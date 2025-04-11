@@ -1,0 +1,7 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=i3
+Comment=Dynamic window manager
+Exec=i3
+Icon=i3
+Type=XSession
