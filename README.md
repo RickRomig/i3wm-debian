@@ -38,4 +38,4 @@ sudo reboot
 - The `run.sh` script will clone my script repository to ~/Downloads and copy the contents to ~/bin.
 
 #### Rick Romig "*The Luddite Geek*"
-#### 10 April 2025
+#### 11 April 2025
