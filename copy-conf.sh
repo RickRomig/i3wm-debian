@@ -7,7 +7,7 @@
 # Author       : Copyright © 2025, Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail.com | rick.romig@mymetronet.com
 # Created      : 10 Apr 2025
-# Last updated : 10 Apr 2025
+# Last updated : 11 Apr 2025
 # Comments     :
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -49,12 +49,15 @@ copy_configs() {
 }
 
 config_executables() {
-	local bin_dir="$HOME/.local/bin"
-	local src_dir="$HOME/i3wm-debian/.local/bin"
+	local bin_dir src_dir i3scripts script
+	bin_dir="$HOME/.local/bin"
+	src_dir="$HOME/i3wm-debian/"
+	i3scripts=(autostart.sh backgrounds.sh keyhelper.sh logout)
+	for script in "${i3scripts[@]}"; do
+		[[ -x "$config_dir/i3/$script" ]] || chmod +x "$config_dir/$script"
+	done
 	cp -v "$src_dir/dmconf.sh" "$bin_dir/" | awk -F"/" '{print "==> " $NF}' | sed "s/'$//"
 	[[ -x "$bin_dir/dmconf.sh" ]] || chmod +x "$bin_dir/dmconf.sh"
-	[[ -x "$config_dir/i3/autostart.sh" ]] || chmod +x "$config_dir/i3/autostart.sh"
-	[[ -x "$config_dir/i3/logout" ]] || chmod +x "$config_dir/i3/logout"
 	[[ -x "$config_dir/polybar/polybar-i3" ]] || chmod +x "$config_dir/polybar/polybar-i3"
 }
 
@@ -82,7 +85,7 @@ add_sudo_tweaks() {
 main() {
 	local script version
 	script="$(basename "$0")"
-	version="1.0.25100"
+	version="1.1.25101"
 	copy_dotfiles
 	copy_configs
 	copy_backgrounds
