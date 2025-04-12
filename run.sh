@@ -7,7 +7,7 @@
 # Author       : Copyright © 2025, Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail.com | rick.romig@mymetronet.com
 # Created      : 10 Apr 2025
-# Last updated : 10 Apr 2025
+# Last updated : 11 Apr 2025
 # Comments     : Adapted from Crucible by typecraft
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -18,8 +18,6 @@ set -e
 
 source utils.sh
 
-## Global variables ##
-
 ## Functions ##
 
 print_logo() {
@@ -29,7 +27,7 @@ print_logo() {
  | |\/| |/ _ \/ __| |_ / _` |  \| |/ _ \ __|
  | |  | | (_) \__ \  _| (_| | |\  |  __/ |_
  |_|  |_|\___/|___/_|  \__,_|_| \_|\___|\__|
- Debian i3WM Installation Tool
+ Debian i3WM Installation Tool by The Luddite Geek
 LOGO
 }
 
@@ -42,17 +40,15 @@ install_zram() {
 
 install_microcode() {
 	local vendor_id
-	vendor_id=$(lcpu | awk '/Vendor ID:/ {print $NF}')
+	vendor_id=$(lscpu | awk '/Vendor ID:/ {print $NF}')
 	printf "Installing microcode for %s ...\n" "$vendor_id"
 	case "$vendor_id" in
 		AuthenticAMD )
 			sudo apt-get install -y amd64-microcode
-			printf "AMD 64 microcode install.\n"
-		;;
+			printf "AMD 64 microcode installed.\n" ;;
 		GenuineIntel )
 			sudo apt-get install -y intel-microcode
-			printf "Intel microcode installed.\n"
-		;;
+			printf "Intel microcode installed.\n" ;;
 		* )
 			printf "%s CPU not supported.\n" "$vendor_id"
 	esac
@@ -64,6 +60,11 @@ install_bluetooth() {
 	sudo systemctl enable bluetooth
 }
 
+install_disk_utils() {
+	[[ -b /dev/sda ]] && sudo apt install -y hdparm
+	[[ -c /dev/nvme0 ]] && sudo apt install -y nvme-cli
+}
+
 install_flatpak() {
 	printf "Installing Flatpak and Flathub ...\n"
 	sudo apt install flatpak -yy
@@ -72,38 +73,21 @@ install_flatpak() {
 
 install_lightdm() {
 	printf "Installing lightdm and slick-greeter ...\n"
-	sudo apt install -y lightdm lightdm-gtk-greeter lightdm-gtk-greeter-settings slick-greeter
 	# Show users on lightdm greeter screen
 	sudo sed -i '/#greeter-hide-users=/s/^#//' /etc/lightdm/lightdm.conf
-	# Add slick-greeter to lightdm.conf
+	# Append slick-greeter to lightdm.conf
 	sudo sed -i '/^#greeter-session=example-gtk-gnome/a greeter-session=slick-greeter' /etc/lightdm/lightdm.conf
-	#  Add slick-greeter.conf
+	# Add slick-greeter.conf to /etc/lightdm/
 	sudo cp slick-greeter.conf /etc/lightdm/
-	# Add /usr/share/backgrounds
+	# Add background image for login screen
 	[[ -d /usr/share/backgrounds ]] || sudo mkdir -p /usr/share/backgrounds
 	sudo cp solarized-debian.png /usr/share/backgrounds/slickback.png
-	# XSessions
+	# XSessions & i3.desktop
 	[[ -d /usr/share/xsessions ]] || sudo mkdir -p /usr/share/xsessions
-	sudo systemctl enable lightdm
 	sudo cp i3.desktop /usr/share/xsessions/
 }
 
-main() {
-	local script version
-	script="$(basename "$0")"
-	version="1.0.25100"
-	clear
-	print_logo
-	if [[ -f "packages.conf" ]]; then
-		source packages.conf
-	else
-		echo "Error: packages.conf not found!"
-		exit 1
-	fi
-	echo "Updating the system..."
-	sudo apt-get update
-
-	# Initial setup
+initial_setup() {
 	lsblk | grep -iw swap || install_zram
 	install_microcode
 	lsusb | grep -i blue && install_bluetooth
@@ -112,8 +96,12 @@ main() {
 	mkdir -p ~/.local/{bin,state,share/{doc,logs,icons/battery}}
 	chmod 700 ~/.ssh
 	clone_repos
+}
 
-	# Install packages by category
+install_by_category() {
+	echo "Installing display manager..."
+	install_packages "${LIGHTDM[@]}"
+
 	echo "Installing system utilities..."
 	install_packages "${SYSTEM_UTILS[@]}"
 
@@ -127,31 +115,28 @@ main() {
 	echo "Installing printer tools..."
 	install_packages "${PRINTER_TOOLS[@]}"
 
-	echo "Installing productivity applications"
-	install_packages "${PROD_APPS[@]}"
-
-	# echo "Installing development tools..."
-	# install_packages "${DEV_TOOLS[@]}"
+	echo "Installing development tools..."
+	install_packages "${DEV_TOOLS[@]}"
 
 	echo "Installing system maintenance tools..."
 	install_packages "${MAINTENANCE[@]}"
+	install_disk_utils
 
 	echo "Installing desktop environment..."
 	install_packages "${DESKTOP[@]}"
 
-	# echo "Installing desktop environment..."
-	# install_packages "${OFFICE[@]}"
+	echo "Installing desktop environment..."
+	install_packages "${OFFICE[@]}"
 
 	echo "Installing media packages..."
 	install_packages "${MEDIA[@]}"
 
 	echo "Installing fonts..."
 	install_packages "${FONTS[@]}"
+}
 
-	install_lightdm
-	install_flatpak
-
-	# Enable services
+enable_services() {
+	local service
 	echo "Configuring services..."
 	for service in "${SERVICES[@]}"; do
 	  if ! systemctl is-enabled "$service" &> /dev/null; then
@@ -161,14 +146,41 @@ main() {
 	    echo "$service is already enabled"
 	  fi
 	done
+}
 
-	# Miscelleous operations
-	# Copy scripts to ~/bin
-	[[ -d ~/bin ]] || mkdir -p ~/bin
-	cp -rpv ~/Downloads/scripts/* ~/bin/
-	# Install Nerd Fonts
+copy_scripts() {
+	local cloned_dir="$HOME/Downloads/scripts"
+	local bin_dir="$HOME/bin"
+	[[ -d "$bin_dir" ]] || mkdir -p "$bin_dir"
+	if [[ -d "$cloned_dir/scripts" ]]; then
+		cp -rpv "$cloned_dir/scripts"/* "$bin_dir"
+	else
+		echo "Scripts directory not found." >&2
+	fi
+}
+
+main() {
+	local script version
+	script="$(basename "$0")"
+	version="2.0.25101"
+	clear
+	print_logo
+	if [[ -f "packages.conf" ]]; then
+		source packages.conf
+	else
+		echo "Error: packages.conf not found!"
+		exit 1
+	fi
+	echo "Updating the system..."
+	sudo apt-get update
+
+	initial_setup
+	install_by_category
+	install_lightdm
+	install_flatpak
+	enable_services
+	copy_scripts
 	source ~/i3wm-debian/nerdfonts.sh
-	# Copy configuration files
 	source ~/i3wm-debian/copyconf.sh
 
 	echo "Setup complete! Reboot your system."
@@ -176,6 +188,6 @@ main() {
 	exit
 }
 
-## Execution
+## Execution ##
 
 main "$@"
