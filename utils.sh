@@ -7,8 +7,8 @@
 # Author       : Copyright © 2025, Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail.com | rick.romig@mymetronet.com
 # Created      : 10 Apr 2025
-# Last updated : 10 Apr 2025
-# Version      : 1.0.25100
+# Last updated : 25 Apr 2025
+# Version      : 1..25115
 # Comments     :
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -39,7 +39,8 @@ install_packages() {
 }
 
 clone_repos() {
-	local gitea_url="http://192.168.0.16:3000/Nullifidian"
+	# local gitea_url="http://192.168.0.16:3000/Nullifidian"
+	local repo_url="https://github.com/RickRomig"
 	local repos=(configs scripts)
 	local dl_dir="$HOME/downloads"
 
@@ -47,7 +48,7 @@ clone_repos() {
 		if [[ -d "$dl_dir/$repo" ]]; then
 			echo "$repo repository already exists."
 		else
-			git clone "$gitea_url/$repo.git" "$dl_dir/$repo"
+			git clone "$repo_url/$repo.git" "$dl_dir/$repo"
 		fi
 	done
 }
