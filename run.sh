@@ -7,7 +7,7 @@
 # Author       : Copyright © 2025, Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail.com | rick.romig@mymetronet.com
 # Created      : 10 Apr 2025
-# Last updated : 11 Apr 2025
+# Last updated : 27 Apr 2025
 # Comments     : Adapted from Crucible by typecraft
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -29,6 +29,12 @@ print_logo() {
  |_|  |_|\___/|___/_|  \__,_|_| \_|\___|\__|
  Debian i3WM Installation Tool by The Luddite Geek
 LOGO
+}
+
+check_vm() {
+	local localnet
+	localnet=$(ip route get 1.2.3.4 | cut -d' ' -f3 | sed 's/\..$//')
+	[[ "$localnet" == "196.168.122" ]] && sudo apt-get install spice-vdagent spice-webdavd
 }
 
 install_zram() {
@@ -71,7 +77,7 @@ install_flatpak() {
 	sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 }
 
-install_lightdm() {
+setup_lightdm() {
 	printf "Installing lightdm and slick-greeter ...\n"
 	# Show users on lightdm greeter screen
 	sudo sed -i '/#greeter-hide-users=/s/^#//' /etc/lightdm/lightdm.conf
@@ -162,7 +168,8 @@ copy_scripts() {
 main() {
 	local script version
 	script="$(basename "$0")"
-	version="2.0.25101"
+	version="2.1.25117"
+	check_vm
 	clear
 	print_logo
 	if [[ -f "packages.conf" ]]; then
@@ -176,7 +183,7 @@ main() {
 
 	initial_setup
 	install_by_category
-	install_lightdm
+	setup_lightdm
 	install_flatpak
 	enable_services
 	copy_scripts
