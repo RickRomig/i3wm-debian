@@ -7,7 +7,7 @@
 # Author       : Copyright © 2025 Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail | rick.romig@mymetronet.net
 # Created      : 27 Apr 2025
-# Last updated : 27 Apr 2025
+# Last updated : 28 Apr 2025
 # Comments     :
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -18,7 +18,7 @@ set -eu
 ## Global Variables ##
 
 script=$(basename "$0"); readonly script
-readonly version="1.0.25117"
+readonly version="1.1.25118"
 cloned_dir="$HOME/Downloads/configs"
 config_dir="$HOME/.config"
 
@@ -36,7 +36,7 @@ copy_dotfiles() {
 
 copy_configs() {
 	local cfg_dir cfg_dirs
-	cfg_dirs=( dunst itty micro rofi )
+	cfg_dirs=( dunst kitty micro rofi )
 	printf "Copying configuration directories and files ...\n"
 	for cfg_dir in "${cfg_dirs[@]}"; do
 		printf  "Linking %s ...\n" "$cfg_dir"
@@ -45,6 +45,7 @@ copy_configs() {
   cp -rv "$cloned_dir/i3" "$config_dir/"
   cp -rv "$cloned_dir/polybar" "$config_dir/"
 	cp -v "$cloned_dir/redshift.conf/" "$config_dir/"
+	cp -v "$HOME/i3wm-debian/dmconf.sh" "$HOME/.local/bin/" | awk -F"/" '{print "==> " $NF}' | sed "s/'$//"
 	sudo cp -v "$cloned_dir"/sleep.conf /etc/systemd/
 	configure_nano
 }
