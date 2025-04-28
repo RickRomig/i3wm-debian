@@ -32,7 +32,7 @@ install_packages() {
 
   if [ ${#to_install[@]} -ne 0 ]; then
     for pkg in "${to_install[@]}"; do
-    	echo "Installing $pkg..."
+    	printf "\e[93mInstalling $pkg...\e0m\n"
     	sudo apt-get install -yy "$pkg"
     done
   fi
@@ -40,11 +40,10 @@ install_packages() {
 
 clone_repos() {
 	local dl_dir repo repos repo_url
-	# repo_url="http://192.168.0.16:3000/Nullifidian"
 	repo_url="https://github.com/RickRomig"
 	repos=(configs scripts)
-	dl_dir="$HOME/downloads"
-
+	dl_dir="$HOME/Downloads"
+	printf "\e[93mCloning configs and scripts...\e[0m\n"
 	for repo in "${repos[@]}"; do
 		if [[ -d "$dl_dir/$repo" ]]; then
 			echo "$repo repository already exists."
