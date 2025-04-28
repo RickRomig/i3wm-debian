@@ -25,9 +25,9 @@ config_dir="$HOME/.config"
 apply_dotfiles() {
 	local dot_file dot_files
 	dot_files=( .bash_aliases .bashrc .bash_logout .imwheelrc .inputrc .profile .face )
-	printf "Linking dotfiles ...\n"
+	printf "\e[93mLinking dotfiles ...\e[0m\n"
 	for dot_file in "${dot_files[@]}"; do
-		printf "Linking %s ...\n" "$dot_file"
+		printf "Copying %s ...\n" "$dot_file"
 		cp -v "$cloned_dir/$dot_file"  "$HOME/$dot_file" | awk -F"/" '{print "==> " $NF}' | sed "s/'$//"
 	done
 }
@@ -35,7 +35,7 @@ apply_dotfiles() {
 apply_configs() {
 	local cfg_dir cfg_dirs
 	cfg_dirs=( dunst kitty micro rofi )
-	printf "Copying configuration directories and files ...\n"
+	printf "\e[93mLinking/Copying configuration directories and files ...\e[0m\n"
 	for cfg_dir in "${cfg_dirs[@]}"; do
 		printf  "Linking %s ...\n" "$cfg_dir"
 		ln -s "$cloned_dir/$cfg_dir" "$config_dir/"
@@ -49,7 +49,7 @@ apply_configs() {
 }
 
 configure_nano() {
-	printf "Configuring nano...\n"
+	printf "\e[93mConfiguring nano...\e[0m\n"
 	[[ -d "$config_dir/nano" ]] || mkdir -p "$config_dir/nano"
 	cp -v /etc/nanorc "$config_dir/nano/" | awk -F"/" '{print "==> " $NF}' | sed "s/'$//"
 	sed -i -f "$HOME/bin/files/nano.sed" "$config_dir/nano/nanorc"
@@ -57,12 +57,13 @@ configure_nano() {
 }
 
 copy_backgrounds() {
-	printf "Copying backgrounds...\n"
+	printf "\e[93mCopying backgrounds...\e[0m\n"
 	[[ -d "$config_dir/backgrounds" ]] || mkdir -p "$config_dir/backgrounds"
 	cp -v "$cloned_dir/backgrounds/*" "$config_dir/backgrounds/" | awk -F"/" '{print "==> " $NF}' | sed "s/'$//"
 }
 
 add_sudo_tweaks() {
+	printf "\e[93mApplying sudo tweaks...\e[0m\n"
 	sudo sh -c 'echo "Defaults pwfeedback" > /etc/sudoers.d/0pwfeedback'
 	sudo chmod 440 /etc/sudoers.d/0pwfeedback
 	sudo sh -c 'echo "Defaults timestamp_timeout=30" > /etc/sudoers.d/rick'
@@ -72,7 +73,7 @@ add_sudo_tweaks() {
 main() {
   local script version
 	script="$(basename "$0")"
-	version="1.2.25118"
+	version="1.0.25118"
 	apply_dotfiles
 	apply_configs
 	configure_nano
