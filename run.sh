@@ -178,8 +178,8 @@ main() {
 	setup_lightdm
 	enable_services
 	copy_scripts
-	source ~/i3wm-debian/nerdfonts.sh
-	source ~/i3wm-debian/configs.sh
+	bash ~/i3wm-debian/nerdfonts.sh
+	bash ~/i3wm-debian/configs.sh
 
 	echo "Setup complete! Reboot your system."
 	echo "$script $version"
