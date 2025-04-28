@@ -27,6 +27,7 @@ install_nerd_fonts() {
   fonts=( "CascadiaCode" "FiraCode" "Go-Mono" "Hack" "Inconsolata" "Iosevka" "JetBrainsMono" "Mononoki" "RobotoMono" "SourceCodePro" )
   for font in "${fonts[@]}"; do
     wget -P "$tmp_dir" "$font_repo/$font.tar.xz"
+    mkdir -p "$font_dir/$font/"
     sudo tar -xvf "$tmp_dir/$font.tar.xz" -C "$font_dir/$font/"
   done
   fc-cache
