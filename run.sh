@@ -94,9 +94,9 @@ initial_setup() {
 	install_microcode
 	lsusb | grep -i blue && install_bluetooth
 	xdg-user-dirs-update
-	mkdir -p ~/bin .cache .config .ssh
+	mkdir -p ~/bin ~/.cache ~/.config
 	mkdir -p ~/.local/{bin,state,share/{doc,logs,icons/battery}}
-	chmod 700 ~/.ssh
+	mkdir -p ~/.ssh && chmod 700 ~/.ssh
 	clone_repos
 }
 
@@ -154,7 +154,7 @@ enable_services() {
 main() {
 	local script version
 	script="$(basename "$0")"
-	version="2.1.25117"
+	version="2.0.25118"
 	check_vm
 	clear
 	print_logo
