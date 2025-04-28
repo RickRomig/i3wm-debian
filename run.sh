@@ -34,7 +34,9 @@ LOGO
 check_vm() {
 	local localnet
 	localnet=$(ip route get 1.2.3.4 | cut -d' ' -f3 | sed 's/\..$//')
-	[[ "$localnet" == "196.168.122" || "$localnet" == "10.0.2" ]] && sudo apt-get install spice-vdagent spice-webdavd
+	if [[ "$localnet" == "196.168.122" ]] || [[ "$localnet" == "10.0.2" ]]; then
+		apt-get install spice-vdagent spice-webdavd
+	fi
 }
 
 install_zram() {
