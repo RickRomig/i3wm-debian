@@ -7,7 +7,7 @@
 # Author       : Copyright © 2025, Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail.com | rick.romig@mymetronet.com
 # Created      : 10 Apr 2025
-# Last updated : 27 Apr 2025
+# Last updated : 28 Apr 2025
 # Comments     : Adapted from Crucible by typecraft
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -40,6 +40,7 @@ check_vm() {
 }
 
 install_zram() {
+	printf "\e[93mInstalling Z-Ram...\e[0m\n"
 	sudo apt install -y zram-tools
 	sudo sed -i.bak '/ALGO/s/^#//;/PERCENT/s/^#//;s/50$/25/' /etc/default/zramswap
   sudo systemctl restart zramswap.service
@@ -49,7 +50,7 @@ install_zram() {
 install_microcode() {
 	local vendor_id
 	vendor_id=$(lscpu | awk '/Vendor ID:/ {print $NF}')
-	printf "Installing microcode for %s ...\n" "$vendor_id"
+	printf "\e[93mInstalling microcode for %s ...\e[0m\n" "$vendor_id"
 	case "$vendor_id" in
 		AuthenticAMD )
 			sudo apt-get install -y amd64-microcode
@@ -58,12 +59,12 @@ install_microcode() {
 			sudo apt-get install -y intel-microcode
 			printf "Intel microcode installed.\n" ;;
 		* )
-			printf "%s CPU not supported.\n" "$vendor_id"
+			printf "\e[91mWARNING!\e[0m %s CPU not supported.\n" "$vendor_id"
 	esac
 }
 
 install_bluetooth() {
-	printf "Installing Bluetooth...\n"
+	printf "\e[93mInstalling Bluetooth...\e[0m\n"
 	sudo apt install -y bluez blueman
 	sudo systemctl enable bluetooth
 }
@@ -74,12 +75,12 @@ install_disk_utils() {
 	elif [[ -c /dev/nvme0 ]]; then
 		sudo apt install -y nvme-cli
 	else
-		echo "Virtual machine"
+		printf "\e[93mVirtual machine\e[0m\n"
 	fi
 }
 
 setup_lightdm() {
-	printf "Installing lightdm and slick-greeter ...\n"
+	printf "\e[93mInstalling lightdm and slick-greeter ...\e[0m\n"
 	# Show users on lightdm greeter screen
 	sudo sed -i '/#greeter-hide-users=/s/^#//' /etc/lightdm/lightdm.conf
 	# Append slick-greeter to lightdm.conf
@@ -98,6 +99,7 @@ initial_setup() {
 	lsblk | grep -iw swap || install_zram
 	install_microcode
 	lsusb | grep -i blue && install_bluetooth
+	printf "\e[93mSetting up directories...\e[0m\n"
 	xdg-user-dirs-update
 	mkdir -p ~/bin ~/.cache ~/.config
 	mkdir -p ~/.local/{bin,state,share/{doc,logs,icons/battery}}
@@ -107,52 +109,52 @@ initial_setup() {
 
 install_by_category() {
 
-	echo "Installing system utilities..."
+	printf "\e[93mInstalling system utilities...\e[0m\n"
 	install_packages "${SYSTEM_UTILS[@]}"
 	sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 
-	echo "Installing network utilities..."
+	printf "\e[93mInstalling network utilities...\e[0m\n"
 	install_packages "${NETWORK_UTILS[@]}"
 	sudo sed -i.bak '/managed/s/false/true/' /etc/NetworkManager/NetworkManager.conf
 
-	echo "Installing X packages..."
+	printf "\e[93mInstalling X packages...\e[0m\n"
 	install_packages "${X_PACKAGES[@]}"
 
-	echo "Installing printer tools..."
+	printf "\e[93mInstalling printer tools...\e[0m\n"
 	install_packages "${PRINTER_TOOLS[@]}"
 
-	echo "Installing development tools..."
+	printf "\e[93mInstalling development tools...\e[0m\n"
 	install_packages "${DEV_TOOLS[@]}"
 
-	echo "Installing system maintenance tools..."
+	printf "\e[93mInstalling system maintenance tools...\e[0m\n"
 	install_packages "${MAINTENANCE[@]}"
 	install_disk_utils
 
-	echo "Installing desktop environment..."
+	printf "\e[93mInstalling desktop environment...\e[0m\n"
 	install_packages "${DESKTOP[@]}"
 
-	echo "Installing desktop environment..."
+	printf "\e[93mInstalling desktop environment...\e[0m\n"
 	install_packages "${OFFICE[@]}"
 
-	echo "Installing media packages..."
+	printf "\e[93mInstalling media packages...\e[0m\n"
 	install_packages "${MEDIA[@]}"
 
-	echo "Installing fonts..."
+	printf "\e[93mInstalling fonts...\e[0m\n"
 	install_packages "${FONTS[@]}"
 
-	echo "Installing display manager..."
+	printf "\e[93mInstalling display manager...\e[0m\n"
 	install_packages "${LIGHTDM[@]}"
 }
 
 enable_services() {
 	local service
-	echo "Configuring services..."
+	printf "\e[93mConfiguring services...\e[0m\n"
 	for service in "${SERVICES[@]}"; do
 	  if ! systemctl is-enabled "$service" &> /dev/null; then
-	    echo "Enabling $service..."
+	    printf "\e[93mEnabling $service...\e[0m\n"
 	    sudo systemctl enable "$service"
 	  else
-	    echo "$service is already enabled"
+	    printf "$service is already enabled\n"
 	  fi
 	done
 }
@@ -160,17 +162,17 @@ enable_services() {
 main() {
 	local script version
 	script="$(basename "$0")"
-	version="2.0.25118"
+	version="1.0.25118"
 	check_vm
 	clear
 	print_logo
 	if [[ -f "packages.conf" ]]; then
 		source packages.conf
 	else
-		echo "Error: packages.conf not found!"
+		printf "\e[91mError:\e[0m packages.conf not found!\n"
 		exit 1
 	fi
-	echo "Updating the system..."
+	printf "\e[93mUpdating the system...\e[0m\n"
 	sudo apt-get update
 
 	initial_setup
@@ -181,7 +183,7 @@ main() {
 	bash ~/i3wm-debian/nerdfonts.sh
 	bash ~/i3wm-debian/configs.sh
 
-	echo "Setup complete! Reboot your system."
+printf "\e[93mSetup complete! Reboot your system.\e[0m\n"
 	echo "$script $version"
 	exit
 }
