@@ -8,7 +8,7 @@
 # Email        : rick.romig@gmail.com | rick.romig@mymetronet.com
 # Created      : 10 Apr 2025
 # Last updated : 27 Apr 2025
-# Version      : 1.2.25117
+# Version      : 1.0.25118
 # Comments     :
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -33,7 +33,7 @@ install_packages() {
   if [ ${#to_install[@]} -ne 0 ]; then
     for pkg in "${to_install[@]}"; do
     	echo "Installing $pkg..."
-    	apt-get install -yy "$pkg"
+    	sudo apt-get install -yy "$pkg"
     done
   fi
 }
