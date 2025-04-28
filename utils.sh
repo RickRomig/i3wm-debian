@@ -53,3 +53,14 @@ clone_repos() {
 		fi
 	done
 }
+
+copy_scripts() {
+	local cloned_dir="$HOME/Downloads/scripts"
+	local bin_dir="$HOME/bin"
+	[[ -d "$bin_dir" ]] || mkdir -p "$bin_dir"
+	if [[ -d "$cloned_dir/scripts" ]]; then
+		cp -rpv "$cloned_dir/scripts"/* "$bin_dir"
+	else
+		echo "Scripts directory not found." >&2
+	fi
+}
