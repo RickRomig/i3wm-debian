@@ -168,11 +168,11 @@
    ```
 
 ### Install git and then clone i3wm-debian repo to home directory (~/).
-`git clone http://192.168.0.16:3000/Nullifidian/i3wm-debian.git ~/i3wm-debian`
+`git clone https://github.com/RickRomig/i3wm-debian.git` ~/i3wm-debian`
 
 #### Repositories for my scripts and configs
 For information only, repos are cloned in `run.sh` installation script.
 ```bash
-git clone http://192.168.0.16:3000/Nullifidian/scripts.git ~/scripts
-git clone http://192.168.0.16:3000/Nullifidian/configs.git ~/configs
+git clone https://github.com/RickRomig/scripts.git ~/scripts
+git clone https://github.com/RickRomig/configs.git ~/configs
 ```
