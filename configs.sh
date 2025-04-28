@@ -30,7 +30,7 @@ apply_dotfiles() {
 	printf "Linking dotfiles ...\n"
 	for dot_file in "${dot_files[@]}"; do
 		printf "Linking %s ...\n" "$dot_file"
-		ln -s "$cloned_dir/$dot_file"  "$HOME/$dot_file"
+		cp -v "$cloned_dir/$dot_file"  "$HOME/$dot_file" | awk -F"/" '{print "==> " $NF}' | sed "s/'$//"
 	done
 }
 
