@@ -69,8 +69,13 @@ install_bluetooth() {
 }
 
 install_disk_utils() {
-	[[ -b /dev/sda ]] && sudo apt install -y hdparm
-	[[ -c /dev/nvme0 ]] && sudo apt install -y nvme-cli
+	if [[ -b /dev/sda ]]; then
+		sudo apt install -y hdparm
+	elif [[ -c /dev/nvme0 ]]; then
+		sudo apt install -y nvme-cli
+	else
+		echo "Virtual machine"
+	fi
 }
 
 setup_lightdm() {
@@ -101,8 +106,6 @@ initial_setup() {
 }
 
 install_by_category() {
-	echo "Installing display manager..."
-	install_packages "${LIGHTDM[@]}"
 
 	echo "Installing system utilities..."
 	install_packages "${SYSTEM_UTILS[@]}"
@@ -136,6 +139,9 @@ install_by_category() {
 
 	echo "Installing fonts..."
 	install_packages "${FONTS[@]}"
+
+	echo "Installing display manager..."
+	install_packages "${LIGHTDM[@]}"
 }
 
 enable_services() {
