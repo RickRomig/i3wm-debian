@@ -17,8 +17,6 @@ set -eu
 
 ## Global Variables ##
 
-script=$(basename "$0"); readonly script
-readonly version="1.1.25118"
 cloned_dir="$HOME/Downloads/configs"
 config_dir="$HOME/.config"
 
@@ -74,7 +72,7 @@ add_sudo_tweaks() {
 main() {
   local script version
 	script="$(basename "$0")"
-	version="1.1.25118"
+	version="1.2.25118"
 	apply_dotfiles
 	apply_configs
 	configure_nano
