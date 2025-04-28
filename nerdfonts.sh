@@ -7,7 +7,7 @@
 # Author       : Copyright © 2025, Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail.com | rick.romig@mymetronet.com
 # Created      : 10 Apr 2025
-# Last updated : 11 Apr 2025
+# Last updated : 28 Apr 2025
 # Comments     :
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -26,6 +26,7 @@ install_nerd_fonts() {
   [[ -d "$font_dir" ]] || sudo mkdir -p "$font_dir"
   fonts=( "CascadiaCode" "FiraCode" "Go-Mono" "Hack" "Inconsolata" "Iosevka" "JetBrainsMono" "Mononoki" "RobotoMono" "SourceCodePro" )
   for font in "${fonts[@]}"; do
+    printf "\e[03mInstalling %s ...\e[0m\n" "$font"
     wget -P "$tmp_dir" "$font_repo/$font.tar.xz"
     sudo mkdir -p "$font_dir/$font/"
     sudo tar -xvf "$tmp_dir/$font.tar.xz" -C "$font_dir/$font/"
@@ -37,8 +38,8 @@ install_nerd_fonts() {
 main() {
   local script version
   script=$(basename "$0")
-  version="2.0.25101"
-  tmp_dir=$(mktemp -d) || { echo "ERROR: Failed to create temporary directory." >&2; exit 1; }
+  version="1.0.25118"
+  tmp_dir=$(mktemp -d) || { printf "\e[91mERROR:\e[0m: Failed to create temporary directory." >&2; exit 1; }
   trap cleanup EXIT
   install_nerd_fonts
 	echo "-----------------"
