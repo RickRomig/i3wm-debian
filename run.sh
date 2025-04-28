@@ -71,12 +71,6 @@ install_disk_utils() {
 	[[ -c /dev/nvme0 ]] && sudo apt install -y nvme-cli
 }
 
-install_flatpak() {
-	printf "Installing Flatpak and Flathub ...\n"
-	sudo apt install flatpak -yy
-	sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-}
-
 setup_lightdm() {
 	printf "Installing lightdm and slick-greeter ...\n"
 	# Show users on lightdm greeter screen
@@ -110,6 +104,7 @@ install_by_category() {
 
 	echo "Installing system utilities..."
 	install_packages "${SYSTEM_UTILS[@]}"
+	sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 
 	echo "Installing network utilities..."
 	install_packages "${NETWORK_UTILS[@]}"
@@ -154,17 +149,6 @@ enable_services() {
 	done
 }
 
-copy_scripts() {
-	local cloned_dir="$HOME/Downloads/scripts"
-	local bin_dir="$HOME/bin"
-	[[ -d "$bin_dir" ]] || mkdir -p "$bin_dir"
-	if [[ -d "$cloned_dir/scripts" ]]; then
-		cp -rpv "$cloned_dir/scripts"/* "$bin_dir"
-	else
-		echo "Scripts directory not found." >&2
-	fi
-}
-
 main() {
 	local script version
 	script="$(basename "$0")"
@@ -184,11 +168,10 @@ main() {
 	initial_setup
 	install_by_category
 	setup_lightdm
-	install_flatpak
 	enable_services
 	copy_scripts
 	source ~/i3wm-debian/nerdfonts.sh
-	source ~/i3wm-debian/copyconf.sh
+	source ~/i3wm-debian/configs.sh
 
 	echo "Setup complete! Reboot your system."
 	echo "$script $version"
