@@ -8,7 +8,7 @@
 # Email        : rick.romig@gmail | rick.romig@mymetronet.net
 # Created      : 27 Apr 2025
 # Last updated : 28 Apr 2025
-# Comments     :
+# Comments     : Assumes scripts and directories under ~/bin have already been installed.
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
 ##########################################################################
@@ -24,27 +24,27 @@ config_dir="$HOME/.config"
 
 ## Functions ##
 
-copy_dotfiles() {
+apply_dotfiles() {
 	local dot_file dot_files
 	dot_files=( .bash_aliases .bashrc .bash_logout .imwheelrc .inputrc .profile .face )
-	printf "Copying .dotfiles ...\n"
+	printf "Linking dotfiles ...\n"
 	for dot_file in "${dot_files[@]}"; do
-		printf "Copying %s ...\n" "$dot_file"
-		cp -v "$cloned_dir/$dot_file"  "$HOME/" | awk -F"/" '{print "==> " $NF}' | sed "s/'$//"
+		printf "Linking %s ...\n" "$dot_file"
+		ln -s "$cloned_dir/$dot_file"  "$HOME/$dot_file"
 	done
 }
 
-copy_configs() {
+apply_configs() {
 	local cfg_dir cfg_dirs
 	cfg_dirs=( dunst kitty micro rofi )
 	printf "Copying configuration directories and files ...\n"
 	for cfg_dir in "${cfg_dirs[@]}"; do
 		printf  "Linking %s ...\n" "$cfg_dir"
-		cp -rv "$cloned_dir/$cfg_dir" "$config_dir/"
+		ln -s "$cloned_dir/$cfg_dir" "$config_dir/"
 	done
+	ln -s "$cloned_dir/redshift.conf/" "$config_dir/redshift.conf"
   cp -rv "$cloned_dir/i3" "$config_dir/"
   cp -rv "$cloned_dir/polybar" "$config_dir/"
-	cp -v "$cloned_dir/redshift.conf/" "$config_dir/"
 	cp -v "$HOME/i3wm-debian/dmconf.sh" "$HOME/.local/bin/" | awk -F"/" '{print "==> " $NF}' | sed "s/'$//"
 	sudo cp -v "$cloned_dir"/sleep.conf /etc/systemd/
 	configure_nano
@@ -53,7 +53,7 @@ copy_configs() {
 configure_nano() {
 	printf "Configuring nano...\n"
 	[[ -d "$config_dir/nano" ]] || mkdir -p "$config_dir/nano"
-	cp -v /etc/nanorc "$config_dir/nano/"
+	cp -v /etc/nanorc "$config_dir/nano/" | awk -F"/" '{print "==> " $NF}' | sed "s/'$//"
 	sed -i -f "$HOME/bin/files/nano.sed" "$config_dir/nano/nanorc"
 	[[ -f "$HOME/.nanorc" ]] && rm "$HOME/.nanorc"
 }
@@ -74,9 +74,10 @@ add_sudo_tweaks() {
 main() {
   local script version
 	script="$(basename "$0")"
-	version="1.0.25117"
-	copy_dotfiles
-	copy_configs
+	version="1.1.25118"
+	apply_dotfiles
+	apply_configs
+	configure_nano
 	copy_backgrounds
 	add_sudo_tweaks
 	echo "$script $version"
