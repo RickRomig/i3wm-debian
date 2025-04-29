@@ -32,7 +32,7 @@ install_packages() {
 
   if [ ${#to_install[@]} -ne 0 ]; then
     for pkg in "${to_install[@]}"; do
-    	printf "\e[93mInstalling $pkg...\e0m\n"
+    	printf "\e[93mInstalling $pkg...\e[0m\n"
     	sudo apt-get install -yy "$pkg"
     done
   fi
