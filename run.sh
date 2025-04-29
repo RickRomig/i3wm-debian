@@ -7,7 +7,7 @@
 # Author       : Copyright © 2025, Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail.com | rick.romig@mymetronet.com
 # Created      : 10 Apr 2025
-# Last updated : 28 Apr 2025
+# Last updated : 29 Apr 2025
 # Comments     : Adapted from Crucible by typecraft
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -159,10 +159,21 @@ enable_services() {
 	done
 }
 
+copy_scripts() {
+	local cloned_dir="$HOME/Downloads/scripts"
+	local bin_dir="$HOME/bin"
+	[[ -d "$bin_dir" ]] || mkdir -p "$bin_dir"
+	if [[ -d "$cloned_dir/scripts" ]]; then
+		cp -rpv "$cloned_dir/scripts"/* "$bin_dir"
+	else
+		echo "Scripts directory not found." >&2
+	fi
+}
+
 main() {
 	local script version
 	script="$(basename "$0")"
-	version="1.0.25118"
+	version="1.0.25119"
 	check_vm
 	clear
 	print_logo
