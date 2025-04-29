@@ -7,7 +7,7 @@
 # Author       : Copyright © 2025 Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail | rick.romig@mymetronet.net
 # Created      : 27 Apr 2025
-# Last updated : 28 Apr 2025
+# Last updated : 29 Apr 2025
 # Comments     : Assumes scripts and directories under ~/bin have already been installed.
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -52,7 +52,7 @@ configure_nano() {
 	printf "\e[93mConfiguring nano...\e[0m\n"
 	[[ -d "$config_dir/nano" ]] || mkdir -p "$config_dir/nano"
 	cp -v /etc/nanorc "$config_dir/nano/" | awk -F"/" '{print "==> " $NF}' | sed "s/'$//"
-	sed -i -f "$HOME/bin/files/nano.sed" "$config_dir/nano/nanorc"
+	sed -i -f nano.sed "$config_dir/nano/nanorc"
 	[[ -f "$HOME/.nanorc" ]] && rm "$HOME/.nanorc"
 }
 
@@ -73,7 +73,7 @@ add_sudo_tweaks() {
 main() {
   local script version
 	script="$(basename "$0")"
-	version="1.0.25118"
+	version="1.0.25119"
 	apply_dotfiles
 	apply_configs
 	configure_nano
