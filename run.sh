@@ -7,8 +7,8 @@
 # Author       : Copyright © 2025, Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail.com | rick.romig@mymetronet.com
 # Created      : 10 Apr 2025
-# Last updated : 29 Apr 2025
-# Comments     : Adapted from Crucible by typecraft
+# Last updated : 30 Apr 2025
+# Comments     : Run this script first.
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
 ###############################################################################
@@ -151,29 +151,18 @@ enable_services() {
 	printf "\e[93mConfiguring services...\e[0m\n"
 	for service in "${SERVICES[@]}"; do
 	  if ! systemctl is-enabled "$service" &> /dev/null; then
-	    printf "\e[93mEnabling $service...\e[0m\n"
+	    printf "\e[93mEnabling %s...\e[0m\n" "$service"
 	    sudo systemctl enable "$service"
 	  else
-	    printf "$service is already enabled\n"
+	    printf "%s is already enabled\n" "$service"
 	  fi
 	done
-}
-
-copy_scripts() {
-	local cloned_dir="$HOME/Downloads/scripts"
-	local bin_dir="$HOME/bin"
-	[[ -d "$bin_dir" ]] || mkdir -p "$bin_dir"
-	if [[ -d "$cloned_dir/scripts" ]]; then
-		cp -rpv "$cloned_dir/scripts"/* "$bin_dir"
-	else
-		echo "Scripts directory not found." >&2
-	fi
 }
 
 main() {
 	local script version
 	script="$(basename "$0")"
-	version="1.0.25119"
+	version="1.0.25120"
 	check_vm
 	clear
 	print_logo
@@ -190,11 +179,10 @@ main() {
 	install_by_category
 	setup_lightdm
 	enable_services
-	copy_scripts
-	bash ~/i3wm-debian/nerdfonts.sh
-	bash ~/i3wm-debian/configs.sh
-
-printf "\e[93mSetup complete! Reboot your system.\e[0m\n"
+	cp -rpv "$HOME/Downloads/scripts /*" "$HOME/bin/"
+	# bash ~/i3wm-debian/nerdfonts.sh
+	# bash ~/i3wm-debian/configs.sh
+	printf "Run \e[93mnerdfonts.sh\e[0m and \e[93mconfigs.sh\e[0m to install Nerd Fonts and setup configuratino files.\n"
 	echo "$script $version"
 	exit
 }
