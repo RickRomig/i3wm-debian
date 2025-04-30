@@ -79,7 +79,7 @@ main() {
 	configure_nano
 	copy_backgrounds
 	add_sudo_tweaks
-	printf "\e[93mSetup complete! Reboot your system.\e[0m\n"
+	printf "\e[93mi3 Window Manager installation complete!\n Reboot your system.\e[0m\n"
 	echo "$script $version"
   exit
 }
