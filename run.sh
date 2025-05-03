@@ -102,7 +102,8 @@ initial_setup() {
 	lsusb | grep -i blue && install_bluetooth
 	printf "\e[93mSetting up directories...\e[0m\n"
 	xdg-user-dirs-update
-	mkdir -p ~/bin ~/.cache ~/.config/backgrounds
+	mkdir -p ~/bin ~/.cache
+	mkdir -p ~/.config/{backgrounds,nano}
 	mkdir -p ~/.local/{bin,state,share/{doc,logs,icons/battery}}
 	mkdir -p ~/.ssh && chmod 700 ~/.ssh
 	clone_repos
