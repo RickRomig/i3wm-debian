@@ -7,7 +7,7 @@
 # Author       : Copyright © 2025 Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail | rick.romig@mymetronet.net
 # Created      : 27 Apr 2025
-# Last updated : 30 Apr 2025
+# Last updated : 03 May 2025
 # Comments     : Assumes scripts and directories under ~/bin have already been installed.
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -53,12 +53,10 @@ configure_nano() {
 	[[ -d "$config_dir/nano" ]] || mkdir -p "$config_dir/nano"
 	cp -v /etc/nanorc "$config_dir/nano/" | awk -F"/" '{print "==> " $NF}' | sed "s/'$//"
 	sed -i -f nano.sed "$config_dir/nano/nanorc"
-	[[ -f "$HOME/.nanorc" ]] && rm "$HOME/.nanorc"
 }
 
 copy_backgrounds() {
 	printf "\e[93mCopying backgrounds...\e[0m\n"
-	[[ -d "$config_dir/backgrounds" ]] || mkdir -p "$config_dir/backgrounds"
 	cp -v "$cloned_dir/backgrounds/*" "$config_dir/backgrounds/" | awk -F"/" '{print "==> " $NF}' | sed "s/'$//"
 }
 
@@ -73,7 +71,7 @@ add_sudo_tweaks() {
 main() {
   local script version
 	script="$(basename "$0")"
-	version="1.0.25120"
+	version="1.0.25123"
 	apply_dotfiles
 	apply_configs
 	configure_nano
