@@ -7,7 +7,7 @@
 # Author       : Copyright © 2025, Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail.com | rick.romig@mymetronet.com
 # Created      : 10 Apr 2025
-# Last updated : 30 Apr 2025
+# Last updated : 03 May 2025
 # Comments     : Run this script first.
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -35,6 +35,7 @@ check_vm() {
 	local localnet
 	localnet=$(ip route get 1.2.3.4 | cut -d' ' -f3 | sed 's/\..$//')
 	if [[ "$localnet" == "196.168.122" ]] || [[ "$localnet" == "10.0.2" ]]; then
+		printf "\e[93mInstalling guest additions..\e[0m\n"
 		sudo apt-get install spice-vdagent spice-webdavd
 	fi
 }
@@ -101,7 +102,7 @@ initial_setup() {
 	lsusb | grep -i blue && install_bluetooth
 	printf "\e[93mSetting up directories...\e[0m\n"
 	xdg-user-dirs-update
-	mkdir -p ~/bin ~/.cache ~/.config
+	mkdir -p ~/bin ~/.cache ~/.config/backgrounds
 	mkdir -p ~/.local/{bin,state,share/{doc,logs,icons/battery}}
 	mkdir -p ~/.ssh && chmod 700 ~/.ssh
 	clone_repos
@@ -111,6 +112,7 @@ install_by_category() {
 
 	printf "\e[93mInstalling system utilities...\e[0m\n"
 	install_packages "${SYSTEM_UTILS[@]}"
+	printf "\e[93mInstalling flathub...\e[0m\n"
 	sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 
 	printf "\e[93mInstalling network utilities...\e[0m\n"
@@ -162,7 +164,7 @@ enable_services() {
 main() {
 	local script version
 	script="$(basename "$0")"
-	version="1.0.25120"
+	version="1.0.25123"
 	check_vm
 	clear
 	print_logo
@@ -180,9 +182,7 @@ main() {
 	setup_lightdm
 	enable_services
 	printf "\e[93mCopying scripts to ~/...\e[0m\n"
-	cp -rpv "$HOME/Downloads/scripts /*" "$HOME/bin/"
-	# bash ~/i3wm-debian/nerdfonts.sh
-	# bash ~/i3wm-debian/configs.sh
+	cp -rpv "$HOME/Downloads/scripts/*" "$HOME/bin/"
 	printf "Run \e[93mnerdfonts.sh\e[0m and \e[93mconfigs.sh\e[0m to install Nerd Fonts and setup configuratino files.\n"
 	echo "$script $version"
 	exit
