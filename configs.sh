@@ -50,7 +50,6 @@ apply_configs() {
 
 configure_nano() {
 	printf "\e[93mConfiguring nano...\e[0m\n"
-	[[ -d "$config_dir/nano" ]] || mkdir -p "$config_dir/nano"
 	cp -v /etc/nanorc "$config_dir/nano/" | awk -F"/" '{print "==> " $NF}' | sed "s/'$//"
 	sed -i -f nano.sed "$config_dir/nano/nanorc"
 }
