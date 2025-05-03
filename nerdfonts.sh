@@ -7,7 +7,7 @@
 # Author       : Copyright © 2025, Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail.com | rick.romig@mymetronet.com
 # Created      : 10 Apr 2025
-# Last updated : 30 Apr 2025
+# Last updated : 03 May 2025
 # Comments     : Run this script after run.sh.
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -38,13 +38,13 @@ install_nerd_fonts() {
 main() {
   local script version
   script=$(basename "$0")
-  version="1.0.25120"
+  version="1.0.25123"
   tmp_dir=$(mktemp -d) || { printf "\e[91mERROR:\e[0m: Failed to create temporary directory." >&2; exit 1; }
   trap cleanup EXIT
   install_nerd_fonts
 	echo "-----------------"
 	echo "$script $version"
-  printf "Run \e[93mconfigs.sh\e[0m to setup configuratino files and complete the installation."
+  printf "Run \e[93mconfigs.sh\e[0m to setup configuratino files and complete the installation.\n"
   exit
 }
 
