@@ -179,6 +179,7 @@ main() {
 	install_by_category
 	setup_lightdm
 	enable_services
+	printf "\e[93mCopying scripts to ~/...\e[0m\n"
 	cp -rpv "$HOME/Downloads/scripts /*" "$HOME/bin/"
 	# bash ~/i3wm-debian/nerdfonts.sh
 	# bash ~/i3wm-debian/configs.sh
