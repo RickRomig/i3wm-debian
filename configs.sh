@@ -7,7 +7,7 @@
 # Author       : Copyright © 2025 Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail | rick.romig@mymetronet.net
 # Created      : 27 Apr 2025
-# Last updated : 03 May 2025
+# Last updated : 04 May 2025
 # Comments     : Assumes scripts and directories under ~/bin have already been installed.
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -25,7 +25,7 @@ config_dir="$HOME/.config"
 apply_dotfiles() {
 	local dot_file dot_files
 	dot_files=( .bash_aliases .bashrc .bash_logout .imwheelrc .inputrc .profile .face )
-	printf "\e[93mLinking dotfiles ...\e[0m\n"
+	printf "\e[93mCopying dotfiles ...\e[0m\n"
 	for dot_file in "${dot_files[@]}"; do
 		printf "Copying %s ...\n" "$dot_file"
 		cp -v "$cloned_dir/$dot_file"  "$HOME/$dot_file" | awk -F"/" '{print "==> " $NF}' | sed "s/'$//"
@@ -41,6 +41,7 @@ apply_configs() {
 		ln -s "$cloned_dir/$cfg_dir" "$config_dir/"
 	done
 	ln -s "$cloned_dir/redshift.conf/" "$config_dir/redshift.conf"
+	# ln -s "$cloned_dir/local/leave.txt" "$HOME/.local/share/doc/"
   cp -rv "$cloned_dir/i3" "$config_dir/"
   cp -rv "$cloned_dir/polybar" "$config_dir/"
 	cp -v "$HOME/i3wm-debian/dmconf.sh" "$HOME/.local/bin/" | awk -F"/" '{print "==> " $NF}' | sed "s/'$//"
@@ -71,7 +72,7 @@ add_sudo_tweaks() {
 main() {
   local script version
 	script="$(basename "$0")"
-	version="1.0.25123"
+	version="1.0.25124"
 	apply_dotfiles
 	apply_configs
 	configure_nano
