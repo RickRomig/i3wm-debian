@@ -44,6 +44,7 @@ apply_configs() {
   cp -rv "$cloned_dir/i3" "$config_dir/"
   cp -rv "$cloned_dir/polybar" "$config_dir/"
 	cp -v "$HOME/i3wm-debian/dmconf.sh" "$HOME/.local/bin/" | awk -F"/" '{print "==> " $NF}' | sed "s/'$//"
+	cp -v "$cloned_dir/local/leave.txt" "$HOME/.local/share/doce/" | awk -F"/" '{print "==> " $NF}' | sed "s/'$//"
 	sudo cp -v "$cloned_dir"/sleep.conf /etc/systemd/
 	configure_nano
 }
