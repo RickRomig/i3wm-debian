@@ -34,7 +34,7 @@ apply_dotfiles() {
 
 apply_configs() {
 	local cfg_dir cfg_dirs
-	cfg_dirs=( dunst kitty micro rofi )
+	cfg_dirs=( dunst flameshot kitty micro rofi )
 	printf "\e[93mLinking/Copying configuration directories and files ...\e[0m\n"
 	for cfg_dir in "${cfg_dirs[@]}"; do
 		printf  "Linking %s ...\n" "$cfg_dir"
