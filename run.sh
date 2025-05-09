@@ -104,7 +104,7 @@ initial_setup() {
 	xdg-user-dirs-update
 	mkdir -p ~/bin ~/.cache
 	mkdir -p ~/.config/{backgrounds,nano}
-	mkdir -p ~/.local/{bin,state,share/{doc,logs,icons/battery}}
+	mkdir -p ~/.local/{bin,state,share/{doc,fonts,logs,icons/battery}}
 	mkdir -p ~/.ssh && chmod 700 ~/.ssh
 	clone_repos
 }
