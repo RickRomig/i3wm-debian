@@ -7,7 +7,7 @@
 # Author       : Copyright © 2025 Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail | rick.romig@mymetronet.net
 # Created      : 27 Apr 2025
-# Last updated : 04 May 2025
+# Last updated : 11 May 2025
 # Comments     : Assumes scripts and directories under ~/bin have already been installed.
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -63,16 +63,18 @@ copy_backgrounds() {
 
 add_sudo_tweaks() {
 	printf "\e[93mApplying sudo tweaks...\e[0m\n"
-	sudo sh -c 'echo "Defaults pwfeedback" > /etc/sudoers.d/0pwfeedback'
+	sudo "$cloned_dir/sudoers/0pwfeedback" /etc/sudoers.d/
+	# sudo sh -c 'echo "Defaults pwfeedback" > /etc/sudoers.d/0pwfeedback'
 	sudo chmod 440 /etc/sudoers.d/0pwfeedback
-	sudo sh -c 'echo "Defaults timestamp_timeout=30" > /etc/sudoers.d/rick'
+	sudo "$cloned_dir/sudoers/rick" /etc/sudoers.d/
+	# sudo sh -c 'echo "Defaults timestamp_timeout=30" > /etc/sudoers.d/rick'
 	sudo chmod 440 /etc/sudoers.d/rick
 }
 
 main() {
   local script version
 	script="$(basename "$0")"
-	version="1.0.25124"
+	version="1.1.25131"
 	apply_dotfiles
 	apply_configs
 	configure_nano
