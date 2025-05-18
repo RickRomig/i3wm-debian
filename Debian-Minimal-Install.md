@@ -38,8 +38,8 @@
         - UEFI - select `gpt`
         - Legacy - select `msdos`
       - Free space and create new partitions
-        - Set partition size (300M or 500M for UEFI partition)
-        - Create as `vfat` and select EFI System Partition
+        - Set partition size (300M or 500M for UEFI partition if UEFI)
+        - Create as `vfat` and select EFI System Partition  (UEFI install)
         - Create root / home partitions (Make `/` bootable if not UEFI)
         - Create as 'ext4' and designate as `/` and `/home' respectively.
         - No swap parition, will be using `zram` for swap.
@@ -50,8 +50,8 @@
    11. Configure package manager.
        - Use network mirror
        - Non-free software - **Yes**
-       - Enable source repositories (**yes**/no)
-       - Services to use (select all)
+       - Enable source repositories (yes/**no**)
+       - Services to use (select all) - security updates, release updates, backported software
    12. Select and install software.
        - Updates
        - Select **No Automatic Updates**
@@ -61,14 +61,19 @@
          - Check **standard system utilities**
    13. Install the GRUB bootloader.
        - Force GRUB installations to the EFI removable media path - **No**
-   14. Finish the installation.
+   14. Execute a shell. (Installing network-manager before rebooting makes things easier)
+```bash
+chroot /target
+apt install git network-manager
+```
+   15. Finish the installation.
 4. Remove installation media and reboot.
 5. If you set up a root user, login as root to add the sudo group and add your user to it.
 ```bash
-# /usr/sbin/adduser rick  # if not created during OS installation
-# /usr/bin/apt install sudo
-# /usr/bin/getent group sudo 2>&1 > /dev/null || /usr/sbin/groupadd sudo
-# /usr/sbin/usermod -aG sudo rick
+/usr/sbin/adduser rick  # if not created during OS installation
+/usr/bin/apt install sudo
+/usr/bin/getent group sudo 2>&1 > /dev/null || /usr/sbin/groupadd sudo
+/usr/sbin/usermod -aG sudo rick
 ```
 6. Login as your user and add your user to the sudo group if you enabled root login.
 ```bash
@@ -100,7 +105,7 @@ $ sed -i.bak '/ALGO/s/^#//;/PERCENT/s/^#//;s/50$/25/' /etc/default/zramswap
 ```
 9. Install `git` and clone the i3wm-debian repo to the home directory (`~/`).
 ```bash
-$ sudo apt install git
+$ sudo apt install git  # if not installed during Debian installation
 $ git clone https://github.com/RickRomig/i3wm-debian.git` ~/i3wm-debian
 ```
 ### Repositories for my scripts and configuration files
@@ -110,4 +115,4 @@ $ git clone https://github.com/RickRomig/scripts.git ~/Downloads/scripts
 $ git clone https://github.com/RickRomig/configs.git ~/Downloads/configs
 ```
 #### Rick Romig "*The Luddite Geek*"
-#### 02 May 2025
+#### 18 May 2025

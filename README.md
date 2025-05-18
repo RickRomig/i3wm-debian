@@ -24,7 +24,7 @@
 ## i3 Installation
 Once system has rebooted, run the following:
 ```bash
-sudo apt install git
+sudo apt install git	# if not installed during Debian installation
 git clone https://github.com/RickRomig/i3wm-debian.git ~/i3wm-debian
 cd i3wm-debian
 ./run.sh
@@ -35,7 +35,7 @@ sudo reboot
 ## NOTES
 - The `run.sh` script will clone the configs and scripts repositories to ~/Downloads.
 - The `run.sh` script will copy the contents of the script repository from ~/Downloads/scripts to ~/bin.
-- Recommend configuring Polybar modules for network and battery, as applicable.
+- Configure Polybar modules for network and battery, as applicable before rebooting after i3 installation.
 ## Set screen resolutino in Gnome-Boxes VM
 ```bash
 sudo micro /etc/lightdm/lightdm.conf
@@ -47,4 +47,4 @@ display-setup-script=xrandr -s 1920x1080
 ```
 
 #### Rick Romig "*The Luddite Geek*"
-#### 02 May 2025
+#### 18 May 2025
