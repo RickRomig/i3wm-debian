@@ -40,7 +40,7 @@ apply_configs() {
 		printf  "Linking %s ...\n" "$cfg_dir"
 		ln -s "$cloned_dir/$cfg_dir" "$config_dir/"
 	done
-	ln -s "$cloned_dir/redshift.conf/" "$config_dir/redshift.conf"
+	ln -s "$cloned_dir/redshift.conf/" "$config_dir/"
 	# ln -s "$cloned_dir/local/leave.txt" "$HOME/.local/share/doc/"
   cp -rv "$cloned_dir/i3" "$config_dir/"
   cp -rv "$cloned_dir/polybar" "$config_dir/"
