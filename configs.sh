@@ -41,13 +41,11 @@ apply_configs() {
 		ln -s "$cloned_dir/$cfg_dir" "$config_dir/"
 	done
 	ln -s "$cloned_dir/redshift.conf/" "$config_dir/"
-	# ln -s "$cloned_dir/local/leave.txt" "$HOME/.local/share/doc/"
   cp -rv "$cloned_dir/i3" "$config_dir/"
   cp -rv "$cloned_dir/polybar" "$config_dir/"
 	cp -v "$HOME/i3wm-debian/dmconf.sh" "$HOME/.local/bin/" | awk -F"/" '{print "==> " $NF}' | sed "s/'$//"
 	cp -v "$cloned_dir/local/leave.txt" "$HOME/.local/share/doc/" | awk -F"/" '{print "==> " $NF}' | sed "s/'$//"
 	sudo cp -v "$cloned_dir"/sleep.conf /etc/systemd/
-	configure_nano
 }
 
 configure_nano() {
@@ -63,12 +61,10 @@ copy_backgrounds() {
 
 add_sudo_tweaks() {
 	printf "\e[93mApplying sudo tweaks...\e[0m\n"
-	sudo "$cloned_dir/sudoers/0pwfeedback" /etc/sudoers.d/
-	# sudo sh -c 'echo "Defaults pwfeedback" > /etc/sudoers.d/0pwfeedback'
+	sudo cp -v "$cloned_dir/sudoers/0pwfeedback" /etc/sudoers.d/ | awk -F"/" '{print "==> " $NF}' | sed "s/'$//"
 	sudo chmod 440 /etc/sudoers.d/0pwfeedback
-	sudo "$cloned_dir/sudoers/rick" /etc/sudoers.d/
-	# sudo sh -c 'echo "Defaults timestamp_timeout=30" > /etc/sudoers.d/rick'
-	sudo chmod 440 /etc/sudoers.d/rick
+	sudo cp -v "$cloned_dir/sudoers/10timeout" /etc/sudoers.d/ | awk -F"/" '{print "==> " $NF}' | sed "s/'$//"
+	sudo chmod 440 /etc/sudoers.d/10timeout
 }
 
 main() {
