@@ -58,3 +58,4 @@ replace_bashrc() {
 	fi
 }
 ```
+picom: [FT Labs](https://github.com/FTLabs)
