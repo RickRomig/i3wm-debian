@@ -68,14 +68,15 @@ apt install git network-manager
 ```
    15. Finish the installation.
 4. Remove installation media and reboot.
-5. If you set up a root user, login as root to add the sudo group and add your user to it.
+### Set sudo access for your user
+1. If you set up a root user, login as root to add the sudo group and add your user to it.
 ```bash
 /usr/sbin/adduser rick  # if not created during OS installation
 /usr/bin/apt install sudo
 /usr/bin/getent group sudo 2>&1 > /dev/null || /usr/sbin/groupadd sudo
 /usr/sbin/usermod -aG sudo rick
 ```
-6. Login as your user and add your user to the sudo group if you enabled root login.
+2. Alternatively, login as your user and add your user to the sudo group if you enabled root login.
 ```bash
 $ su -
 # /usr/bin/apt install sudo
@@ -84,7 +85,7 @@ $ su -
 # exit
 $ chfn rick    # add room number, phone to user data
  ```
-7. Increase TTY font-size. (Optional)
+### Increase TTY font-size. (Optional)
 ```bash
 $ sudo dpkg-reconfigure console-setup
 ```
@@ -92,7 +93,14 @@ $ sudo dpkg-reconfigure console-setup
    - Arrow down to Terminus
    - Select largest font size (May be too large, 2nd largest may be a better choice)
    - `Ctrl+l` to clear screen and set font
-8. Install & configure Zram (Skip this step since Zram be installed in 'run.sh' if no swap is found.)
+### Clone i3wm-debian repository
+Install `git` and clone the i3wm-debian repo to the home directory (`~/`).
+```bash
+$ sudo apt install git network-manager   # if not installed during Debian installation
+$ git clone https://github.com/RickRomig/i3wm-debian.git` ~/i3wm-debian
+```
+### Zram
+Install & configure Zram (Skip this step since Zram be installed in 'run.sh' if no swap is found.)
 ```bash
 $ sudo apt install zram-tools
 $ sudo nano /etc/default/zramswap
@@ -102,11 +110,7 @@ ALGO=lz4
 PERCENT=25
 # Use sed instead of nano (recommended)
 $ sed -i.bak '/ALGO/s/^#//;/PERCENT/s/^#//;s/50$/25/' /etc/default/zramswap
-```
-9. Install `git` and clone the i3wm-debian repo to the home directory (`~/`).
-```bash
-$ sudo apt install git  # if not installed during Debian installation
-$ git clone https://github.com/RickRomig/i3wm-debian.git` ~/i3wm-debian
+$ sudo systemctl restart zramswap.service
 ```
 ### Repositories for my scripts and configuration files
 For information only, repos will be cloned to `~/Downloads` by the `run.sh` installation script.
@@ -115,4 +119,4 @@ $ git clone https://github.com/RickRomig/scripts.git ~/Downloads/scripts
 $ git clone https://github.com/RickRomig/configs.git ~/Downloads/configs
 ```
 #### Rick Romig "*The Luddite Geek*"
-#### 18 May 2025
+#### 20 May 2025
