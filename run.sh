@@ -7,7 +7,7 @@
 # Author       : Copyright © 2025, Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail.com | rick.romig@mymetronet.com
 # Created      : 10 Apr 2025
-# Last updated : 03 May 2025
+# Last updated : 20 May 2025
 # Comments     : Run this script first.
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -102,7 +102,7 @@ initial_setup() {
 	lsusb | grep -i blue && install_bluetooth
 	printf "\e[93mSetting up directories...\e[0m\n"
 	xdg-user-dirs-update
-	mkdir -p ~/bin ~/.cache
+	mkdir -p ~/bin ~/.cache ~/Screenshots
 	mkdir -p ~/.config/{backgrounds,nano}
 	mkdir -p ~/.local/{bin,state,share/{doc,fonts,logs,icons/battery}}
 	mkdir -p ~/.ssh && chmod 700 ~/.ssh
@@ -165,7 +165,7 @@ enable_services() {
 main() {
 	local script version
 	script="$(basename "$0")"
-	version="1.0.25123"
+	version="1.1.25140"
 	check_vm
 	clear
 	print_logo
