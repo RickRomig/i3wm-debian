@@ -38,8 +38,8 @@ check_i3(){
 	i3_cfg_d="$HOME/.config/i3"
 	if [[ "$i3_cfg_d" ]]; then
 		echo "An exist ~/.config/i3 directory was found."
-		read -rp "Backup the existing configuration? (y/n): response
-		if [[ "$response" =~ ^[Yn]$ ]]; then
+		read -rp "Backup the existing configuration? (y/n)" response
+		if [[ "$response" =~ ^[Yy]$ ]]; then
 			backup_dir="$HOME/.config/i3_backup+$(date +%F-%R)"
 			mv "$i3_cfg_d" "$backup_dir" || die "Failed to backup current config" 1
 			echo "Backup saveed to $backup_dir"
@@ -52,7 +52,7 @@ Replace current .bashSrc
 replace_bashrc() {
 	local response
 	read -rp "Replace your .bashrc with mosfanet .bashrc? (y/n) " response
-	if [[ "$response" =~ ^[Yn]$ ]]; then
+	if [[ "$response" =~ ^[Yy]$ ]]; then
 		wget -O ~/.bashrc https://raw.githubusercontent.com/RickRomig/configs/refs/heads/main/.bashrc
 		source ~/.bashrc
 	fi
