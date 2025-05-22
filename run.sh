@@ -163,27 +163,30 @@ enable_services() {
 }
 
 main() {
-	local script version
+	local script version confirm
 	script="$(basename "$0")"
 	version="1.2.25142"
 	check_vm
 	clear
-	print_logo
 	if [[ -f "packages.conf" ]]; then
 		source packages.conf
 	else
 		printf "\e[91mError:\e[0m packages.conf not found!\n"
 		exit 1
 	fi
+	print_logo
+	printf "This script will install and configure i3wm on your Debian system.\n"
+	read -rp "Do you want to continue (y/n) " confirm
+	[[ ! "$confirm" =~ ^[Yy]$ ]] && { printf "Installation aborted.\n"; exit; }
 	printf "\e[93mUpdating the system...\e[0m\n"
-	sudo apt-get update
-
+	sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get clean
 	initial_setup
 	install_by_category
 	setup_lightdm
 	enable_services
-	printf "\e[93mCopying scripts to ~/...\e[0m\n"
-	cp -rpv "$HOME/Downloads/scripts/*" "$HOME/bin/"
+	copy_scripts
+	# printf "\e[93mCopying scripts to ~/bin ...\e[0m\n"
+	# cp -rpv "$HOME/Downloads/scripts/*" "$HOME/bin/"
 	printf "Run \e[93mnerdfonts.sh\e[0m and \e[93mconfigs.sh\e[0m to install Nerd Fonts and setup configuratino files.\n"
 	echo "$script $version"
 	exit
