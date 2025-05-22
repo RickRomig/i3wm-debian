@@ -7,7 +7,7 @@
 # Author       : Copyright © 2025, Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail.com | rick.romig@mymetronet.com
 # Created      : 10 Apr 2025
-# Last updated : 20 May 2025
+# Last updated : 22 May 2025
 # Comments     : Run this script first.
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -90,7 +90,7 @@ setup_lightdm() {
 	sudo cp slick-greeter.conf /etc/lightdm/
 	# Add background image for login screen
 	[[ -d /usr/share/backgrounds ]] || sudo mkdir -p /usr/share/backgrounds
-	sudo cp solarized-debian.png /usr/share/backgrounds/slickback.png
+	sudo cp slickback.png /usr/share/backgrounds/
 	# XSessions & i3.desktop
 	[[ -d /usr/share/xsessions ]] || sudo mkdir -p /usr/share/xsessions
 	sudo cp i3.desktop /usr/share/xsessions/
@@ -165,7 +165,7 @@ enable_services() {
 main() {
 	local script version
 	script="$(basename "$0")"
-	version="1.1.25140"
+	version="1.2.25142"
 	check_vm
 	clear
 	print_logo
