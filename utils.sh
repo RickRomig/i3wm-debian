@@ -7,8 +7,8 @@
 # Author       : Copyright © 2025, Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail.com | rick.romig@mymetronet.com
 # Created      : 10 Apr 2025
-# Last updated : 29 Apr 2025
-# Version      : 1.0.25119
+# Last updated : 22 May 2025
+# Version      : 1.1.25142
 # Comments     :
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -32,7 +32,7 @@ install_packages() {
 
   if [ ${#to_install[@]} -ne 0 ]; then
     for pkg in "${to_install[@]}"; do
-    	printf "\e[93mInstalling $pkg...\e[0m\n"
+    	printf "\e[93mInstalling %s...\e[0m\n" "$pkg"
     	sudo apt-get install -yy "$pkg"
     done
   fi
@@ -51,4 +51,19 @@ clone_repos() {
 			git clone "$repo_url/$repo.git" "$dl_dir/$repo"
 		fi
 	done
+}
+
+copy_scripts() {
+	local response
+	read -rp "Copy scripts or create a link? (c/l) " response
+	if [[ "$response" =~ ^[Cc]$ ]]; then
+		printf "\e[93mCopying scripts to ~/bin ...\e[0m\n"
+		cp -rpv "$HOME/Downloads/scripts/*" "$HOME/bin/"
+	elif [[ "$response" =~ ^[Ll]$ ]]; then
+		printf "\e[93mCreating symbolic link to scripts directory...\e[0\n"
+		ls -s "$HOME/Downloads/scripts" "$HOME/bin/"
+	else
+		printf "\e[93mCopying scripts to ~/bin ...\e[0m\n"
+		cp -rpv "$HOME/Downloads/scripts/*" "$HOME/bin/"
+	fi
 }
