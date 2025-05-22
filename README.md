@@ -9,7 +9,7 @@
 7. **packages.conf** - Arrays of packages to be installed.
 8. **i3.desktop** - used by LightDM to launch i3-wm.
 9. **slick-greeter** - used by LightDM to login user.
-10. **solarized-debian.png** - background for login screen.
+10. **slickback.png** - background for lightdm login screen.
 11. **nano.sed** - sed script to configure nanorc.
 ## Debian Installation
 1. Install a minimal installation of Debian stable using **Debian-Minimal-Install.md** as a guide.
@@ -47,4 +47,4 @@ display-setup-script=xrandr -s 1920x1080
 ```
 
 #### Rick Romig "*The Luddite Geek*"
-#### 20 May 2025
+#### 22 May 2025
