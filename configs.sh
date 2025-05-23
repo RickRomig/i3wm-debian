@@ -33,18 +33,28 @@ apply_dotfiles() {
 }
 
 apply_configs() {
-	local cfg_dir cfg_dirs
+	local cfg_dir cfg_dirs response
 	cfg_dirs=( dunst flameshot kitty micro rofi )
-	printf "\e[93mLinking/Copying configuration directories and files ...\e[0m\n"
-	for cfg_dir in "${cfg_dirs[@]}"; do
-		printf  "Linking %s ...\n" "$cfg_dir"
-		ln -s "$cloned_dir/$cfg_dir" "$config_dir/"
-	done
-	ln -s "$cloned_dir/redshift.conf/" "$config_dir/"
+	read -rp "Copy or link confguration files? (c/l) " response
+	case "$response" in
+		^[Cc]$ )
+			for cfg_dir in "${cfg_dirs[@]}"; do
+			printf "\e[93mCopying %s ...\e[0m\n" "$cfg_dir"
+			cp -rv "$cloned_dir/$cfg_dir" "$config_dir/"
+			done
+			cp -v "$cloned_dir/redshift.conf" "$config_dir/"
+		;;
+		* )
+			for cfg_dir in "${cfg_dirs[@]}"; do
+				printf  "Linking %s ...\n" "$cfg_dir"
+				ln -s "$cloned_dir/$cfg_dir" "$config_dir/"
+			done
+			ln -s "$cloned_dir/redshift.conf" "$config_dir/"
+	esac
   cp -rv "$cloned_dir/i3" "$config_dir/"
   cp -rv "$cloned_dir/polybar" "$config_dir/"
-	cp -v "$HOME/i3wm-debian/dmconf.sh" "$HOME/.local/bin/" | awk -F"/" '{print "==> " $NF}' | sed "s/'$//"
-	cp -v "$cloned_dir/local/leave.txt" "$HOME/.local/share/doc/" | awk -F"/" '{print "==> " $NF}' | sed "s/'$//"
+	cp -v "$HOME/i3wm-debian/dmconf.sh" "$HOME/.local/bin/"
+	cp -v "$cloned_dir/local/leave.txt" "$HOME/.local/share/doc/"
 	sudo cp -v "$cloned_dir"/sleep.conf /etc/systemd/
 }
 
