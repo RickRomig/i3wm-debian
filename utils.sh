@@ -56,14 +56,13 @@ clone_repos() {
 copy_scripts() {
 	local response
 	read -rp "Copy scripts or create a link? (c/l) " response
-	if [[ "$response" =~ ^[Cc]$ ]]; then
-		printf "\e[93mCopying scripts to ~/bin ...\e[0m\n"
-		cp -rpv "$HOME/Downloads/scripts/*" "$HOME/bin/"
-	elif [[ "$response" =~ ^[Ll]$ ]]; then
-		printf "\e[93mCreating symbolic link to scripts directory...\e[0\n"
-		ls -s "$HOME/Downloads/scripts" "$HOME/bin/"
-	else
-		printf "\e[93mCopying scripts to ~/bin ...\e[0m\n"
-		cp -rpv "$HOME/Downloads/scripts/*" "$HOME/bin/"
-	fi
+	case "$response" in
+		^[Ll]$ )
+			printf "\e[93mCreating a symbolic link to scripts directory...\e[0\n"
+			ln -s "$HOME/Downloads/scripts" "$HOME/bin/"
+		;;
+		* )
+			printf "\e[93mCopying scripts to ~/bin ...\e[0m\n"
+			cp -rpv "$HOME/Downloads/scripts/*" "$HOME/bin/"
+	esac
 }
