@@ -53,10 +53,10 @@ apply_configs() {
 	esac
   cp -rv "$cloned_dir/i3" "$config_dir/"
   cp -rv "$cloned_dir/polybar" "$config_dir/"
-	cp -rv "$cloned_dir/icons/*" "$HOME/.icons/"
-	cp -v "$HOME/i3wm-debian/dmconf.sh" "$HOME/.local/bin/"
-	cp -v "$cloned_dir/local/leave.txt" "$HOME/.local/share/doc/"
-	sudo cp -v "$cloned_dir"/sleep.conf /etc/systemd/
+	cp -v "$cloned_dir/icons/*" "$HOME/.icons/" | awk -F"/" '{print "==> " $NF}' | sed "s/'$//"
+	cp -v "$HOME/i3wm-debian/dmconf.sh" "$HOME/.local/bin/" | awk -F"/" '{print "==> " $NF}' | sed "s/'$//"
+	cp -v "$cloned_dir/local/leave.txt" "$HOME/.local/share/doc/" | awk -F"/" '{print "==> " $NF}' | sed "s/'$//"
+	sudo cp -v "$cloned_dir"/sleep.conf /etc/systemd/ | awk -F"/" '{print "==> " $NF}' | sed "s/'$//"
 }
 
 configure_nano() {
