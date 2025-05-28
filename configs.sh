@@ -7,7 +7,7 @@
 # Author       : Copyright © 2025 Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail | rick.romig@mymetronet.net
 # Created      : 27 Apr 2025
-# Last updated : 11 May 2025
+# Last updated : 28 May 2025
 # Comments     : Assumes scripts and directories under ~/bin have already been installed.
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -53,6 +53,7 @@ apply_configs() {
 	esac
   cp -rv "$cloned_dir/i3" "$config_dir/"
   cp -rv "$cloned_dir/polybar" "$config_dir/"
+	cp -rv "$cloned_dir/icons" "$HOME/"
 	cp -v "$HOME/i3wm-debian/dmconf.sh" "$HOME/.local/bin/"
 	cp -v "$cloned_dir/local/leave.txt" "$HOME/.local/share/doc/"
 	sudo cp -v "$cloned_dir"/sleep.conf /etc/systemd/
@@ -80,7 +81,7 @@ add_sudo_tweaks() {
 main() {
   local script version
 	script="$(basename "$0")"
-	version="1.1.25131"
+	version="1.2.25148"
 	apply_dotfiles
 	apply_configs
 	configure_nano
