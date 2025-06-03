@@ -7,7 +7,7 @@
 # Author       : Copyright © 2025, Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail.com | rick.romig@mymetronet.com
 # Created      : 10 Apr 2025
-# Last updated : 28 May 2025
+# Last updated : 03 Jun 2025
 # Comments     : Run this script first.
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -164,8 +164,8 @@ enable_services() {
 
 main() {
 	local script version confirm
-	script="$(basename "$0")"
-	version="1.3.25148"
+	script="${0##*/}"
+	version="1.4.25154"
 	check_vm
 	clear
 	if [[ -f "packages.conf" ]]; then
