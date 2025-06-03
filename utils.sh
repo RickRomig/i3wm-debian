@@ -7,8 +7,8 @@
 # Author       : Copyright © 2025, Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail.com | rick.romig@mymetronet.com
 # Created      : 10 Apr 2025
-# Last updated : 22 May 2025
-# Version      : 1.1.25142
+# Last updated : 02 Jun 2025
+# Version      : 1.2.25154
 # Comments     :
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -38,6 +38,7 @@ install_packages() {
   fi
 }
 
+# Clone configs and scripts repositories to ~/Downloads
 clone_repos() {
 	local dl_dir repo repos repo_url
 	repo_url="https://github.com/RickRomig"
@@ -53,12 +54,14 @@ clone_repos() {
 	done
 }
 
+# Copy or link bash scripts to ~/bin
 copy_scripts() {
 	local response
 	read -rp "Copy scripts or create a link? (c/l) " response
 	case "$response" in
 		^[Ll]$ )
 			printf "\e[93mCreating a symbolic link to scripts directory...\e[0\n"
+			[[ -d "$HOME/bin" ]] && rmdir "$HOME/bin"
 			ln -s "$HOME/Downloads/scripts" "$HOME/bin/"
 		;;
 		* )
