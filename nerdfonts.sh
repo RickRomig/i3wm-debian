@@ -7,7 +7,7 @@
 # Author       : Copyright © 2025, Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail.com | rick.romig@mymetronet.com
 # Created      : 10 Apr 2025
-# Last updated : 03 May 2025
+# Last updated : 03 Jun 2025
 # Comments     : Run this script after run.sh.
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -35,15 +35,15 @@ install_nerd_fonts() {
     sudo tar -xvf "$tmp_dir/$font.tar.xz" -C "$font_dir/$font/"
   done
   wget -P "$tmp_dir" "$font_repo/$symbols_archive"
-  tar xvf "$tmp_dir/$symbols_archive" "$font_dir/$symbols_font"
+  tar -xvf "$tmp_dir/$symbols_archive" "$font_dir/$symbols_font"
   fc-cache
   printf "Nerd fonts installed.\n"
 }
 
 main() {
   local script version
-  script=$(basename "$0")
-  version="1.0.25123"
+	script="${0##*/}"
+  version="1.1.25154"
   tmp_dir=$(mktemp -d) || { printf "\e[91mERROR:\e[0m: Failed to create temporary directory." >&2; exit 1; }
   trap cleanup EXIT
   install_nerd_fonts
