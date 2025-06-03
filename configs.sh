@@ -7,7 +7,7 @@
 # Author       : Copyright © 2025 Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail | rick.romig@mymetronet.net
 # Created      : 27 Apr 2025
-# Last updated : 28 May 2025
+# Last updated : 03 Jun 2025
 # Comments     : Assumes scripts and directories under ~/bin have already been installed.
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -80,8 +80,8 @@ add_sudo_tweaks() {
 
 main() {
   local script version
-	script="$(basename "$0")"
-	version="1.2.25148"
+	script="${0##*/}"
+	version="1.3.25154"
 	apply_dotfiles
 	apply_configs
 	configure_nano
