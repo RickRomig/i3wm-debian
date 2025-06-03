@@ -20,14 +20,14 @@
 9. Link or copy configuration files with `configs.sh`
 
 ### Configuration Files
-1. Replace copyconf.sh with configs.sh
-	- Create symbolic links from ~/Downloads/configs for apps in ~/.config/
+1. configs.sh
+	- Create symbolic links from ~/Downloads/configs for apps in ~/.config/ or copy all directories to ~/.config/
 	- Symbolic link to home dot files?
 	- Copy config for i3 and polybar because of variations in devices and keybindings.
 	- Some config directories/files may be copied for special cases.
 		- kitty for the HP 850 G3
 		- fastfetch for the Gateway E-475M
-2. Contents of ~/Downloads/scripts will be copied to ~/bin to prevent complications in the development process.
+2. Contents of ~/Downloads/scripts will be copied to ~/bin to prevent complications in the development process except for VMs.
 3. Picom is installed, but have no configuration file for it.
 
 ### Misc notes
@@ -47,7 +47,7 @@ check_i3(){
 	fi
 }
 ```
-Replace current .bashSrc
+Replace current .bashrc
 ```bash
 replace_bashrc() {
 	local response
