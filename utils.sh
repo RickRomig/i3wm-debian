@@ -7,9 +7,9 @@
 # Author       : Copyright © 2025, Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail.com | rick.romig@mymetronet.com
 # Created      : 10 Apr 2025
-# Last updated : 02 Jun 2025
+# Last updated : 03 Jun 2025
 # Version      : 1.2.25154
-# Comments     :
+# Comments     : Sourced in run.sh
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
 ###############################################################################
@@ -54,18 +54,8 @@ clone_repos() {
 	done
 }
 
-# Copy or link bash scripts to ~/bin
+# Copy scripts to ~/bin
 copy_scripts() {
-	local response
-	read -rp "Copy scripts or create a link? (c/l) " response
-	case "$response" in
-		^[Ll]$ )
-			printf "\e[93mCreating a symbolic link to scripts directory...\e[0\n"
-			[[ -d "$HOME/bin" ]] && rmdir "$HOME/bin"
-			ln -s "$HOME/Downloads/scripts" "$HOME/bin/"
-		;;
-		* )
-			printf "\e[93mCopying scripts to ~/bin ...\e[0m\n"
-			cp -rpv "$HOME/Downloads/scripts/*" "$HOME/bin/"
-	esac
+	printf "\e[93mCopying scripts to ~/bin ...\e[0m\n"
+	cp -rpv "$HOME/Downloads/scripts/" "$HOME/bin/"
 }
