@@ -36,7 +36,7 @@ check_vm() {
 	localnet=$(ip route get 1.2.3.4 | cut -d' ' -f3 | sed 's/\..$//')
 	if [[ "$localnet" == "196.168.122" ]] || [[ "$localnet" == "10.0.2" ]]; then
 		printf "\e[93mInstalling guest additions..\e[0m\n"
-		sudo apt-get install spice-vdagent spice-webdavd
+		sudo apt-get install -y spice-vdagent spice-webdavd
 	fi
 }
 
@@ -72,11 +72,13 @@ install_bluetooth() {
 
 install_disk_utils() {
 	if [[ -b /dev/sda ]]; then
+		printf "\e[93mInstalling hdparm...\e[0m\n"
 		sudo apt install -y hdparm
 	elif [[ -c /dev/nvme0 ]]; then
+		printf "\e[93mInstalling nvme-cli...\e[0m\n"
 		sudo apt install -y nvme-cli
 	else
-		printf "\e[93mVirtual machine\e[0m\n"
+		printf "\e[93mVirtual machine, nothing installed.\e[0m\n"
 	fi
 }
 
@@ -102,10 +104,10 @@ initial_setup() {
 	lsusb | grep -i blue && install_bluetooth
 	printf "\e[93mSetting up directories...\e[0m\n"
 	xdg-user-dirs-update
-	mkdir -p ~/bin ~/.cache ~/.icons ~/Screenshots
-	mkdir -p ~/.config/{backgrounds,nano}
-	mkdir -p ~/.local/{bin,state,share/{doc,fonts,logs,icons/battery}}
-	mkdir -p ~/.ssh && chmod 700 ~/.ssh
+	mkdir -pv ~/bin ~/.cache ~/.icons ~/Screenshots
+	mkdir -pv ~/.config/nano
+	mkdir -pv ~/.local/{bin,state,share/{doc,fonts,logs,icons}}
+	mkdir -pv ~/.ssh && chmod 700 ~/.ssh
 	clone_repos
 }
 
@@ -185,9 +187,7 @@ main() {
 	setup_lightdm
 	enable_services
 	copy_scripts
-	# printf "\e[93mCopying scripts to ~/bin ...\e[0m\n"
-	# cp -rpv "$HOME/Downloads/scripts/*" "$HOME/bin/"
-	printf "Run \e[93mnerdfonts.sh\e[0m and \e[93mconfigs.sh\e[0m to install Nerd Fonts and setup configuratino files.\n"
+	printf "Run \e[93mnerdfonts.sh\e[0m and \e[93mconfigs.sh\e[0m to install Nerd Fonts and configuration files.\n"
 	echo "$script $version"
 	exit
 }
