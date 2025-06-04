@@ -10,28 +10,24 @@
 	- Install Bluetooth (if present)
 	- Set up XDG and user directories
 	- Clone configs and scripts repositories to ~/Downloads
-3. Install packages with functions in `utils.sh`
+3. Install packages with functions in `utils.sh` (Flatpak and Flathub are installed)
 	- Install disk utilities as applicable
 4. Setup LightDM
-5. Install Flatpak
-6. Enable services
-7. Copy scripts from cloned scripts repo to ~/bin
-8. Install Nerd Fonts with `nerdfonts.sh`
-9. Link or copy configuration files with `configs.sh`
+5. Enable services
+6. Copy scripts from cloned scripts repo to ~/bin
+7. Install Nerd Fonts with `nerdfonts.sh` script
+8. Copy configuration files with `configs.sh` script
 
 ### Configuration Files
-1. configs.sh
-	- Create symbolic links from ~/Downloads/configs for apps in ~/.config/ or copy all directories to ~/.config/
-	- Symbolic link to home dot files?
-	- Copy config for i3 and polybar because of variations in devices and keybindings.
-	- Some config directories/files may be copied for special cases.
-		- kitty for the HP 850 G3
-		- fastfetch for the Gateway E-475M
-2. Contents of ~/Downloads/scripts will be copied to ~/bin to prevent complications in the development process except for VMs.
-3. Picom is installed, but have no configuration file for it.
+1. run.sh
+	- Copies scripts and supporting filesl from ~/Downloads/scripts to ~/bin
+2. configs.sh
+	- Copies all directories and reshift.conf from ~/Downloads/configs to ~/.config/
+3. Picom is installed, but I have no configuration file for it.
+	- i3/autostart.sh runs `piccom -b`
 
 ### Misc notes
-Check for existing i3 configuration
+Check for existing i3 configuration (not implemented)
 ```bash
 check_i3(){
 	local i3_cfg_d response backup_dir
@@ -47,7 +43,7 @@ check_i3(){
 	fi
 }
 ```
-Replace current .bashrc
+Replace current .bashrc (not implemented)
 ```bash
 replace_bashrc() {
 	local response
