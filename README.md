@@ -18,7 +18,7 @@
 	- Highly recommend setting up a separate home partition. It makes life easier.
 2. In the software selection page:
 	- Uncheck all desktop environments.
-	- Check SSH server. SSH is used to administer all Linux systems on MosfaNet.
+	- Check SSH server. SSH is used to administer all Linux systems on MosfaNet. (Shouldn't be needed in a VM.)
 	- Check Standard system utilities.
 3. Reboot
 ## i3 Installation
@@ -30,12 +30,14 @@ $ cd i3wm-debian
 $ ./run.sh
 $ ./nerdfonts.sh
 $ ./configs.sh
+$ micro .config/polybar/config.ini	# Edit wlan, eth, and battery modules as needed.
 $ sudo reboot
 ```
 ## NOTES
-- The `run.sh` script will clone the configs and scripts repositories to ~/Downloads.
-- The `run.sh` script will copy the contents of the script repository from ~/Downloads/scripts to ~/bin.
-- Configure Polybar modules for network and battery, as applicable before rebooting after i3 installation.
+- The `run.sh` script clones the configs and scripts repositories to ~/Downloads.
+- The `run.sh` script copies the contents of the script repository from ~/Downloads/scripts to ~/bin.
+- The `configs.sh` script copies configuration directories from ~/Downloads/configs to ~/.config.
+- Configure Polybar modules for network and battery, as applicable, before rebooting after i3 installation.
 ## Set screen resolution in Gnome-Boxes VM
 ```bash
 $ sudo micro /etc/lightdm/lightdm.conf
@@ -47,4 +49,4 @@ display-setup-script=xrandr -s 1920x1080
 ```
 
 #### Rick Romig "*The Luddite Geek*"
-#### 22 May 2025
+#### 03 Jun 2025
