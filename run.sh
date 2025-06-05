@@ -105,7 +105,7 @@ initial_setup() {
 	printf "\e[93mSetting up directories...\e[0m\n"
 	xdg-user-dirs-update
 	mkdir -pv ~/bin ~/.cache ~/.icons ~/Screenshots
-	mkdir -pv ~/.config/{backgrounds,dunst,flameshot,i3,keepassxc,kitty,micro,nano,polybar,rofi,systemd/user}
+	mkdir -pv ~/.config/{backgrounds,dunst,flameshot,i3,keepassxc,kitty,micro,nano,picom,polybar,rofi,systemd/user}
 	mkdir -pv ~/.local/{bin,state,share/{doc,fonts,logs,icons}}
 	mkdir -pv ~/.ssh && chmod 700 ~/.ssh
 	clone_repos
