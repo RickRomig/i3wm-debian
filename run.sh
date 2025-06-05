@@ -7,7 +7,7 @@
 # Author       : Copyright © 2025, Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail.com | rick.romig@mymetronet.com
 # Created      : 10 Apr 2025
-# Last updated : 03 Jun 2025
+# Last updated : 05 Jun 2025
 # Comments     : Run this script first.
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -105,7 +105,7 @@ initial_setup() {
 	printf "\e[93mSetting up directories...\e[0m\n"
 	xdg-user-dirs-update
 	mkdir -pv ~/bin ~/.cache ~/.icons ~/Screenshots
-	mkdir -pv ~/.config/nano
+	mkdir -pv ~/.config/{backgrounds,dunst,flameshot,i3,keepassxc,kitty,micro,nano,polybar,rofi,systemd/user}
 	mkdir -pv ~/.local/{bin,state,share/{doc,fonts,logs,icons}}
 	mkdir -pv ~/.ssh && chmod 700 ~/.ssh
 	clone_repos
@@ -167,7 +167,7 @@ enable_services() {
 main() {
 	local script version confirm
 	script="${0##*/}"
-	version="1.4.25154"
+	version="1.5.25156"
 	check_vm
 	clear
 	if [[ -f "packages.conf" ]]; then
