@@ -62,6 +62,7 @@ copy_configs(){
 		backgrounds
 		i3
 		keepassxc
+		picom
 		polybar
 		systemd
 	)
