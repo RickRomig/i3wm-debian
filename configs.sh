@@ -7,7 +7,7 @@
 # Author       : Copyright © 2025 Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail | rick.romig@mymetronet.net
 # Created      : 27 Apr 2025
-# Last updated : 03 Jun 2025
+# Last updated : 05 Jun 2025
 # Comments     : Assumes scripts and directories under ~/bin have already been copied.
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -17,8 +17,8 @@ set -eu
 
 ## Global Variables ##
 
-cloned_dir="$HOME/Downloads/configs"
-config_dir="$HOME/.config"
+readonly cloned_dir="$HOME/Downloads/configs"
+readonly config_dir="$HOME/.config"
 
 ## Functions ##
 
@@ -33,15 +33,42 @@ copy_dotfiles() {
 	done
 }
 
+# Link configuration files to directories in ~/.config
+link_configs() {
+	local file files
+	files=(
+		"dunst/dunstrc"
+		"flameshot/flameshot.ini"
+		"kitty/bindings.list"
+		"kitty/kitty.conf"
+		"micro/bindings.json"
+		"micro/settings.json"
+		"rofi/arc_dark_colors.rasi"
+		"rofi/arc_dark_transparent_colors.rasi"
+		"rofi/config.rasi"
+		"redshift.conf"
+	)
+	for file in "${files[@]}"; do
+		printf "\e[93mLinking %s to %s ...\e[0m\n" "$cloned_dir/$file" "$config_dir"
+		[[ -f "$config_dir/$file" ]] && rm "$config_dir/$file"
+		ln -s "$cloned_dir/$file" "$config_dir/$file"
+	done
+}
+
 # Copy configuration directories to ~/.config
-copy_configs() {
+copy_configs(){
 	local cfg_dir cfg_dirs
-	cfg_dirs=( backgrounds dunst flameshot i3 keypassxc kitty micro polybar rofi )
+	cfg_dirs=(
+		backgrounds
+		i3
+		keepassxc
+		polybar
+		systemd
+	)
 	for cfg_dir in "${cfg_dirs[@]}"; do
 		printf "\e[93mCopying %s ...\e[0m\n" "$cfg_dir"
 		cp -rv "$cloned_dir/$cfg_dir" "$config_dir/"
 	done
-	cp -v "$cloned_dir/redshift.conf" "$config_dir/"
 }
 
 # Copy miscellaneous files
@@ -71,8 +98,9 @@ add_sudo_tweaks() {
 
 main() {
 	local script="${0##*/}"
-	local version="1.3.25154"
+	local version="1.4.25156"
 	copy_dotfiles
+	link_configs
 	copy_configs
 	copy_misc_files
 	configure_nano
