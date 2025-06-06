@@ -43,6 +43,7 @@ link_configs() {
 		"kitty/kitty.conf"
 		"micro/bindings.json"
 		"micro/settings.json"
+		"picom/picom.conf"
 		"rofi/arc_dark_colors.rasi"
 		"rofi/arc_dark_transparent_colors.rasi"
 		"rofi/config.rasi"
@@ -62,7 +63,6 @@ copy_configs(){
 		backgrounds
 		i3
 		keepassxc
-		picom
 		polybar
 		systemd
 	)
