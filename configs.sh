@@ -7,8 +7,8 @@
 # Author       : Copyright © 2025 Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail | rick.romig@mymetronet.net
 # Created      : 27 Apr 2025
-# Last updated : 09 Jun 2025
-# Comments     : Assumes scripts and directories under ~/bin have already been copied or linked.
+# Last updated : 05 Jun 2025
+# Comments     : Assumes scripts and directories under ~/bin have already been copied.
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
 ##########################################################################
@@ -52,7 +52,7 @@ link_configs() {
 	for file in "${files[@]}"; do
 		printf "\e[93mLinking %s to %s ...\e[0m\n" "$cloned_dir/$file" "$config_dir"
 		[[ -f "$config_dir/$file" ]] && rm "$config_dir/$file"
-		ln -sv "$cloned_dir/$file" "$config_dir/$file"
+		ln -s "$cloned_dir/$file" "$config_dir/$file"
 	done
 }
 
@@ -99,7 +99,7 @@ add_sudo_tweaks() {
 
 main() {
 	local script="${0##*/}"
-	local version="1.5.251600"
+	local version="1.4.25156"
 	copy_dotfiles
 	link_configs
 	copy_configs
