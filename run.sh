@@ -7,7 +7,7 @@
 # Author       : Copyright © 2025, Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail.com | rick.romig@mymetronet.com
 # Created      : 10 Apr 2025
-# Last updated : 05 Jun 2025
+# Last updated : 12 Jun 2025
 # Comments     : Run this script first.
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -27,7 +27,7 @@ print_logo() {
  | |\/| |/ _ \/ __| |_ / _` |  \| |/ _ \ __|
  | |  | | (_) \__ \  _| (_| | |\  |  __/ |_
  |_|  |_|\___/|___/_|  \__,_|_| \_|\___|\__|
- Debian i3WM Installation Tool by The Luddite Geek
+ Debian i3WM Installation Tool by Rick Romig
 LOGO
 }
 
@@ -35,7 +35,7 @@ check_vm() {
 	local localnet
 	localnet=$(ip route get 1.2.3.4 | cut -d' ' -f3 | sed 's/\..$//')
 	if [[ "$localnet" == "196.168.122" ]] || [[ "$localnet" == "10.0.2" ]]; then
-		printf "\e[93mInstalling guest additions..\e[0m\n"
+		printf "\e[93mVirtual Machine - Installing guest additions...\e[0m\n"
 		sudo apt-get install -y spice-vdagent spice-webdavd
 	fi
 }
@@ -167,13 +167,13 @@ enable_services() {
 main() {
 	local script version confirm
 	script="${0##*/}"
-	version="1.5.25156"
+	version="1.6.25163"
 	check_vm
 	clear
 	if [[ -f "packages.conf" ]]; then
 		source packages.conf
 	else
-		printf "\e[91mError:\e[0m packages.conf not found!\n"
+		printf "\e[91mERROR:\e[0m packages.conf not found!\n"
 		exit 1
 	fi
 	print_logo
