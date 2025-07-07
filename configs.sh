@@ -7,7 +7,7 @@
 # Author       : Copyright © 2025 Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail | rick.romig@mymetronet.net
 # Created      : 27 Apr 2025
-# Last updated : 09 Jun 2025
+# Last updated : 07 Jul 2025
 # Comments     : Assumes scripts and directories under ~/bin have already been copied.
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -25,7 +25,7 @@ readonly config_dir="$HOME/.config"
 # Copy dotfiles to the home directory
 copy_dotfiles() {
 	local dot_file dot_files
-	dot_files=( .bash_aliases .bashrc .bash_logout .face .imwheelrc .inputrc .profile )
+	dot_files=( .bash_aliases .bashrc .bash_logout .curlrc .face .imwheelrc .inputrc .profile .wgetrc )
 	printf "\e[93mCopying dotfiles ...\e[0m\n"
 	for dot_file in "${dot_files[@]}"; do
 		printf "\e[93mCopying %s ...\e[0m\n" "$dot_file"
@@ -99,7 +99,7 @@ add_sudo_tweaks() {
 
 main() {
 	local script="${0##*/}"
-	local version="1.5.25160"
+	local version="1.6.25188"
 	copy_dotfiles
 	link_configs
 	copy_configs
