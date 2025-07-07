@@ -7,7 +7,7 @@
 # Author       : Copyright © 2025, Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail.com | rick.romig@mymetronet.com
 # Created      : 10 Apr 2025
-# Last updated : 12 Jun 2025
+# Last updated : 07 Jul 2025
 # Comments     : Run this script first.
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -60,7 +60,7 @@ install_microcode() {
 			sudo apt-get install -y intel-microcode
 			printf "Intel microcode installed.\n" ;;
 		* )
-			printf "\e[91mWARNING!\e[0m %s CPU not supported.\n" "$vendor_id"
+			printf "\e[91mWARNING!\e[0m %s CPU not supported.\n" "$vendor_id" >&2
 	esac
 }
 
@@ -78,7 +78,7 @@ install_disk_utils() {
 		printf "\e[93mInstalling nvme-cli...\e[0m\n"
 		sudo apt install -y nvme-cli
 	else
-		printf "\e[93mVirtual machine, nothing installed.\e[0m\n"
+		printf "\e[93mVirtual machine, disk utillities not installed.\e[0m\n"
 	fi
 }
 
@@ -138,7 +138,7 @@ install_by_category() {
 	printf "\e[93mInstalling desktop environment...\e[0m\n"
 	install_packages "${DESKTOP[@]}"
 
-	printf "\e[93mInstalling desktop environment...\e[0m\n"
+	printf "\e[93mInstalling office applications...\e[0m\n"
 	install_packages "${OFFICE[@]}"
 
 	printf "\e[93mInstalling media packages...\e[0m\n"
@@ -167,19 +167,19 @@ enable_services() {
 main() {
 	local script version confirm
 	script="${0##*/}"
-	version="1.6.25163"
+	version="1.7.25188"
 	check_vm
 	clear
 	if [[ -f "packages.conf" ]]; then
 		source packages.conf
 	else
-		printf "\e[91mERROR:\e[0m packages.conf not found!\n"
+		printf "\e[91mERROR:\e[0m packages.conf not found!\n" >&2
 		exit 1
 	fi
 	print_logo
 	printf "This script will install and configure i3wm on your Debian system.\n"
 	read -rp "Do you want to continue (y/n) " confirm
-	[[ ! "$confirm" =~ ^[Yy]$ ]] && { printf "Installation aborted.\n"; exit; }
+	[[ ! "$confirm" =~ ^[Yy]$ ]] && { printf "Installation aborted.\n" >&2; exit; }
 	printf "\e[93mUpdating the system...\e[0m\n"
 	sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get clean
 	initial_setup
