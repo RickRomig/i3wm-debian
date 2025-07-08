@@ -7,7 +7,7 @@
 # Author       : Copyright © 2025, Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail.com | rick.romig@mymetronet.com
 # Created      : 10 Apr 2025
-# Last updated : 07 Jul 2025
+# Last updated : 08 Jul 2025
 # Comments     : Run this script first.
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -31,7 +31,7 @@ print_logo() {
 LOGO
 }
 
-check_vm() {
+check_for_vm() {
 	local localnet
 	localnet=$(ip route get 1.2.3.4 | cut -d' ' -f3 | sed 's/\..$//')
 	if [[ "$localnet" == "196.168.122" ]] || [[ "$localnet" == "10.0.2" ]]; then
@@ -167,8 +167,8 @@ enable_services() {
 main() {
 	local script version confirm
 	script="${0##*/}"
-	version="1.7.25188"
-	check_vm
+	version="1.7.25189"
+	check_for_vm
 	clear
 	if [[ -f "packages.conf" ]]; then
 		source packages.conf
