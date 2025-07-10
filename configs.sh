@@ -7,7 +7,7 @@
 # Author       : Copyright © 2025 Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail | rick.romig@mymetronet.net
 # Created      : 27 Apr 2025
-# Last updated : 07 Jul 2025
+# Last updated : 09 Jul 2025
 # Comments     : Assumes scripts and directories under ~/bin have already been copied.
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -54,6 +54,7 @@ link_configs() {
 		[[ -f "$config_dir/$file" ]] && rm "$config_dir/$file"
 		ln -sv "$cloned_dir/$file" "$config_dir/$file"
 	done
+  micro -plugin install bookmark
 }
 
 # Copy configuration directories to ~/.config
@@ -99,7 +100,7 @@ add_sudo_tweaks() {
 
 main() {
 	local script="${0##*/}"
-	local version="1.6.25188"
+	local version="1.7.25190"
 	copy_dotfiles
 	link_configs
 	copy_configs
