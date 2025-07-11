@@ -7,10 +7,21 @@
 # Author       : Copyright © 2025 Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail | rick.romig@mymetronet.net
 # Created      : 27 Apr 2025
-# Last updated : 10 Jul 2025
+# Last updated : 11 Jul 2025
 # Comments     : Assumes scripts and directories under ~/bin have already been copied.
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
+# License URL  : https://github.com/RickRomig/i3wm-debian/blob/main/README.md
+##########################################################################
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
 ##########################################################################
 
 set -eu
@@ -110,7 +121,7 @@ add_sudo_tweaks() {
 
 main() {
 	local script="${0##*/}"
-	local version="1.8.25191"
+	local version="1.9.25192"
 	copy_dotfiles
 	link_configs
 	copy_configs
