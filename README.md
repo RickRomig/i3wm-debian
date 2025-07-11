@@ -1,4 +1,9 @@
 # i3 on Debian Stable
+## Description
+This repository contains scripts and support files to install the i3 Window Manager on a minimal installation of Debian Stable.
+## License
+Copyright © 2025, Richard B. Romig
+Files and scripts in this reposoitorry are licensed under the GNU General Public Licencse, version 2 which can be found in the [repository](https://github.com/RickRomig/i3wm-debian/blob/main/README.md)
 ## Files
 1. **Debian-Minimal-Install.md** - Instructions for a minimal installation of Debian.
 2. **run.sh** - Installs i3-wm and necessary software.
@@ -47,6 +52,10 @@ display-setup-script=xrandr -s 1920x1080
 #pam-service=lightdm
 #pam-autologin-service=lightdm-autologin
 ```
+## Terms and conditions
+These programs are free software; you can redistribute them and/or modify them under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
+
+These programs are distributed in the hope that they will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
 #### Rick Romig "*The Luddite Geek*"
 #### 03 Jun 2025
