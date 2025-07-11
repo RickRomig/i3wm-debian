@@ -7,10 +7,21 @@
 # Author       : Copyright © 2025, Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail.com | rick.romig@mymetronet.com
 # Created      : 10 Apr 2025
-# Last updated : 03 Jun 2025
+# Last updated : 11 Jul 2025
 # Comments     : Run this script after run.sh.
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
+# License URL  : https://github.com/RickRomig/i3wm-debian/blob/main/README.md
+###############################################################################
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
 ###############################################################################
 
 # shellcheck disable=SC2317 # Don't warn about unreachable commands in this function
@@ -43,7 +54,7 @@ install_nerd_fonts() {
 main() {
   local script version
 	script="${0##*/}"
-  version="1.1.25154"
+  version="1.2.25192"
   tmp_dir=$(mktemp -d) || { printf "\e[91mERROR:\e[0m: Failed to create temporary directory." >&2; exit 1; }
   trap cleanup EXIT
   install_nerd_fonts
