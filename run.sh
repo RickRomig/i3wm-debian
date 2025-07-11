@@ -11,7 +11,7 @@
 # Comments     : Run this script first.
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
-# License URL  : https://github.com/RickRomig/i3wm-debian/blob/main/README.md
+# License URL  : https://github.com/RickRomig/i3wm-debian/blob/main/LICENSE
 ###############################################################################
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
