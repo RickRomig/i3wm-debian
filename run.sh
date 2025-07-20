@@ -52,11 +52,18 @@ check_for_vm() {
 	fi
 }
 
+debian_distro() {
+	local codename
+	codename=$(/usr/bin/lsb_release --codename --short | awk 'NR = 1 {print $0}')
+	printf "%s" "$codename"
+}
+
 http_to_https() {
+	local -r distro="$1"
 	local -r deb_src_path="/etc/apt/sources.list"
-	local -r backport_path="/etc/apt/sources.list.d/trixie-backports.list"
-	sudo sed -i 's/http:/https:/' "$deb_src_path"
-	[[ -f "$backport_path" ]] && sudo sed -i 's/http:/https:/' "$backport_path"
+	local -r backports_path="/etc/apt/sources.list.d/${distro}-backports.list"
+	sudo sed -i.bak 's/http:/https:/' "$deb_src_path"
+	[[ -f "$backports_path" ]] && sudo sed -i.bak 's/http:/https:/' "$backports_path"
 }
 
 install_zram() {
@@ -184,9 +191,11 @@ enable_services() {
 }
 
 main() {
-	local script version confirm
+	local script version confirm distro
 	script="${0##*/}"
 	version="1.8.25201"
+	distro="$(debian_distro)"
+	[[ "$distro" != "bookworm" && "$distro" != "trixie" ]] && { printf "Distribution is not supported by this script.\n"; exit 1; }
 	check_for_vm
 	clear
 	if [[ -f "packages.conf" ]]; then
@@ -200,7 +209,7 @@ main() {
 	read -rp "Do you want to continue (y/n) " confirm
 	[[ ! "$confirm" =~ ^[Yy]$ ]] && { printf "Installation aborted.\n" >&2; exit; }
 	printf "\e[93mUpdating the system...\e[0m\n"
-	http_to_https
+	http_to_https "$distro"
 	sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get clean
 	initial_setup
 	install_by_category
