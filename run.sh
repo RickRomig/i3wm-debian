@@ -7,7 +7,7 @@
 # Author       : Copyright © 2025, Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail.com | rick.romig@mymetronet.com
 # Created      : 10 Apr 2025
-# Last updated : 11 Jul 2025
+# Last updated : 20 Jul 2025
 # Comments     : Run this script first.
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -50,6 +50,13 @@ check_for_vm() {
 		printf "\e[93mVirtual Machine - Installing guest additions...\e[0m\n"
 		sudo apt-get install -y spice-vdagent spice-webdavd
 	fi
+}
+
+http_to_https() {
+	local -r deb_src_path="/etc/apt/sources.list"
+	local -r backport_path="/etc/apt/sources.list.d/trixie-backports.list"
+	sudo sed -i 's/http:/https:/' "$deb_src_path"
+	[[ -f "$backport_path" ]] && sudo sed -i 's/http:/https:/' "$backport_path"
 }
 
 install_zram() {
@@ -179,7 +186,7 @@ enable_services() {
 main() {
 	local script version confirm
 	script="${0##*/}"
-	version="1.8.25192"
+	version="1.8.25201"
 	check_for_vm
 	clear
 	if [[ -f "packages.conf" ]]; then
@@ -193,6 +200,7 @@ main() {
 	read -rp "Do you want to continue (y/n) " confirm
 	[[ ! "$confirm" =~ ^[Yy]$ ]] && { printf "Installation aborted.\n" >&2; exit; }
 	printf "\e[93mUpdating the system...\e[0m\n"
+	http_to_https
 	sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get clean
 	initial_setup
 	install_by_category
