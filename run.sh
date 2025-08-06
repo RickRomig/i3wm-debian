@@ -7,7 +7,7 @@
 # Author       : Copyright © 2025, Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail.com | rick.romig@mymetronet.com
 # Created      : 10 Apr 2025
-# Last updated : 05 Aug 2025
+# Last updated : 06 Aug 2025
 # Comments     : Run this script first.
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -62,7 +62,7 @@ http_to_https() {
 	local -r distro="$1"
 	local -r deb_src_path="/etc/apt/sources.list"
 	local -r backports_path="/etc/apt/sources.list.d/${distro}-backports.list"
-	sudo sed -i.bak 's/http:/https:/' "$deb_src_path"
+	sudo sed -i.bak 's/http:/https:/;/ftp/s/https:/http:/' "$deb_src_path"
 	[[ -f "$backports_path" ]] && sudo sed -i.bak 's/http:/https:/' "$backports_path"
 }
 
@@ -191,11 +191,11 @@ enable_services() {
 }
 
 main() {
-	local script version confirm distro
-	script="${0##*/}"
-	version="1.9.25216"
+	local confirm distro
+	local -r script="${0##*/}"
+	local -r version="1.9.25217"
 	distro="$(debian_distro)"
-	[[ "$distro" != "bookworm" && "$distro" != "trixie" ]] && { printf "Distribution is not supported by this script.\n"; exit 1; }
+	[[ "$distro" != "bookworm" && "$distro" != "trixie" ]] && { printf "\e[91mUnsupported distribution.\e[0m\nInstalls i3wm on Debian 12 or 13.\n" >&2; exit 1; }
 	check_for_vm
 	clear
 	if [[ -f "packages.conf" ]]; then
@@ -210,12 +210,12 @@ main() {
 	[[ ! "$confirm" =~ ^[Yy]$ ]] && { printf "Installation aborted.\n" >&2; exit; }
 	printf "\e[93mUpdating the system...\e[0m\n"
 	http_to_https "$distro"
-	sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get clean
+	sudo apt-get update && sudo apt-get dist-upgrade -y && sudo apt-get clean
 	initial_setup
 	install_by_category
 	setup_lightdm
 	enable_services
-	copy_scripts
+	link_scripts
 	printf "Run \e[93mnerdfonts.sh\e[0m and \e[93mconfigs.sh\e[0m to install Nerd Fonts and configuration files.\n"
 	echo "$script $version"
 	exit
