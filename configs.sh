@@ -7,12 +7,12 @@
 # Author       : Copyright © 2025 Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail | rick.romig@mymetronet.net
 # Created      : 27 Apr 2025
-# Last updated : 11 Jul 2025
+# Last updated : 05 Aug 2025
 # Comments     : Assumes scripts and directories under ~/bin have already been copied.
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
 # License URL  : https://github.com/RickRomig/i3wm-debian/blob/main/LICENSE
-##########################################################################
+###########################################################################
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 of the License, or
@@ -49,8 +49,11 @@ copy_dotfiles() {
 	)
 	printf "\e[93mCopying dotfiles ...\e[0m\n"
 	for dot_file in "${dot_files[@]}"; do
-		printf "\e[93mCopying %s ...\e[0m\n" "$dot_file"
-		cp -v "$cloned_dir/$dot_file"  "$HOME/$dot_file" | awk -F"/" '{print "==> " $NF}' | sed "s/'$//"
+		# printf "\e[93mCopying %s ...\e[0m\n" "$dot_file"
+		# cp -v "$cloned_dir/$dot_file" "$HOME/$dot_file" | awk -F"/" '{print "==> " $NF}' | sed "s/'$//"
+		printf "\e[93mLinking %s ...\e[0m\n" "$dot_file"
+		[[ -f "$HOME/$dot_file" ]] && rm "$HOME/$dot_file"
+		ln -sv "$cloned_dir/$dot_file" "$HOME/$dot_file"
 	done
 }
 
@@ -121,7 +124,7 @@ add_sudo_tweaks() {
 
 main() {
 	local script="${0##*/}"
-	local version="1.9.25192"
+	local version="1.10.25216"
 	copy_dotfiles
 	link_configs
 	copy_configs
