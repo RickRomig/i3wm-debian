@@ -7,7 +7,7 @@
 # Author       : Copyright © 2025, Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail.com | rick.romig@mymetronet.com
 # Created      : 10 Apr 2025
-# Last updated : 20 Jul 2025
+# Last updated : 05 Aug 2025
 # Comments     : Run this script first.
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -130,7 +130,7 @@ initial_setup() {
 	lsusb | grep -i blue && install_bluetooth
 	printf "\e[93mSetting up directories...\e[0m\n"
 	xdg-user-dirs-update
-	mkdir -pv ~/bin ~/.cache ~/.icons ~/Screenshots
+	mkdir -pv ~/.cache ~/.icons ~/Screenshots
 	mkdir -pv ~/.config/{backgrounds,dunst,flameshot,i3,keepassxc,kitty,micro,nano,picom,polybar,rofi,systemd/user}
 	mkdir -pv ~/.local/{bin,state,share/{doc,fonts,logs,icons}}
 	mkdir -pv ~/.ssh && chmod 700 ~/.ssh
@@ -193,7 +193,7 @@ enable_services() {
 main() {
 	local script version confirm distro
 	script="${0##*/}"
-	version="1.8.25201"
+	version="1.9.25216"
 	distro="$(debian_distro)"
 	[[ "$distro" != "bookworm" && "$distro" != "trixie" ]] && { printf "Distribution is not supported by this script.\n"; exit 1; }
 	check_for_vm
