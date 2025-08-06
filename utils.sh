@@ -7,8 +7,8 @@
 # Author       : Copyright © 2025, Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail.com | rick.romig@mymetronet.com
 # Created      : 10 Apr 2025
-# Last updated : 11 Jul 2025
-# Version      : 1.3.25192
+# Last updated : 05 Aug 2025
+# Version      : 1.4.25216
 # Comments     : Sourced in run.sh
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -67,6 +67,9 @@ clone_repos() {
 
 # Copy scripts to ~/bin
 copy_scripts() {
-	printf "\e[93mCopying scripts to ~/bin ...\e[0m\n"
-	cp -rpv "$HOME/Downloads/scripts/" "$HOME/bin/"
+	# printf "\e[93mCopying scripts to ~/bin ...\e[0m\n"
+	# cp -rpv "$HOME/Downloads/scripts/" "$HOME/bin/"
+	printf "\e[93mLinking scripts to ~/bin...\e[0m\n"
+	# [[ -d "$HOME/bin" ]] && rm -rf "${HOME:?}/bin"
+	ln -vs "$HOME/Downloads/scripts/" "$HOME/bin"
 }
