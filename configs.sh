@@ -131,6 +131,7 @@ main() {
 	copy_misc_files
 	configure_nano
 	add_sudo_tweaks
+	echo 'vm.swappiness=10' | sudo tee -a /etc/sysctl.conf
 	printf "\e[93mi3 Window Manager installation complete!\n Reboot your system.\e[0m\n"
 	printf "Remember to edit your Polybar configuration!\n"
 	echo "$script $version"
