@@ -7,8 +7,8 @@
 # Author       : Copyright © 2025 Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail | rick.romig@mymetronet.net
 # Created      : 27 Apr 2025
-# Last updated : 05 Aug 2025
-# Comments     : Assumes scripts and directories under ~/bin have already been copied.
+# Last updated : 09 Aug 2025
+# Comments     :
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
 # License URL  : https://github.com/RickRomig/i3wm-debian/blob/main/LICENSE
@@ -30,11 +30,12 @@ set -eu
 
 readonly cloned_dir="$HOME/Downloads/configs"
 readonly config_dir="$HOME/.config"
+readonly old_configs="$HOME/old-configs"
 
 ## Functions ##
 
-# Copy dotfiles to the home directory
-copy_dotfiles() {
+# Create symbolic links to dotfiles in the home directory
+link_dotfiles() {
 	local dot_file dot_files
 	dot_files=(
 		.bash_aliases
@@ -47,17 +48,17 @@ copy_dotfiles() {
 		.profile
 		.wgetrc
 	)
-	printf "\e[93mCopying dotfiles ...\e[0m\n"
+	printf "\e[93m93mLinking dotfiles ...\e[0m\n"
 	for dot_file in "${dot_files[@]}"; do
-		# printf "\e[93mCopying %s ...\e[0m\n" "$dot_file"
+		# printf "\e[93mLinking %s ...\e[0m\n" "$dot_file"
 		# cp -v "$cloned_dir/$dot_file" "$HOME/$dot_file" | awk -F"/" '{print "==> " $NF}' | sed "s/'$//"
 		printf "\e[93mLinking %s ...\e[0m\n" "$dot_file"
-		[[ -f "$HOME/$dot_file" ]] && rm "$HOME/$dot_file"
+		[[ -f "$HOME/$dot_file" ]] && mv -v "$HOME/$dot_file" "$old_configs/"
 		ln -sv "$cloned_dir/$dot_file" "$HOME/$dot_file"
 	done
 }
 
-# Link configuration files to directories in ~/.config
+# Link specific configuration files to directories in ~/.config
 link_configs() {
 	local file files
 	files=(
@@ -74,9 +75,16 @@ link_configs() {
 		"redshift.conf"
 	)
 	for file in "${files[@]}"; do
-		printf "\e[93mLinking %s to %s ...\e[0m\n" "$cloned_dir/$file" "$config_dir"
-		[[ -f "$config_dir/$file" ]] && rm "$config_dir/$file"
-		ln -sv "$cloned_dir/$file" "$config_dir/$file"
+		if [[ -f "$config_dir/$file" ]]; then
+			printf "\e[93mLinking %s to %s ...\e[0m\n" "$cloned_dir/$file" "$config_dir"
+			if [[ "$file" == "redshift.conf" ]]; then
+				mv -v "$config_dir/$file" "$old_configs/"
+			else
+				[[ -d "$old_configs/${file%/*}" ]] || mkdir -p "$old_configs/${file%/*}"
+				mv -v "$config_dir/$file" "$old_configs/${file%/*}/${file##*/}"
+			fi
+			ln -sv "$cloned_dir/$file" "$config_dir/$file"
+		fi
 	done
   micro -plugin install bookmark
 }
@@ -113,25 +121,27 @@ configure_nano() {
 	sed -i -f nano.sed "$config_dir/nano/nanorc"
 }
 
-# Add tweaks to /etc/sudoers.d directory
-add_sudo_tweaks() {
-	printf "\e[93mApplying sudo tweaks...\e[0m\n"
+# Add tweaks to /etc/sudoers.d directory and set swappiness
+set_system_tweaks() {
+	printf "\e[93mApplying password feeback...\e[0m\n"
 	sudo cp -v "$cloned_dir/sudoers/0pwfeedback" /etc/sudoers.d/ | awk -F"/" '{print "==> " $NF}' | sed "s/'$//"
 	sudo chmod 440 /etc/sudoers.d/0pwfeedback
+	printf "\e[93mApplying sudo timeout...\e[0m\n"
 	sudo cp -v "$cloned_dir/sudoers/10timeout" /etc/sudoers.d/ | awk -F"/" '{print "==> " $NF}' | sed "s/'$//"
 	sudo chmod 440 /etc/sudoers.d/10timeout
+	printf "\e[93mApplying swappiness...\e[0m\n"
+	echo 'vm.swappiness=10' | sudo tee -a /etc/sysctl.conf
 }
 
 main() {
 	local script="${0##*/}"
-	local version="1.10.25216"
-	copy_dotfiles
+	local version="1.11.25221"
+	link_dotfiles
 	link_configs
 	copy_configs
 	copy_misc_files
 	configure_nano
-	add_sudo_tweaks
-	echo 'vm.swappiness=10' | sudo tee -a /etc/sysctl.conf
+	set_system_tweaks
 	printf "\e[93mi3 Window Manager installation complete!\n Reboot your system.\e[0m\n"
 	printf "Remember to edit your Polybar configuration!\n"
 	echo "$script $version"
