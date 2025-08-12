@@ -7,7 +7,7 @@
 # Author       : Copyright © 2025, Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail.com | rick.romig@mymetronet.com
 # Created      : 10 Apr 2025
-# Last updated : 06 Aug 2025
+# Last updated : 12 Aug 2025
 # Comments     : Run this script first.
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -69,7 +69,7 @@ http_to_https() {
 install_zram() {
 	printf "\e[93mInstalling Z-Ram...\e[0m\n"
 	sudo apt install -y zram-tools
-	sudo sed -i.bak '/ALGO/s/^#//;/PERCENT/s/^#//;s/50$/25/' /etc/default/zramswap
+	sudo sed -i.bak '/ALGO/s/^#//;/PERCENT/s/^#//;/PERCENT/s/50$/25/' /etc/default/zramswap
   sudo systemctl restart zramswap.service
 	printf "Zram-tools installed.\n"
 }
@@ -150,6 +150,9 @@ install_by_category() {
 
 	printf "\e[93mInstalling X packages...\e[0m\n"
 	install_packages "${X_PACKAGES[@]}"
+
+	printf "\e[93mInstalling Audio packages...\e[0m\n"
+	install_packages "${AUDIO[@]}"
 
 	printf "\e[93mInstalling printer tools...\e[0m\n"
 	install_packages "${PRINTER_TOOLS[@]}"
