@@ -7,7 +7,7 @@
 # Author       : Copyright © 2025 Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail | rick.romig@mymetronet.net
 # Created      : 27 Apr 2025
-# Last updated : 09 Aug 2025
+# Last updated : 13 Aug 2025
 # Comments     :
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -41,12 +41,10 @@ link_dotfiles() {
 		.bash_aliases
 		.bashrc
 		.bash_logout
-		.curlrc
 		.face
 		.imwheelrc
 		.inputrc
 		.profile
-		.wgetrc
 	)
 	printf "\e[93m93mLinking dotfiles ...\e[0m\n"
 	for dot_file in "${dot_files[@]}"; do
@@ -135,7 +133,7 @@ set_system_tweaks() {
 
 main() {
 	local script="${0##*/}"
-	local version="1.11.25221"
+	local version="1.12.25225"
 	link_dotfiles
 	link_configs
 	copy_configs
