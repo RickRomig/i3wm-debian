@@ -27,7 +27,7 @@
 	- i3/autostart.sh runs `piccom -b`
 
 ### Misc notes
-Check for existing i3 configuration (not implemented)
+- Check for existing i3 configuration (not implemented)
 ```bash
 check_i3(){
 	local i3_cfg_d response backup_dir
@@ -43,7 +43,20 @@ check_i3(){
 	fi
 }
 ```
-Replace current .bashrc (not implemented)
+- Modernize sources nag in Debian 13 Trixie
+	- Create an alias in `.bashrc` or `.bash_aliases`
+```bash
+alias apt='apt -o APT::Get::Update::SourceListWarnings=false'
+```
+	- Create `/etc/apt/apt.conf.d/10quellsourceformatwarnings`
+```bash
+# Keep apt shut about preferring the "deb822" sources file format
+APT::Get::Update::SourceListWarnings "false";
+```
+- Trixie backports Signed-By line: `/usr/share/keyrings/debian-archive-keyring.gpg`
+
+
+### Replace current .bashrc (not implemented)
 ```bash
 replace_bashrc() {
 	local response
