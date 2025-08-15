@@ -7,7 +7,7 @@
 # Author       : Copyright © 2025 Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail | rick.romig@mymetronet.net
 # Created      : 27 Apr 2025
-# Last updated : 13 Aug 2025
+# Last updated : 14 Aug 2025
 # Comments     :
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -107,7 +107,6 @@ copy_configs(){
 copy_misc_files() {
 	printf "\e[93mCopying miscellaneous files...\e[0m\n"
 	cp -v "$cloned_dir/icons/*" "$HOME/.icons/" | awk -F"/" '{print "==> " $NF}' | sed "s/'$//"
-	cp -v "$HOME/i3wm-debian/dmconf.sh" "$HOME/.local/bin/" | awk -F"/" '{print "==> " $NF}' | sed "s/'$//"
 	cp -v "$cloned_dir/local/leave.txt" "$HOME/.local/share/doc/" | awk -F"/" '{print "==> " $NF}' | sed "s/'$//"
 	sudo cp -v "$cloned_dir"/sleep.conf /etc/systemd/ | awk -F"/" '{print "==> " $NF}' | sed "s/'$//"
 }
@@ -133,7 +132,7 @@ set_system_tweaks() {
 
 main() {
 	local script="${0##*/}"
-	local version="1.12.25225"
+	local version="1.13.25226"
 	link_dotfiles
 	link_configs
 	copy_configs
