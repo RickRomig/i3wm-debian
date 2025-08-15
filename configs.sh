@@ -7,7 +7,7 @@
 # Author       : Copyright © 2025 Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail | rick.romig@mymetronet.net
 # Created      : 27 Apr 2025
-# Last updated : 14 Aug 2025
+# Last updated : 15 Aug 2025
 # Comments     :
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -107,8 +107,7 @@ copy_configs(){
 copy_misc_files() {
 	printf "\e[93mCopying miscellaneous files...\e[0m\n"
 	cp -v "$cloned_dir/icons/*" "$HOME/.icons/" | awk -F"/" '{print "==> " $NF}' | sed "s/'$//"
-	cp -v "$cloned_dir/local/leave.txt" "$HOME/.local/share/doc/" | awk -F"/" '{print "==> " $NF}' | sed "s/'$//"
-	sudo cp -v "$cloned_dir"/sleep.conf /etc/systemd/ | awk -F"/" '{print "==> " $NF}' | sed "s/'$//"
+	ln -sv "$cloned_dir/local/leave.txt" "$HOME/.local/share/doc/leave.txt"
 }
 
 # Configure the nano text editor
@@ -128,11 +127,13 @@ set_system_tweaks() {
 	sudo chmod 440 /etc/sudoers.d/10timeout
 	printf "\e[93mApplying swappiness...\e[0m\n"
 	echo 'vm.swappiness=10' | sudo tee -a /etc/sysctl.conf
+	printf "Applying settings for sleep/suspend...\n"
+	sudo cp -v "$cloned_dir"/sleep.conf /etc/systemd/ | awk -F"/" '{print "==> " $NF}' | sed "s/'$//"
 }
 
 main() {
 	local script="${0##*/}"
-	local version="1.13.25226"
+	local version="1.14.25227"
 	link_dotfiles
 	link_configs
 	copy_configs
