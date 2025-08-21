@@ -7,7 +7,7 @@
 # Author       : Copyright © 2025 Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail | rick.romig@mymetronet.net
 # Created      : 27 Apr 2025
-# Last updated : 15 Aug 2025
+# Last updated : 20 Aug 2025
 # Comments     :
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -23,8 +23,6 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 # GNU General Public License for more details.
 ##########################################################################
-
-set -eu
 
 ## Global Variables ##
 
@@ -133,7 +131,8 @@ set_system_tweaks() {
 
 main() {
 	local script="${0##*/}"
-	local version="1.14.25227"
+	local version="1.14.25232"
+	[[ -d "$old_configs" ]] || mkdir -p "$old_configs"
 	link_dotfiles
 	link_configs
 	copy_configs
