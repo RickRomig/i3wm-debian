@@ -26,8 +26,6 @@
 
 # shellcheck disable=SC1090
 
-set -e
-
 source utils.sh
 
 ## Functions ##
@@ -56,14 +54,6 @@ debian_distro() {
 	local codename
 	codename=$(/usr/bin/lsb_release --codename --short | awk 'NR = 1 {print $0}')
 	printf "%s" "$codename"
-}
-
-http_to_https() {
-	local -r distro="$1"
-	local -r deb_src_path="/etc/apt/sources.list"
-	local -r backports_path="/etc/apt/sources.list.d/${distro}-backports.list"
-	sudo sed -i.bak 's/http:/https:/;/ftp/s/https:/http:/' "$deb_src_path"
-	[[ -f "$backports_path" ]] && sudo sed -i.bak 's/http:/https:/' "$backports_path"
 }
 
 install_zram() {
@@ -138,7 +128,6 @@ initial_setup() {
 }
 
 install_by_category() {
-
 	printf "\e[93mInstalling system utilities...\e[0m\n"
 	install_packages "${SYSTEM_UTILS[@]}"
 	printf "\e[93mInstalling flathub...\e[0m\n"
@@ -193,27 +182,34 @@ enable_services() {
 	done
 }
 
-main() {
-	local confirm distro
-	local -r script="${0##*/}"
-	local -r version="1.9.25217"
+get_started() {
+	local distro
 	distro="$(debian_distro)"
 	[[ "$distro" != "bookworm" && "$distro" != "trixie" ]] && { printf "\e[91mUnsupported distribution.\e[0m\nInstalls i3wm on Debian 12 or 13.\n" >&2; exit 1; }
+	printf "Checking if a Vertual Machine...\n"
 	check_for_vm
-	clear
 	if [[ -f "packages.conf" ]]; then
+		printf "Sourcing packages.conf...\n"
 		source packages.conf
 	else
 		printf "\e[91mERROR:\e[0m packages.conf not found!\n" >&2
 		exit 1
 	fi
+	printf "\e[93mUpdating the system...\e[0m\n"
+	sudo find /etc/apt -name "*.list" -exec sed -i 's/http:/https:/;/ftp/s/https:/http:/' {} \;
+	sudo apt-get update && sudo apt-get dist-upgrade -y && sudo apt-get clean
+}
+
+main() {
+	local -r script="${0##*/}"
+	local -r version="1.9.25232"
+	local confirm
+	clear
 	print_logo
 	printf "This script will install and configure i3wm on your Debian system.\n"
 	read -rp "Do you want to continue (y/n) " confirm
 	[[ ! "$confirm" =~ ^[Yy]$ ]] && { printf "Installation aborted.\n" >&2; exit; }
-	printf "\e[93mUpdating the system...\e[0m\n"
-	http_to_https "$distro"
-	sudo apt-get update && sudo apt-get dist-upgrade -y && sudo apt-get clean
+	get_started
 	initial_setup
 	install_by_category
 	setup_lightdm
