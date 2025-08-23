@@ -26,7 +26,13 @@
 
 # shellcheck disable=SC1090
 
-source utils.sh
+if [[ -x utils.sh ]]; then
+	printf "Sourcing packages.conf...\n"
+	source utils.sh
+else
+	printf "\e[91mERROR:\e[0m utils.sh not found!\n" >&2
+	exit 1
+fi
 
 ## Functions ##
 
@@ -127,6 +133,10 @@ initial_setup() {
 }
 
 install_by_category() {
+
+	printf "\e[93mInstalling Core packages...\e[0m\n"
+	install_packages "${CORE_PACKAGES[@]}"
+
 	printf "\e[93mInstalling system utilities...\e[0m\n"
 	install_packages "${SYSTEM_UTILS[@]}"
 	printf "\e[93mInstalling flathub...\e[0m\n"
@@ -136,8 +146,8 @@ install_by_category() {
 	install_packages "${NETWORK_UTILS[@]}"
 	sudo sed -i.bak '/managed/s/false/true/' /etc/NetworkManager/NetworkManager.conf
 
-	printf "\e[93mInstalling X packages...\e[0m\n"
-	install_packages "${X_PACKAGES[@]}"
+	printf "\e[93mInstalling File manager packages...\e[0m\n"
+	install_packages "${FILE_MANAGER[@]}"
 
 	printf "\e[93mInstalling Audio packages...\e[0m\n"
 	install_packages "${AUDIO[@]}"
@@ -187,7 +197,7 @@ get_started() {
 	[[ "$distro" != "bookworm" && "$distro" != "trixie" ]] && { printf "\e[91mUnsupported distribution.\e[0m\nInstalls i3wm on Debian 12 or 13.\n" >&2; exit 1; }
 	printf "Checking if a Vertual Machine...\n"
 	check_for_vm
-	if [[ -f "packages.conf" ]]; then
+	if [[ -f packages.conf ]]; then
 		printf "Sourcing packages.conf...\n"
 		source packages.conf
 	else
