@@ -7,8 +7,8 @@
 # Author       : Copyright © 2025, Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail.com | rick.romig@mymetronet.com
 # Created      : 10 Apr 2025
-# Last updated : 06 Aug 2025
-# Version      : 1.4.25217
+# Last updated : 23 Aug 2025
+# Version      : 1.5.25235
 # Comments     : Sourced in run.sh
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -44,7 +44,7 @@ install_packages() {
   if [ ${#to_install[@]} -ne 0 ]; then
     for pkg in "${to_install[@]}"; do
     	printf "\e[93mInstalling %s...\e[0m\n" "$pkg"
-    	sudo apt-get install -yy "$pkg"
+    	sudo apt-get install -yy "$pkg" 2>/dev/null || printf "\e[32m%s not installed, skipping...\e[0m\n" "$pkg"
     done
   fi
 }
