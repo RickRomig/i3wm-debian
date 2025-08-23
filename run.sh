@@ -7,7 +7,7 @@
 # Author       : Copyright © 2025, Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail.com | rick.romig@mymetronet.com
 # Created      : 10 Apr 2025
-# Last updated : 20 Aug 2025
+# Last updated : 23 Aug 2025
 # Comments     : Run this script first.
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -31,6 +31,7 @@ source utils.sh
 ## Functions ##
 
 print_logo() {
+	echo -ne "\033[0;33m"
 	cat << "LOGO"
   __  __            __       _   _      _
  |  \/  | ___  ___ / _| __ _| \ | | ___| |_
@@ -39,6 +40,7 @@ print_logo() {
  |_|  |_|\___/|___/_|  \__,_|_| \_|\___|\__|
  Debian i3WM Installation Tool by Rick Romig
 LOGO
+	echo -e "\033[0m"
 }
 
 check_for_vm() {
@@ -87,14 +89,11 @@ install_bluetooth() {
 }
 
 install_disk_utils() {
-	if [[ -b /dev/sda ]]; then
-		printf "\e[93mInstalling hdparm...\e[0m\n"
-		sudo apt install -y hdparm
-	elif [[ -c /dev/nvme0 ]]; then
-		printf "\e[93mInstalling nvme-cli...\e[0m\n"
-		sudo apt install -y nvme-cli
+	if [[ -b /dev/vda ]]; then
+		printf "\e[91mVirtual machine, disk utillities were not installed.\e[0m\n"
 	else
-		printf "\e[93mVirtual machine, disk utillities not installed.\e[0m\n"
+		[[ -b /dev/sda ]] && { rintf "\e[93mInstalling hdparm...\e[0m\n"; udo apt install -y hdparm; }
+		[[ -c /dev/nvme0 ]] && { printf "\e[93mInstalling nvme-cli...\e[0m\n"; sudo apt install -y nvme-cli; }
 	fi
 }
 
@@ -202,7 +201,7 @@ get_started() {
 
 main() {
 	local -r script="${0##*/}"
-	local -r version="1.9.25232"
+	local -r version="1.10.25235"
 	local confirm
 	clear
 	print_logo
