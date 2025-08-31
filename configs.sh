@@ -140,9 +140,9 @@ main() {
 	configure_nano
 	set_system_tweaks
 	printf "\e[93mi3 Window Manager installation complete!\n Reboot your system.\e[0m\n"
-	printf "Remember to edit your Polybar configuration!\n"
+	printf "Remember to update your Polybar configuration!\n"
 	echo "$script $version"
-  exit
+	exit
 }
 
 ## Execution ##
