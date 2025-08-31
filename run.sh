@@ -7,7 +7,7 @@
 # Author       : Copyright © 2025, Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail.com | rick.romig@mymetronet.com
 # Created      : 10 Apr 2025
-# Last updated : 23 Aug 2025
+# Last updated : 24 Aug 2025
 # Comments     : Run this script first.
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -37,19 +37,23 @@ fi
 ## Functions ##
 
 print_logo() {
-	echo -ne "\033[0;33m"
+	echo -ne "\033[0;92m"
 	cat << "LOGO"
   __  __            __       _   _      _
  |  \/  | ___  ___ / _| __ _| \ | | ___| |_
  | |\/| |/ _ \/ __| |_ / _` |  \| |/ _ \ __|
  | |  | | (_) \__ \  _| (_| | |\  |  __/ |_
  |_|  |_|\___/|___/_|  \__,_|_| \_|\___|\__|
- Debian i3WM Installation Tool by Rick Romig
+     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+     |i|3|w|m| |I|n|s|t|a|l|l|a|t|i|o|n|
+     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+     |T|h|e| |L|u|d|d|i|t|e| |G|e|e|k| |
+     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 LOGO
 	echo -e "\033[0m"
 }
 
-check_for_vm() {
+check_if_vm() {
 	local localnet
 	localnet=$(ip route get 1.2.3.4 | cut -d' ' -f3 | sed 's/\..$//')
 	if [[ "$localnet" == "196.168.122" ]] || [[ "$localnet" == "10.0.2" ]]; then
@@ -98,13 +102,13 @@ install_disk_utils() {
 	if [[ -b /dev/vda ]]; then
 		printf "\e[91mVirtual machine, disk utillities were not installed.\e[0m\n"
 	else
-		[[ -b /dev/sda ]] && { rintf "\e[93mInstalling hdparm...\e[0m\n"; udo apt install -y hdparm; }
+		[[ -b /dev/sda ]] && { rintf "\e[93mInstalling hdparm...\e[0m\n"; sudo apt install -y hdparm; }
 		[[ -c /dev/nvme0 ]] && { printf "\e[93mInstalling nvme-cli...\e[0m\n"; sudo apt install -y nvme-cli; }
 	fi
 }
 
-setup_lightdm() {
-	printf "\e[93mInstalling lightdm and slick-greeter ...\e[0m\n"
+configure_lightdm() {
+	printf "\e[93mConfiguring lightdm and slick-greeter ...\e[0m\n"
 	# Show users on lightdm greeter screen
 	sudo sed -i '/#greeter-hide-users=/s/^#//' /etc/lightdm/lightdm.conf
 	# Append slick-greeter to lightdm.conf
@@ -196,7 +200,7 @@ get_started() {
 	distro="$(debian_distro)"
 	[[ "$distro" != "bookworm" && "$distro" != "trixie" ]] && { printf "\e[91mUnsupported distribution.\e[0m\nInstalls i3wm on Debian 12 or 13.\n" >&2; exit 1; }
 	printf "Checking if a Vertual Machine...\n"
-	check_for_vm
+	check_if_vm
 	if [[ -f packages.conf ]]; then
 		printf "Sourcing packages.conf...\n"
 		source packages.conf
@@ -211,17 +215,17 @@ get_started() {
 
 main() {
 	local -r script="${0##*/}"
-	local -r version="1.10.25235"
+	local -r version="1.11.25236"
 	local confirm
 	clear
 	print_logo
-	printf "This script will install and configure i3wm on your Debian system.\n"
+	printf "This script will install i3wm, configuration files, and scripts on your Debian system.\n"
 	read -rp "Do you want to continue (y/n) " confirm
-	[[ ! "$confirm" =~ ^[Yy]$ ]] && { printf "Installation aborted.\n" >&2; exit; }
+	[[ ! "$confirm" =~ ^[Yy]$ ]] && { printf "Installation canceled.\n" >&2; exit; }
 	get_started
 	initial_setup
 	install_by_category
-	setup_lightdm
+	configure_lightdm
 	enable_services
 	link_scripts
 	printf "Run \e[93mnerdfonts.sh\e[0m and \e[93mconfigs.sh\e[0m to install Nerd Fonts and configuration files.\n"
