@@ -7,7 +7,7 @@
 # Author       : Copyright © 2025 Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail | rick.romig@mymetronet.net
 # Created      : 27 Apr 2025
-# Last updated : 20 Aug 2025
+# Last updated : 02 Sep 2025
 # Comments     :
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -127,11 +127,12 @@ set_system_tweaks() {
 	echo 'vm.swappiness=10' | sudo tee -a /etc/sysctl.conf
 	printf "Applying settings for sleep/suspend...\n"
 	sudo cp -v "$cloned_dir"/sleep.conf /etc/systemd/ | awk -F"/" '{print "==> " $NF}' | sed "s/'$//"
+	sudo cp -v "$cloned_dir/apt/nosnap.pref" /etc/apt/preferences.d/ | awk -F"/" '{print "==> " $NF}' | sed "s/'$//"
 }
 
 main() {
 	local script="${0##*/}"
-	local version="1.14.25232"
+	local version="1.15.25245"
 	[[ -d "$old_configs" ]] || mkdir -p "$old_configs"
 	link_dotfiles
 	link_configs
