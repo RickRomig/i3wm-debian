@@ -26,24 +26,6 @@
 
 # shellcheck disable=SC1090
 
-# Check for files to be sourced
-
-# if [[ -x utils.sh ]]; then
-# 	printf "Sourcing utils.sh...\n"
-# 	source utils.sh
-# else
-# 	printf "\e[91mERROR:\e[0m utils.sh not found!\n" >&2
-# 	exit 1
-# fi
-
-# if [[ -f packages.conf ]]; then
-# 	printf "Sourcing packages.conf...\n"
-# 	source packages.conf
-# else
-# 	printf "\e[91mERROR:\e[0m packages.conf not found!\n" >&2
-# 	exit 1
-# fi
-
 ## Functions ##
 
 print_logo() {
