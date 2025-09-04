@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 ###############################################################################
-# Script Name  : run.sh
+# Script Name  : install.sh
 # Description  : Installs i3-wm on a minimal installation of Debin along with applications, untilities, etc.
 # Dependencies : None
 # Arguments    : None
 # Author       : Copyright © 2025, Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail.com | rick.romig@mymetronet.com
 # Created      : 10 Apr 2025
-# Last updated : 24 Aug 2025
+# Last updated : 04 Sep 2025
 # Comments     : Run this script first.
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -26,13 +26,23 @@
 
 # shellcheck disable=SC1090
 
-if [[ -x utils.sh ]]; then
-	printf "Sourcing packages.conf...\n"
-	source utils.sh
-else
-	printf "\e[91mERROR:\e[0m utils.sh not found!\n" >&2
-	exit 1
-fi
+# Check for files to be sourced
+
+# if [[ -x utils.sh ]]; then
+# 	printf "Sourcing utils.sh...\n"
+# 	source utils.sh
+# else
+# 	printf "\e[91mERROR:\e[0m utils.sh not found!\n" >&2
+# 	exit 1
+# fi
+
+# if [[ -f packages.conf ]]; then
+# 	printf "Sourcing packages.conf...\n"
+# 	source packages.conf
+# else
+# 	printf "\e[91mERROR:\e[0m packages.conf not found!\n" >&2
+# 	exit 1
+# fi
 
 ## Functions ##
 
@@ -53,19 +63,31 @@ LOGO
 	echo -e "\033[0m"
 }
 
-check_if_vm() {
+source_files() {
+	local file files status
+	status=0
+	files=(utils.sh packages.conf)
+	for file in "${files[@]}"; do
+		if [[ -f "$file" ]]; then
+    	printf "%s [OK]\n" "$file"
+    	sleep 1
+    	printf '\e[A\e[K'
+			source "$file"
+		else
+			printf "\e[91m%s not found.\e[0m\n" "$file" >&2
+			status=1
+		fi
+		return "$status"
+	done
+}
+
+vm_spice_install() {
 	local localnet
 	localnet=$(ip route get 1.2.3.4 | cut -d' ' -f3 | sed 's/\..$//')
 	if [[ "$localnet" == "196.168.122" ]] || [[ "$localnet" == "10.0.2" ]]; then
 		printf "\e[93mVirtual Machine - Installing guest additions...\e[0m\n"
 		sudo apt-get install -y spice-vdagent spice-webdavd
 	fi
-}
-
-debian_distro() {
-	local codename
-	codename=$(/usr/bin/lsb_release --codename --short | awk 'NR = 1 {print $0}')
-	printf "%s" "$codename"
 }
 
 install_zram() {
@@ -195,19 +217,13 @@ enable_services() {
 	done
 }
 
-get_started() {
+pre_install() {
 	local distro
-	distro="$(debian_distro)"
-	[[ "$distro" != "bookworm" && "$distro" != "trixie" ]] && { printf "\e[91mUnsupported distribution.\e[0m\nInstalls i3wm on Debian 12 or 13.\n" >&2; exit 1; }
-	printf "Checking if a Vertual Machine...\n"
-	check_if_vm
-	if [[ -f packages.conf ]]; then
-		printf "Sourcing packages.conf...\n"
-		source packages.conf
-	else
-		printf "\e[91mERROR:\e[0m packages.conf not found!\n" >&2
-		exit 1
-	fi
+	distro="$(/usr/bin/lsb_release --codename --short | awk 'NR = 1 {print $0}')"
+	source_files || exit 1
+	[[ "$distro" == "bookworm" || "$distro" == "trixie" ]] || { printf "\e[91m%s is unsupported.\e[0m\nInstalls i3wm on Debian 12 or 13.\n" "${distro^}" >&2; exit 1; }
+	printf "Install spice-vdagent & spice-webdavd if a Virtual Machine...\n"
+	vm_spice_install
 	printf "\e[93mUpdating the system...\e[0m\n"
 	sudo find /etc/apt -name "*.list" -exec sed -i 's/http:/https:/;/ftp/s/https:/http:/' {} \;
 	sudo apt-get update && sudo apt-get dist-upgrade -y && sudo apt-get clean
@@ -215,14 +231,14 @@ get_started() {
 
 main() {
 	local -r script="${0##*/}"
-	local -r version="1.11.25236"
+	local -r version="2.0.25247"
 	local confirm
 	clear
 	print_logo
 	printf "This script will install i3wm, configuration files, and scripts on your Debian system.\n"
 	read -rp "Do you want to continue (y/n) " confirm
 	[[ ! "$confirm" =~ ^[Yy]$ ]] && { printf "Installation canceled.\n" >&2; exit; }
-	get_started
+	pre_install
 	initial_setup
 	install_by_category
 	configure_lightdm
