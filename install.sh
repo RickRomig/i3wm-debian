@@ -7,7 +7,7 @@
 # Author       : Copyright © 2025, Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail.com | rick.romig@mymetronet.com
 # Created      : 10 Apr 2025
-# Last updated : 04 Sep 2025
+# Last updated : 05 Sep 2025
 # Comments     : Run this script first.
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -46,15 +46,16 @@ LOGO
 }
 
 source_files() {
-	local file files status
+	local file files status script_dir
 	status=0
+	script_dir=$(dirname "$(readlink -f "${0}")")
 	files=(utils.sh packages.conf)
 	for file in "${files[@]}"; do
-		if [[ -f "$file" ]]; then
+		if [[ -f "$script_dir/$file" ]]; then
     	printf "%s [OK]\n" "$file"
     	sleep 1
     	printf '\e[A\e[K'
-			source "$file"
+			source "$script_dir/$file"
 		else
 			printf "\e[91m%s not found.\e[0m\n" "$file" >&2
 			status=1
@@ -213,7 +214,7 @@ pre_install() {
 
 main() {
 	local -r script="${0##*/}"
-	local -r version="2.0.25247"
+	local -r version="2.0.25248"
 	local confirm
 	clear
 	print_logo
