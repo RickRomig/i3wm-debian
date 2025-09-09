@@ -7,7 +7,7 @@
 # Author       : Copyright © 2025 Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail | rick.romig@mymetronet.net
 # Created      : 27 Apr 2025
-# Last updated : 02 Sep 2025
+# Last updated : 08 Sep 2025
 # Comments     :
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -89,7 +89,6 @@ link_configs() {
 copy_configs(){
 	local cfg_dir cfg_dirs
 	cfg_dirs=(
-		backgrounds
 		i3
 		keepassxc
 		polybar
@@ -99,6 +98,7 @@ copy_configs(){
 		printf "\e[93mCopying %s ...\e[0m\n" "$cfg_dir"
 		cp -rv "$cloned_dir/$cfg_dir" "$config_dir/"
 	done
+	ln -sv "$cloned_dir/backgrounds" "$config_dir/"
 }
 
 # Copy miscellaneous files
@@ -132,7 +132,7 @@ set_system_tweaks() {
 
 main() {
 	local script="${0##*/}"
-	local version="1.15.25245"
+	local version="1.16.25251"
 	[[ -d "$old_configs" ]] || mkdir -p "$old_configs"
 	link_dotfiles
 	link_configs
