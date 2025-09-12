@@ -7,7 +7,7 @@
 # Author       : Copyright © 2025, Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail.com | rick.romig@mymetronet.com
 # Created      : 10 Apr 2025
-# Last updated : 05 Sep 2025
+# Last updated : 11 Sep 2025
 # Comments     : Run this script first.
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -68,8 +68,9 @@ vm_spice_install() {
 	local localnet
 	localnet=$(ip route get 1.2.3.4 | cut -d' ' -f3 | sed 's/\..$//')
 	if [[ "$localnet" == "196.168.122" ]] || [[ "$localnet" == "10.0.2" ]]; then
-		printf "\e[93mVirtual Machine - Installing guest additions...\e[0m\n"
-		sudo apt-get install -y spice-vdagent spice-webdavd
+		printf "\e[93mVirtual Machine - Installing Spice Tools...\e[0m\n"
+  	apt-cache show spice-vdagent 2>/dev/null | grep -q spice-vdagent && sudo apt-get install -y spice-vdagent
+  	apt-cache show spice-webdavd 2>/dev/null | grep -q spice-webdavd && sudo apt-get install -y spice-webdavd
 	fi
 }
 
@@ -214,7 +215,7 @@ pre_install() {
 
 main() {
 	local -r script="${0##*/}"
-	local -r version="2.0.25248"
+	local -r version="2.1.25254"
 	local confirm
 	clear
 	print_logo
