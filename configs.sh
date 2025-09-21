@@ -7,7 +7,7 @@
 # Author       : Copyright © 2025 Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail | rick.romig@mymetronet.net
 # Created      : 27 Apr 2025
-# Last updated : 08 Sep 2025
+# Last updated : 21 Sep 2025
 # Comments     :
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -98,14 +98,14 @@ copy_configs(){
 		printf "\e[93mCopying %s ...\e[0m\n" "$cfg_dir"
 		cp -rv "$cloned_dir/$cfg_dir" "$config_dir/"
 	done
-	ln -sv "$cloned_dir/backgrounds" "$config_dir/"
+	ln -sv "$cloned_dir"/backgrounds "$config_dir/"
 }
 
 # Copy miscellaneous files
 copy_misc_files() {
 	printf "\e[93mCopying miscellaneous files...\e[0m\n"
 	cp -v "$cloned_dir/icons/*" "$HOME/.icons/" | awk -F"/" '{print "==> " $NF}' | sed "s/'$//"
-	ln -sv "$cloned_dir/local/leave.txt" "$HOME/.local/share/doc/leave.txt"
+	ln -sv "$cloned_dir"/local/leave.txt "$HOME"/.local/share/doc/leave.txt
 }
 
 # Configure the nano text editor
@@ -132,7 +132,7 @@ set_system_tweaks() {
 
 main() {
 	local script="${0##*/}"
-	local version="1.16.25251"
+	local version="1.17.25264"
 	[[ -d "$old_configs" ]] || mkdir -p "$old_configs"
 	link_dotfiles
 	link_configs
