@@ -7,7 +7,7 @@
 # Author       : Copyright © 2025 Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail | rick.romig@mymetronet.net
 # Created      : 27 Apr 2025
-# Last updated : 21 Sep 2025
+# Last updated : 28 Sep 2025
 # Comments     :
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -115,31 +115,42 @@ configure_nano() {
 	sed -i -f nano.sed "$config_dir/nano/nanorc"
 }
 
+# Set reserved space for root and home partitions
+set_reserved_space() {
+	local home_part root_part
+	root_part=$(df -P | awk '$NF == "/" {print $1}')
+	home_part=$(df -P | awk '$NF == "/home" {print $1}')
+	sudo tune2fs -m 2 "$root_part"
+	[[ "$home_part" ]] && sudo tune2fs -m 0 "$home_part"
+	printf "Drive reserve space set.\n"
+}
+
 # Add tweaks to /etc/sudoers.d directory and set swappiness
-set_system_tweaks() {
+apply_system_tweaks() {
 	printf "\e[93mApplying password feeback...\e[0m\n"
 	sudo cp -v "$cloned_dir/sudoers/0pwfeedback" /etc/sudoers.d/ | awk -F"/" '{print "==> " $NF}' | sed "s/'$//"
 	sudo chmod 440 /etc/sudoers.d/0pwfeedback
 	printf "\e[93mApplying sudo timeout...\e[0m\n"
 	sudo cp -v "$cloned_dir/sudoers/10timeout" /etc/sudoers.d/ | awk -F"/" '{print "==> " $NF}' | sed "s/'$//"
 	sudo chmod 440 /etc/sudoers.d/10timeout
-	printf "\e[93mApplying swappiness...\e[0m\n"
-	echo 'vm.swappiness=10' | sudo tee -a /etc/sysctl.conf
 	printf "Applying settings for sleep/suspend...\n"
 	sudo cp -v "$cloned_dir"/sleep.conf /etc/systemd/ | awk -F"/" '{print "==> " $NF}' | sed "s/'$//"
 	sudo cp -v "$cloned_dir/apt/nosnap.pref" /etc/apt/preferences.d/ | awk -F"/" '{print "==> " $NF}' | sed "s/'$//"
+	printf "\e[93mApplying swappiness...\e[0m\n"
+	echo 'vm.swappiness=10' | sudo tee -a /etc/sysctl.conf
+	set_reserved_space
 }
 
 main() {
 	local script="${0##*/}"
-	local version="1.17.25264"
+	local version="1.18.25271"
 	[[ -d "$old_configs" ]] || mkdir -p "$old_configs"
 	link_dotfiles
 	link_configs
 	copy_configs
 	copy_misc_files
 	configure_nano
-	set_system_tweaks
+	apply_system_tweaks
 	printf "\e[93mi3 Window Manager installation complete!\n Reboot your system.\e[0m\n"
 	printf "Remember to update your Polybar configuration!\n"
 	echo "$script $version"
