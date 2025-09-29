@@ -108,7 +108,7 @@ install_disk_utils() {
 	if [[ -b /dev/vda ]]; then
 		printf "\e[91mVirtual machine, disk utillities were not installed.\e[0m\n"
 	else
-		[[ -b /dev/sda ]] && { rintf "\e[93mInstalling hdparm...\e[0m\n"; sudo apt install -y hdparm; }
+		[[ -b /dev/sda ]] && { printf "\e[93mInstalling hdparm...\e[0m\n"; sudo apt install -y hdparm; }
 		[[ -c /dev/nvme0 ]] && { printf "\e[93mInstalling nvme-cli...\e[0m\n"; sudo apt install -y nvme-cli; }
 	fi
 }
@@ -215,7 +215,7 @@ pre_install() {
 
 main() {
 	local -r script="${0##*/}"
-	local -r version="2.1.25254"
+	local -r version="2.1.25272"
 	local confirm
 	clear
 	print_logo
