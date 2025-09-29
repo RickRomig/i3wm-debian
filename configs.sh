@@ -7,7 +7,7 @@
 # Author       : Copyright © 2025 Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail | rick.romig@mymetronet.net
 # Created      : 27 Apr 2025
-# Last updated : 28 Sep 2025
+# Last updated : 29 Sep 2025
 # Comments     :
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -96,23 +96,23 @@ copy_configs(){
 	)
 	for cfg_dir in "${cfg_dirs[@]}"; do
 		printf "\e[93mCopying %s ...\e[0m\n" "$cfg_dir"
-		cp -rv "$cloned_dir/$cfg_dir" "$config_dir/"
+		cp -rv "$cloned_dir/$cfg_dir" "$config_dir"/
 	done
-	ln -sv "$cloned_dir"/backgrounds "$config_dir/"
+	ln -sv "$cloned_dir"/backgrounds "$config_dir"/
 }
 
 # Copy miscellaneous files
 copy_misc_files() {
 	printf "\e[93mCopying miscellaneous files...\e[0m\n"
-	cp -v "$cloned_dir/icons/*" "$HOME/.icons/" | awk -F"/" '{print "==> " $NF}' | sed "s/'$//"
+	cp -rv "$cloned_dir"/icons/ "$HOME"/.icons/ | awk -F"/" '{print "==> " $NF}' | sed "s/'$//"
 	ln -sv "$cloned_dir"/local/leave.txt "$HOME"/.local/share/doc/leave.txt
 }
 
 # Configure the nano text editor
 configure_nano() {
 	printf "\e[93mConfiguring nano...\e[0m\n"
-	cp -v /etc/nanorc "$config_dir/nano/" | awk -F"/" '{print "==> " $NF}' | sed "s/'$//"
-	sed -i -f nano.sed "$config_dir/nano/nanorc"
+	cp -v /etc/nanorc "$config_dir"/nano/ | awk -F"/" '{print "==> " $NF}' | sed "s/'$//"
+	sed -i -f nano.sed "$config_dir"/nano/nanorc
 }
 
 # Set reserved space for root and home partitions
@@ -128,14 +128,14 @@ set_reserved_space() {
 # Add tweaks to /etc/sudoers.d directory and set swappiness
 apply_system_tweaks() {
 	printf "\e[93mApplying password feeback...\e[0m\n"
-	sudo cp -v "$cloned_dir/sudoers/0pwfeedback" /etc/sudoers.d/ | awk -F"/" '{print "==> " $NF}' | sed "s/'$//"
+	sudo cp -v "$cloned_dir"/sudoers/0pwfeedback /etc/sudoers.d/ | awk -F"/" '{print "==> " $NF}' | sed "s/'$//"
 	sudo chmod 440 /etc/sudoers.d/0pwfeedback
 	printf "\e[93mApplying sudo timeout...\e[0m\n"
-	sudo cp -v "$cloned_dir/sudoers/10timeout" /etc/sudoers.d/ | awk -F"/" '{print "==> " $NF}' | sed "s/'$//"
+	sudo cp -v "$cloned_dir"/sudoers/10timeout /etc/sudoers.d/ | awk -F"/" '{print "==> " $NF}' | sed "s/'$//"
 	sudo chmod 440 /etc/sudoers.d/10timeout
 	printf "Applying settings for sleep/suspend...\n"
 	sudo cp -v "$cloned_dir"/sleep.conf /etc/systemd/ | awk -F"/" '{print "==> " $NF}' | sed "s/'$//"
-	sudo cp -v "$cloned_dir/apt/nosnap.pref" /etc/apt/preferences.d/ | awk -F"/" '{print "==> " $NF}' | sed "s/'$//"
+	sudo cp -v "$cloned_dir"/apt/nosnap.pref /etc/apt/preferences.d/ | awk -F"/" '{print "==> " $NF}' | sed "s/'$//"
 	printf "\e[93mApplying swappiness...\e[0m\n"
 	echo 'vm.swappiness=10' | sudo tee -a /etc/sysctl.conf
 	set_reserved_space
@@ -143,7 +143,7 @@ apply_system_tweaks() {
 
 main() {
 	local script="${0##*/}"
-	local version="1.18.25271"
+	local version="1.18.25272"
 	[[ -d "$old_configs" ]] || mkdir -p "$old_configs"
 	link_dotfiles
 	link_configs
@@ -151,8 +151,8 @@ main() {
 	copy_misc_files
 	configure_nano
 	apply_system_tweaks
-	printf "\e[93mi3 Window Manager installation complete!\n Reboot your system.\e[0m\n"
-	printf "Remember to update your Polybar configuration!\n"
+	printf "Remember to configure your Polybar!\n"
+	printf "\e[93mi3 Window Manager installation complete!\e[0m\n"
 	echo "$script $version"
 	exit
 }
