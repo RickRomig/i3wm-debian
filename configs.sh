@@ -134,11 +134,11 @@ apply_system_tweaks() {
 	printf "\e[93mApplying sudo timeout...\e[0m\n"
 	sudo cp -v "$cloned_dir"/sudoers/10timeout /etc/sudoers.d/ | awk -F"/" '{print "==> " $NF}' | sed "s/'$//"
 	sudo chmod 440 /etc/sudoers.d/10timeout
-	printf "A\e[93mpplying settings for sleep/suspend...\e[0m\n"
+	printf "\e[93mApplying settings for sleep/suspend...\e[0m\n"
 	sudo cp -v "$cloned_dir"/sleep.conf /etc/systemd/ | awk -F"/" '{print "==> " $NF}' | sed "s/'$//"
 	printf "\e[93mDisabling snaps...\e[0m\n"
 	sudo cp -v "$cloned_dir"/apt/nosnap.pref /etc/apt/preferences.d/ | awk -F"/" '{print "==> " $NF}' | sed "s/'$//"
-	printf "\e[93mASetting swappines...\e[0m\n"
+	printf "\e[93mSetting swappiness...\e[0m\n"
 	sudo cp -v "$cloned_dir"/90-swappiness.conf /etc/sysctl.d/ | awk -F"/" '{print "==> " $NF}' | sed "s/'$//"
 	set_reserved_space
 }
