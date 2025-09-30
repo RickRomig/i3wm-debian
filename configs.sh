@@ -7,7 +7,7 @@
 # Author       : Copyright © 2025 Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail | rick.romig@mymetronet.net
 # Created      : 27 Apr 2025
-# Last updated : 29 Sep 2025
+# Last updated : 30 Sep 2025
 # Comments     :
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -120,6 +120,7 @@ set_reserved_space() {
 	local home_part root_part
 	root_part=$(df -P | awk '$NF == "/" {print $1}')
 	home_part=$(df -P | awk '$NF == "/home" {print $1}')
+	printf "e[93mSetting reserve space on root & home partitions...\e[0m\n"
 	sudo tune2fs -m 2 "$root_part"
 	[[ "$home_part" ]] && sudo tune2fs -m 0 "$home_part"
 	printf "Drive reserve space set.\n"
@@ -127,23 +128,24 @@ set_reserved_space() {
 
 # Add tweaks to /etc/sudoers.d directory and set swappiness
 apply_system_tweaks() {
-	printf "\e[93mApplying password feeback...\e[0m\n"
+	printf "\e[93mApplying password feedback...\e[0m\n"
 	sudo cp -v "$cloned_dir"/sudoers/0pwfeedback /etc/sudoers.d/ | awk -F"/" '{print "==> " $NF}' | sed "s/'$//"
 	sudo chmod 440 /etc/sudoers.d/0pwfeedback
 	printf "\e[93mApplying sudo timeout...\e[0m\n"
 	sudo cp -v "$cloned_dir"/sudoers/10timeout /etc/sudoers.d/ | awk -F"/" '{print "==> " $NF}' | sed "s/'$//"
 	sudo chmod 440 /etc/sudoers.d/10timeout
-	printf "Applying settings for sleep/suspend...\n"
+	printf "A\e[93mpplying settings for sleep/suspend...\e[0m\n"
 	sudo cp -v "$cloned_dir"/sleep.conf /etc/systemd/ | awk -F"/" '{print "==> " $NF}' | sed "s/'$//"
+	printf "\e[93mDisabling snaps...\e[0m\n"
 	sudo cp -v "$cloned_dir"/apt/nosnap.pref /etc/apt/preferences.d/ | awk -F"/" '{print "==> " $NF}' | sed "s/'$//"
-	printf "\e[93mApplying swappiness...\e[0m\n"
-	echo 'vm.swappiness=10' | sudo tee -a /etc/sysctl.conf
+	printf "\e[93mASetting swappines...\e[0m\n"
+	sudo cp -v "$cloned_dir"/90-swappiness.conf /etc/sysctl.d/ | awk -F"/" '{print "==> " $NF}' | sed "s/'$//"
 	set_reserved_space
 }
 
 main() {
 	local script="${0##*/}"
-	local version="1.18.25272"
+	local version="1.19.25273"
 	[[ -d "$old_configs" ]] || mkdir -p "$old_configs"
 	link_dotfiles
 	link_configs
