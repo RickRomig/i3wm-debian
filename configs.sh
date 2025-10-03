@@ -141,7 +141,7 @@ show_polybar_devs() {
 	local eth_int wifi_int bat_name
 	eth_int=$(find /sys/class/net -name "e*")
 	wifi_int=$(find /sys/class/net -name "w*")
-	bat_name=$(find /sys/class/power_supply/ -name "BAT*" )
+	bat_name=$(find /sys/class/power_supply/ -name "BAT*")
 	printf "\e[93mPolybar device names:\e[0m\n"
 	[[ "$eth_int" ]] && printf "Ethernet: %s\n" "${eth_int##*/}"
 	[[ "$wifi_int" ]] && printf "Wireless: %s\n" "${wifi_int##*/}"
