@@ -40,12 +40,12 @@ install_nerd_fonts() {
   fonts=( "FiraCode" "Go-Mono" "Hack" "Inconsolata" "Iosevka" "JetBrainsMono" "Mononoki" "RobotoMono" "SourceCodePro" )
   for font in "${fonts[@]}"; do
     printf "\e[03mInstalling %s ...\e[0m\n" "$font"
-    wget -P "$tmp_dir" "$font_repo/$font.tar.xz"
+    wget -q -P "$tmp_dir" "$font_repo/$font.tar.xz"
     mkdir -p "$font_dir/$font/"
     tar -xvf "$tmp_dir/${font}.tar.xz" -C "$font_dir/$font/"
   done
-  wget -P "$tmp_dir" "$font_repo/$symbols_archive"
-  tar -xvf "$tmp_dir/$symbols_archive" "$font_dir/$symbols_font"
+  wget -q -P "$tmp_dir" "$font_repo/$symbols_archive"
+  tar -xvf "$tmp_dir/$symbols_archive" -C "$font_dir/$symbols_font"
   fc-cache
   printf "Nerd fonts installed.\n"
 }
