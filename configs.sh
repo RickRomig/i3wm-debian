@@ -7,7 +7,7 @@
 # Author       : Copyright © 2025 Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail | rick.romig@mymetronet.net
 # Created      : 27 Apr 2025
-# Last updated : 30 Sep 2025
+# Last updated : 04 Oct 2025
 # Comments     :
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -55,7 +55,6 @@ link_configs() {
 		"dunst/dunstrc"
 		"flameshot/flameshot.ini"
 		"kitty/bindings.list"
-		"kitty/kitty.conf"
 		"micro/bindings.json"
 		"micro/settings.json"
 		"picom/picom.conf"
@@ -84,6 +83,7 @@ copy_configs(){
 	local cfg_dir cfg_dirs
 	cfg_dirs=(
 		i3
+		kitty
 		keepassxc
 		polybar
 		systemd
@@ -150,7 +150,7 @@ show_polybar_devs() {
 
 main() {
 	local script="${0##*/}"
-	local version="2.0.25276"
+	local version="2.1.25277"
 	[[ -d "$HOME/old-configs" ]] || mkdir -p "$HOME/old-configs"
 	link_dotfiles
 	link_configs
