@@ -7,9 +7,9 @@
 # Author       : Copyright © 2025, Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail.com | rick.romig@mymetronet.com
 # Created      : 10 Apr 2025
-# Last updated : 23 Aug 2025
-# Version      : 1.5.25235
-# Comments     : Sourced in run.sh
+# Last updated : 20 Oct 2025
+# Version      : 1.6.25293
+# Comments     : Sourced in install.sh
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
 # License URL  : https://github.com/RickRomig/i3wm-debian/blob/main/LICENSE
@@ -67,9 +67,9 @@ clone_repos() {
 
 # Copy scripts to ~/bin
 link_scripts() {
+	printf "\e[93mLinking scripts to ~/bin...\e[0m\n"
+	ln -vs ~/Downloads/scripts/ ~/bin
 	# printf "\e[93mCopying scripts to ~/bin ...\e[0m\n"
 	# cp -rpv "$HOME/Downloads/scripts/" "$HOME/bin/"
-	printf "\e[93mLinking scripts to ~/bin...\e[0m\n"
 	# [[ -d "$HOME/bin" ]] && rm -rf "${HOME:?}/bin"
-	ln -vs "$HOME/Downloads/scripts/" "$HOME/bin"
 }
