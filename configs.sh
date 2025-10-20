@@ -7,7 +7,7 @@
 # Author       : Copyright © 2025 Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail | rick.romig@mymetronet.net
 # Created      : 27 Apr 2025
-# Last updated : 04 Oct 2025
+# Last updated : 20 Oct 2025
 # Comments     :
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -40,11 +40,9 @@ link_dotfiles() {
 	)
 	printf "\e[93m93mLinking dotfiles ...\e[0m\n"
 	for dot_file in "${dot_files[@]}"; do
-		# printf "\e[93mLinking %s ...\e[0m\n" "$dot_file"
-		# cp -v "$cloned_dir/$dot_file" "$HOME/$dot_file"
 		printf "\e[93mLinking %s ...\e[0m\n" "$dot_file"
 		[[ -f "$HOME/$dot_file" ]] && mv -v "$HOME/$dot_file" "$HOME/old-configs/"
-		ln -sv "$HOME/Downloads/configs/$dot_file" "$HOME/$dot_file"
+		ln -sv ~/Downloads/configs/"$dot_file" ~/"$dot_file"
 	done
 }
 
@@ -54,6 +52,7 @@ link_configs() {
 	files=(
 		"dunst/dunstrc"
 		"flameshot/flameshot.ini"
+		"glow/glow.yml"
 		"kitty/bindings.list"
 		"micro/bindings.json"
 		"micro/settings.json"
@@ -67,12 +66,12 @@ link_configs() {
 		if [[ -f "$HOME/Downloads/configs/$file" ]]; then
 			printf "\e[93mLinking %s to %s ...\e[0m\n" "$HOME/Downloads/configs/$file" "$HOME/.config"
 			if [[ "$file" == "redshift.conf" ]]; then
-				mv -v "$HOME/Downloads/configs/$file" "$HOME/old-configs/"
+				mv -v "$HOME/.config/$file" "$HOME/old-configs/"
 			else
 				[[ -d "$HOME/old-configs/${file%/*}" ]] || mkdir -p "$HOME/old-configs/${file%/*}"
-				mv -v "$HOME/Downloads/configs/$file" "$HOME/old-configs/${file%/*}/${file##*/}"
+				mv -v "$HOME/.config/$file" "$HOME/old-configs/${file%/*}/${file##*/}"
 			fi
-			ln -sv "$HOME/Downloads/configs/$file" "$HOME/.config/$file"
+			ln -sv ~/Downloads/configs/"$file" ~/.config/"$file"
 		fi
 	done
   micro -plugin install bookmark
@@ -92,14 +91,14 @@ copy_configs(){
 		printf "\e[93mCopying %s ...\e[0m\n" "$cfg_dir"
 		cp -rv "$HOME/Downloads/configs/$cfg_dir" "$HOME/.config"/
 	done
-	ln -sv "$HOME/Downloads/configs"/backgrounds "$HOME/.config"/
 }
 
 # Copy miscellaneous files
 copy_misc_files() {
 	printf "\e[93mCopying miscellaneous files...\e[0m\n"
 	cp -rv "$HOME/Downloads/configs"/icons/ "$HOME"/.icons/
-	ln -sv "$HOME/Downloads/configs"/local/leave.txt "$HOME"/.local/share/doc/leave.txt
+	ln -sv ~/Downloads/configs/backgrounds ~/.config/
+	ln -sv ~/Downloads/configs/local/leave.txt ~/.local/share/doc/leave.txt
 }
 
 # Configure the nano text editor
@@ -137,7 +136,7 @@ apply_system_tweaks() {
 	set_reserved_space
 }
 
-show_polybar_devs() {
+show_polybar_devices() {
 	local eth_int wifi_int bat_name
 	eth_int=$(find /sys/class/net -name "e*")
 	wifi_int=$(find /sys/class/net -name "w*")
@@ -150,7 +149,7 @@ show_polybar_devs() {
 
 main() {
 	local script="${0##*/}"
-	local version="2.1.25277"
+	local version="2.1.25293"
 	[[ -d "$HOME/old-configs" ]] || mkdir -p "$HOME/old-configs"
 	link_dotfiles
 	link_configs
@@ -159,8 +158,8 @@ main() {
 	configure_nano
 	apply_system_tweaks
 	printf "\e[93mi3 Window Manager installation complete!\e[0m\n"
-	printf "Remember to configure your Polybar before rebooting.\n"
-	show_polybar_devs
+	printf "Remember to configure Polybar before rebooting.\n"
+	show_polybar_devices
 	echo "$script $version"
 	exit
 }
