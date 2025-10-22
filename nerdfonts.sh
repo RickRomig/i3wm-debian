@@ -7,7 +7,7 @@
 # Author       : Copyright © 2025, Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail.com | rick.romig@mymetronet.com
 # Created      : 10 Apr 2025
-# Last updated : 29 Sep 2025
+# Last updated : 22 Oct 2025
 # Comments     : Run this script after run.sh.
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -30,10 +30,8 @@ cleanup() {
 	[[ -d "$tmp_dir" ]] && rm -rf "$tmp_dir"
 }
 
-install_nerd_fonts() {
-  local font font_dir fonts font_repo symbols_font symbols_archive
-  symbols_font="SymbolsNerdFontMono-Regular.ttf"
-  symbols_archive="NerdFontsSymbolsOnly.tar.xz"
+install_NerdFonts() {
+  local font font_dir fonts font_repo
   font_repo="https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0"
   font_dir="$HOME"/.local/share/fonts
   [[ -d "$font_dir" ]] || sudo mkdir -p "$font_dir"
@@ -44,19 +42,26 @@ install_nerd_fonts() {
     mkdir -p "$font_dir/$font/"
     tar -xvf "$tmp_dir/${font}.tar.xz" -C "$font_dir/$font/"
   done
-  wget -q -P "$tmp_dir" "$font_repo/$symbols_archive"
-  tar -xvf "$tmp_dir/$symbols_archive" -C "$font_dir/$symbols_font"
-  fc-cache
   printf "Nerd fonts installed.\n"
+}
+
+install_SymbolNerdFonts() {
+  local -r font_dir="$HOME/.local/share/fonts"
+  local -r symbols_archive="NerdFontsSymbolsOnly.tar.xz"
+  [[ -d ~/Downloads/configs ]] && cp -v ~/Downloads/configs/local/NerdFontsSymbolsOnly.tar.xz "$font_dir/"
+  [[ -d ~/gitea/configs ]] && cp -v ~/gitea/configs/local/NerdFontsSymbolsOnly.tar.xz "$font_dir/"
+  tar xvf "$font_dir/$symbols_archive" -C "$font_dir/${symbols_archive%%.*}"
 }
 
 main() {
   local script version
 	script="${0##*/}"
-  version="1.3.25272"
+  version="1.4.25295"
   tmp_dir=$(mktemp -d) || { printf "\e[91mERROR:\e[0m: Failed to create temporary directory." >&2; exit 1; }
   trap cleanup EXIT
-  install_nerd_fonts
+  install_NerdFonts
+  install_SymbolNerdFonts
+  fc-cache
 	echo "-----------------"
 	echo "$script $version"
   printf "Run \e[93mconfigs.sh\e[0m to setup configuration files and complete the installation.\n"
