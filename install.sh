@@ -7,7 +7,7 @@
 # Author       : Copyright © 2025, Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail.com | rick.romig@mymetronet.com
 # Created      : 10 Apr 2025
-# Last updated : 11 Sep 2025
+# Last updated : 28 Oct 2025
 # Comments     : Run this script first.
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -209,13 +209,13 @@ pre_install() {
 	printf "Install spice-vdagent & spice-webdavd if a Virtual Machine...\n"
 	vm_spice_install
 	printf "\e[93mUpdating the system...\e[0m\n"
-	sudo find /etc/apt -name "*.list" -exec sed -i 's/http:/https:/;/ftp/s/https:/http:/' {} \;
+	# sudo find /etc/apt -name "*.list" -exec sed -i 's/http:/https:/;/ftp/s/https:/http:/' {} \;
 	sudo apt-get update && sudo apt-get dist-upgrade -y && sudo apt-get clean
 }
 
 main() {
 	local -r script="${0##*/}"
-	local -r version="2.1.25272"
+	local -r version="2.2.25301"
 	local confirm
 	clear
 	print_logo
