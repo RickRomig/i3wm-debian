@@ -7,7 +7,7 @@
 # Author       : Copyright © 2025 Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail | rick.romig@mymetronet.net
 # Created      : 27 Apr 2025
-# Last updated : 20 Oct 2025
+# Last updated : 28 Oct 2025
 # Comments     :
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -53,7 +53,6 @@ link_configs() {
 		"dunst/dunstrc"
 		"flameshot/flameshot.ini"
 		"glow/glow.yml"
-		"kitty/bindings.list"
 		"micro/bindings.json"
 		"micro/settings.json"
 		"picom/picom.conf"
@@ -149,7 +148,7 @@ show_polybar_devices() {
 
 main() {
 	local script="${0##*/}"
-	local version="2.1.25293"
+	local version="2.2.25301"
 	[[ -d "$HOME/old-configs" ]] || mkdir -p "$HOME/old-configs"
 	link_dotfiles
 	link_configs
