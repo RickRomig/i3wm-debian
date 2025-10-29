@@ -112,9 +112,11 @@ set_reserved_space() {
 	local home_part root_part
 	root_part=$(df -P | awk '$NF == "/" {print $1}')
 	home_part=$(df -P | awk '$NF == "/home" {print $1}')
+	data_part=$(df -P | awk '$NF == "/data" {print $1}')
 	printf "e[93mSetting reserved space on root & home partitions...\e[0m\n"
 	sudo tune2fs -m 2 "$root_part"
 	[[ "$home_part" ]] && sudo tune2fs -m 0 "$home_part"
+	[[ "$data_part" ]] && sudo tune2fs -m 0 "$data_part"
 	printf "Drive reserve space set.\n"
 }
 
@@ -132,6 +134,8 @@ apply_system_tweaks() {
 	sudo cp -v "$HOME/Downloads/configs"/apt/nosnap.pref /etc/apt/preferences.d/
 	printf "\e[93mSetting swappiness...\e[0m\n"
 	sudo cp -v "$HOME/Downloads/configs"/90-swappiness.conf /etc/sysctl.d/
+	printf "\e[93mSetting sleep.conf...\e[0m\n"
+	sudo cp -v ~/Downloads/configs/99-sleep.conf /etc/systemd/sleep.conf.d/
 	set_reserved_space
 }
 
