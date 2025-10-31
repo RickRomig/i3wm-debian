@@ -7,7 +7,7 @@
 # Author       : Copyright © 2025 Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail | rick.romig@mymetronet.net
 # Created      : 27 Apr 2025
-# Last updated : 28 Oct 2025
+# Last updated : 31 Oct 2025
 # Comments     :
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -109,33 +109,37 @@ configure_nano() {
 
 # Set reserved space for root and home partitions
 set_reserved_space() {
-	local home_part root_part
+	local home_part root_part data_part rbc blk_cnt res_pct
 	root_part=$(df -P | awk '$NF == "/" {print $1}')
 	home_part=$(df -P | awk '$NF == "/home" {print $1}')
 	data_part=$(df -P | awk '$NF == "/data" {print $1}')
+	rbc=$(sudo /usr/sbin/tune2fs -l "$root_part" | awk '/Reserved block count/ {print $NF}')
+	blk_cnt=$(sudo /usr/sbin/tune2fs -l "$root_part" | awk '/Block count/ {print $NF}')
+	res_pct="$(bc <<< "${rbc} * 100 / ${blk_cnt}")"
 	printf "e[93mSetting reserved space on root & home partitions...\e[0m\n"
-	sudo tune2fs -m 2 "$root_part"
-	[[ "$home_part" ]] && sudo tune2fs -m 0 "$home_part"
-	[[ "$data_part" ]] && sudo tune2fs -m 0 "$data_part"
+	[[ "$res_pct" -ne 5 ]] && sudo /usr/sbin/tune2fs -m 2 "$root_part"
+	[[ "$home_part" ]] && sudo /usr/sbin/tune2fs -m 0 "$home_part"
+	[[ "$data_part" ]] && sudo /usr/sbin/tune2fs -m 0 "$data_part"
 	printf "Drive reserve space set.\n"
 }
 
 # Add tweaks to /etc/sudoers.d directory and set swappiness
 apply_system_tweaks() {
+	local repo_dir=~/Downloads/configs
 	printf "\e[93mApplying password feedback...\e[0m\n"
-	sudo cp -v "$HOME/Downloads/configs"/sudoers/0pwfeedback /etc/sudoers.d/
+	sudo cp -v "$repo_dir"/sudoers/0pwfeedback /etc/sudoers.d/
 	sudo chmod 440 /etc/sudoers.d/0pwfeedback
 	printf "\e[93mApplying sudo timeout...\e[0m\n"
-	sudo cp -v "$HOME/Downloads/configs"/sudoers/10timeout /etc/sudoers.d/
+	sudo cp -v "$repo_dir"/sudoers/10timeout /etc/sudoers.d/
 	sudo chmod 440 /etc/sudoers.d/10timeout
 	printf "\e[93mApplying settings for sleep/suspend...\e[0m\n"
-	sudo cp -v "$HOME/Downloads/configs"/sleep.conf /etc/systemd/
+	sudo cp -v "$repo_dir"/sleep.conf /etc/systemd/
 	printf "\e[93mDisabling snaps...\e[0m\n"
-	sudo cp -v "$HOME/Downloads/configs"/apt/nosnap.pref /etc/apt/preferences.d/
+	sudo cp -v "$repo_dir"/apt/nosnap.pref /etc/apt/preferences.d/
 	printf "\e[93mSetting swappiness...\e[0m\n"
-	sudo cp -v "$HOME/Downloads/configs"/90-swappiness.conf /etc/sysctl.d/
+	sudo cp -v "$repo_dir"/90-swappiness.conf /etc/sysctl.d/
 	printf "\e[93mSetting sleep.conf...\e[0m\n"
-	sudo cp -v ~/Downloads/configs/99-sleep.conf /etc/systemd/sleep.conf.d/
+	sudo cp -v "$repo_dir"/99-sleep.conf /etc/systemd/sleep.conf.d/
 	set_reserved_space
 }
 
@@ -152,8 +156,8 @@ show_polybar_devices() {
 
 main() {
 	local script="${0##*/}"
-	local version="2.2.25301"
-	[[ -d "$HOME/old-configs" ]] || mkdir -p "$HOME/old-configs"
+	local version="2.3.25304"
+	[[ -d ~/old-configs ]] || mkdir -p ~/old-configs
 	link_dotfiles
 	link_configs
 	copy_configs
