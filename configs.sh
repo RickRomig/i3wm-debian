@@ -7,7 +7,7 @@
 # Author       : Copyright © 2025 Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail | rick.romig@mymetronet.net
 # Created      : 27 Apr 2025
-# Last updated : 31 Oct 2025
+# Last updated : 02 Nov 2025
 # Comments     :
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -28,6 +28,8 @@
 
 # Create symbolic links to dotfiles in the home directory
 link_dotfiles() {
+	local old_configs=~/old-configs
+	[[ -d "$old_configs" ]] || mkdir -p "$old_configs"
 	local dot_file dot_files
 	dot_files=(
 		.bash_aliases
@@ -41,13 +43,15 @@ link_dotfiles() {
 	printf "\e[93m93mLinking dotfiles ...\e[0m\n"
 	for dot_file in "${dot_files[@]}"; do
 		printf "\e[93mLinking %s ...\e[0m\n" "$dot_file"
-		[[ -f "$HOME/$dot_file" ]] && mv -v "$HOME/$dot_file" "$HOME/old-configs/"
+		[[ -f "$HOME/$dot_file" ]] && mv -v "$HOME/$dot_file" "$old_configs/"
 		ln -sv ~/Downloads/configs/"$dot_file" ~/"$dot_file"
 	done
 }
 
 # Link specific configuration files to directories in ~/.config
 link_configs() {
+	local old_configs=~/old-configs
+	[[ -d "$old_configs" ]] || mkdir -p "$old_configs"
 	local file files
 	files=(
 		"dunst/dunstrc"
@@ -65,10 +69,10 @@ link_configs() {
 		if [[ -f "$HOME/Downloads/configs/$file" ]]; then
 			printf "\e[93mLinking %s to %s ...\e[0m\n" "$HOME/Downloads/configs/$file" "$HOME/.config"
 			if [[ "$file" == "redshift.conf" ]]; then
-				mv -v "$HOME/.config/$file" "$HOME/old-configs/"
+				mv -v "$HOME/.config/$file" "$old_configs/"
 			else
-				[[ -d "$HOME/old-configs/${file%/*}" ]] || mkdir -p "$HOME/old-configs/${file%/*}"
-				mv -v "$HOME/.config/$file" "$HOME/old-configs/${file%/*}/${file##*/}"
+				[[ -d "$old_configs/${file%/*}" ]] || mkdir -p "$old_configs/${file%/*}"
+				mv -v "$HOME/.config/$file" "$old_configs/${file%/*}/${file##*/}"
 			fi
 			ln -sv ~/Downloads/configs/"$file" ~/.config/"$file"
 		fi
@@ -93,9 +97,9 @@ copy_configs(){
 }
 
 # Copy miscellaneous files
-copy_misc_files() {
+cp_ln_misc_files() {
 	printf "\e[93mCopying miscellaneous files...\e[0m\n"
-	cp -rv "$HOME/Downloads/configs"/icons/ "$HOME"/.icons/
+	cp -av ~/Downloads/configs/icons/. ~/.icons/
 	ln -sv ~/Downloads/configs/backgrounds ~/.config/
 	ln -sv ~/Downloads/configs/local/leave.txt ~/.local/share/doc/leave.txt
 }
@@ -120,7 +124,7 @@ set_reserved_space() {
 	[[ "$res_pct" -ne 5 ]] && sudo /usr/sbin/tune2fs -m 2 "$root_part"
 	[[ "$home_part" ]] && sudo /usr/sbin/tune2fs -m 0 "$home_part"
 	[[ "$data_part" ]] && sudo /usr/sbin/tune2fs -m 0 "$data_part"
-	printf "Drive reserve space set.\n"
+	printf "Partition reserve space set.\n"
 }
 
 # Add tweaks to /etc/sudoers.d directory and set swappiness
@@ -156,12 +160,11 @@ show_polybar_devices() {
 
 main() {
 	local script="${0##*/}"
-	local version="2.3.25304"
-	[[ -d ~/old-configs ]] || mkdir -p ~/old-configs
+	local version="2.4.25306"
 	link_dotfiles
 	link_configs
 	copy_configs
-	copy_misc_files
+	cp_ln_misc_files
 	configure_nano
 	apply_system_tweaks
 	printf "\e[93mi3 Window Manager installation complete!\e[0m\n"
