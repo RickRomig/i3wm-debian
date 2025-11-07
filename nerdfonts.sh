@@ -7,7 +7,7 @@
 # Author       : Copyright © 2025, Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail.com | rick.romig@mymetronet.com
 # Created      : 10 Apr 2025
-# Last updated : 22 Oct 2025
+# Last updated : 07 Nov 2025
 # Comments     : Run this script after run.sh.
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -31,9 +31,9 @@ cleanup() {
 }
 
 install_NerdFonts() {
-  local font font_dir fonts font_repo
-  font_repo="https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0"
-  font_dir="$HOME"/.local/share/fonts
+  local font fonts
+  local -r font_repo="https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0"
+  local -r font_dir="$1"
   [[ -d "$font_dir" ]] || sudo mkdir -p "$font_dir"
   fonts=( "FiraCode" "Go-Mono" "Hack" "Inconsolata" "Iosevka" "JetBrainsMono" "Mononoki" "RobotoMono" "SourceCodePro" )
   for font in "${fonts[@]}"; do
@@ -46,21 +46,22 @@ install_NerdFonts() {
 }
 
 install_SymbolNerdFonts() {
-  local -r font_dir="$HOME/.local/share/fonts"
+  local -r font_dir="$1"
   local -r symbols_archive="NerdFontsSymbolsOnly.tar.xz"
-  [[ -d ~/Downloads/configs ]] && cp -v ~/Downloads/configs/local/NerdFontsSymbolsOnly.tar.xz "$font_dir/"
-  [[ -d ~/gitea/configs ]] && cp -v ~/gitea/configs/local/NerdFontsSymbolsOnly.tar.xz "$font_dir/"
+  cp -v ~/Downloads/configs/local/"$symbols_archive" "$font_dir/"
   tar xvf "$font_dir/$symbols_archive" -C "$font_dir/${symbols_archive%%.*}"
+  rm -v "$font_dir/$symbols_archive"
 }
 
 main() {
-  local script version
+  local script version font_dir
+  font_dir=~/.local/share/fonts
 	script="${0##*/}"
-  version="1.4.25295"
+  version="1.5.25311"
   tmp_dir=$(mktemp -d) || { printf "\e[91mERROR:\e[0m: Failed to create temporary directory." >&2; exit 1; }
   trap cleanup EXIT
-  install_NerdFonts
-  install_SymbolNerdFonts
+  install_NerdFonts "$font_dir"
+  install_SymbolNerdFonts "$font_dir"
   fc-cache
 	echo "-----------------"
 	echo "$script $version"
