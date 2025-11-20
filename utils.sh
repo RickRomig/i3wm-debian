@@ -7,8 +7,8 @@
 # Author       : Copyright © 2025, Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail.com | rick.romig@mymetronet.com
 # Created      : 10 Apr 2025
-# Last updated : 20 Oct 2025
-# Version      : 1.6.25293
+# Last updated : 20 Nov 2025
+# Version      : 1.7.25324
 # Comments     : Sourced in install.sh
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -27,7 +27,7 @@
 
 # Function to check if a package is installed
 is_installed() {
-	dpkg -l "$1" &> /dev/null && return 0 || return 1
+	dpkg -l "$1" | grep -qw '^ii' &> /dev/null && return 0 || return 1
 }
 
 # Function to install packages if not already installed
