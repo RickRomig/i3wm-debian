@@ -7,7 +7,7 @@
 # Author       : Copyright © 2025 Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail | rick.romig@mymetronet.net
 # Created      : 27 Apr 2025
-# Last updated : 02 Nov 2025
+# Last updated : 30 Dec 2025
 # Comments     :
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -134,8 +134,8 @@ apply_system_tweaks() {
 	sudo cp -v "$repo_dir"/sudoers/0pwfeedback /etc/sudoers.d/
 	sudo chmod 440 /etc/sudoers.d/0pwfeedback
 	printf "\e[93mApplying sudo timeout...\e[0m\n"
-	sudo cp -v "$repo_dir"/sudoers/10timeout /etc/sudoers.d/
-	sudo chmod 440 /etc/sudoers.d/10timeout
+	sudo cp -v "$repo_dir"/sudoers/10-timeout /etc/sudoers.d/
+	sudo chmod 440 /etc/sudoers.d/10-timeout
 	printf "\e[93mApplying settings for sleep/suspend...\e[0m\n"
 	sudo cp -v "$repo_dir"/sleep.conf /etc/systemd/
 	printf "\e[93mDisabling snaps...\e[0m\n"
@@ -160,7 +160,7 @@ show_polybar_devices() {
 
 main() {
 	local script="${0##*/}"
-	local version="2.4.25306"
+	local version="2.5.25364"
 	link_dotfiles
 	link_configs
 	copy_configs
