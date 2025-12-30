@@ -7,7 +7,7 @@
 # Author       : Copyright © 2025, Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail.com | rick.romig@mymetronet.com
 # Created      : 10 Apr 2025
-# Last updated : 07 Nov 2025
+# Last updated : 30 Dec 2025
 # Comments     : Run this script after run.sh.
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -47,17 +47,15 @@ install_NerdFonts() {
 
 install_SymbolNerdFonts() {
   local -r font_dir="$1"
-  local -r symbols_archive="NerdFontsSymbolsOnly.tar.xz"
-  cp -v ~/Downloads/configs/local/"$symbols_archive" "$font_dir/"
-  tar xvf "$font_dir/$symbols_archive" -C "$font_dir/${symbols_archive%%.*}"
-  rm -v "$font_dir/$symbols_archive"
+  cp -v ~/Downloads/configs/local/nerdfonts/*.ttf "$font_dir/"
+  printf "Symbols Nerd Fonts installed.\n"
 }
 
 main() {
   local script version font_dir
   font_dir=~/.local/share/fonts
 	script="${0##*/}"
-  version="1.5.25311"
+  version="1.6.25364"
   tmp_dir=$(mktemp -d) || { printf "\e[91mERROR:\e[0m: Failed to create temporary directory." >&2; exit 1; }
   trap cleanup EXIT
   install_NerdFonts "$font_dir"
