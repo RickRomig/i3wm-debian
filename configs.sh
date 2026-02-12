@@ -7,7 +7,7 @@
 # Author       : Copyright © 2025 Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail | rick.romig@mymetronet.net
 # Created      : 27 Apr 2025
-# Last updated : 30 Dec 2025
+# Last updated : 12 Feb 2026
 # Comments     :
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -114,11 +114,11 @@ configure_nano() {
 # Set reserved space for root and home partitions
 set_reserved_space() {
 	local home_part root_part data_part rbc blk_cnt res_pct
-	root_part=$(df -P | awk '$NF == "/" {print $1}')
-	home_part=$(df -P | awk '$NF == "/home" {print $1}')
-	data_part=$(df -P | awk '$NF == "/data" {print $1}')
-	rbc=$(sudo /usr/sbin/tune2fs -l "$root_part" | awk '/Reserved block count/ {print $NF}')
-	blk_cnt=$(sudo /usr/sbin/tune2fs -l "$root_part" | awk '/Block count/ {print $NF}')
+	root_part=$(awk '$NF == "/" {print $1}' <(df -P))
+	home_part=$(awk '$NF == "/home" {print $1}' <(df -P))
+	data_part=$(awk '$NF == "/data" {print $1}' <(df -P))
+	rbc=$(awk '/Reserved block count/ {print $NF}' <(sudo /usr/sbin/tune2fs -l "$root_part"))
+	blk_cnt=$(awk '/Block count/ {print $NF}' <(sudo /usr/sbin/tune2fs -l "$root_part"))
 	res_pct="$(bc <<< "${rbc} * 100 / ${blk_cnt}")"
 	printf "e[93mSetting reserved space on root & home partitions...\e[0m\n"
 	[[ "$res_pct" -ne 5 ]] && sudo /usr/sbin/tune2fs -m 2 "$root_part"
@@ -160,7 +160,7 @@ show_polybar_devices() {
 
 main() {
 	local script="${0##*/}"
-	local version="2.5.25364"
+	local version="2.6.26043"
 	link_dotfiles
 	link_configs
 	copy_configs
