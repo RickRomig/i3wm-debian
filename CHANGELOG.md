@@ -1,3 +1,8 @@
+-zramswap.sed: added for use in install.sh to configure zram
+-utils.sh: is_installed() - process substitution; install_packages() - replaced if statement
+-install.sh: implemented process substitution
+-configs.sh: set_resrved_space() - implemented process substitution
+-CHANGELOG.md: initial commit - Changelof from git log
 -configs.sh: apply_system_tweaks() - updated sudo timeout
 -nerdfonts.sh: copies *.ttf files to fonts directory instead of extracting from tarball
 -utils.sh: is_installed() - added check for dpkg installed flag
