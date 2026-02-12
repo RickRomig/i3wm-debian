@@ -7,7 +7,7 @@
 # Author       : Copyright © 2025, Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail.com | rick.romig@mymetronet.com
 # Created      : 10 Apr 2025
-# Last updated : 28 Oct 2025
+# Last updated : 12 Feb 2026
 # Comments     : Run this script first.
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -66,25 +66,25 @@ source_files() {
 
 vm_spice_install() {
 	local localnet
-	localnet=$(ip route get 1.2.3.4 | cut -d' ' -f3 | sed 's/\..$//')
+	localnet=$(cut -d' ' -f3 <(ip route get 1.2.3.4) | sed 's/\..$//')
 	if [[ "$localnet" == "196.168.122" ]] || [[ "$localnet" == "10.0.2" ]]; then
 		printf "\e[93mVirtual Machine - Installing Spice Tools...\e[0m\n"
-  	apt-cache show spice-vdagent 2>/dev/null | grep -q spice-vdagent && sudo apt-get install -y spice-vdagent
-  	apt-cache show spice-webdavd 2>/dev/null | grep -q spice-webdavd && sudo apt-get install -y spice-webdavd
+  	grep -q spice-vdagent <(apt-cache show spice-vdagent 2>/dev/null) && sudo apt-get install -y spice-vdagent
+  	grep -q spice-webdavd <(apt-cache show spice-webdavd 2>/dev/null) && sudo apt-get install -y spice-webdavd
 	fi
 }
 
 install_zram() {
 	printf "\e[93mInstalling Z-Ram...\e[0m\n"
 	sudo apt install -y zram-tools
-	sudo sed -i.bak '/ALGO/s/^#//;/PERCENT/s/^#//;/PERCENT/s/50$/25/' /etc/default/zramswap
+	sudo sed -i.bak -f ./zramswap.sed /etc/default/zramswap
   sudo systemctl restart zramswap.service
 	printf "Zram-tools installed.\n"
 }
 
 install_microcode() {
 	local vendor_id
-	vendor_id=$(lscpu | awk '/Vendor ID:/ {print $NF}')
+	vendor_id=$(awk '/Vendor ID:/ {print $NF}' <(lscpu))
 	printf "\e[93mInstalling microcode for %s ...\e[0m\n" "$vendor_id"
 	case "$vendor_id" in
 		AuthenticAMD )
@@ -203,7 +203,7 @@ enable_services() {
 
 pre_install() {
 	local distro
-	distro="$(/usr/bin/lsb_release --codename --short | awk 'NR = 1 {print $0}')"
+	distro="$(awk 'NR = 1 {print $0}' <(/usr/bin/lsb_release --codename --short))"
 	source_files || exit 1
 	[[ "$distro" == "bookworm" || "$distro" == "trixie" ]] || { printf "\e[91m%s is unsupported.\e[0m\nInstalls i3wm on Debian 12 or 13.\n" "${distro^}" >&2; exit 1; }
 	printf "Install spice-vdagent & spice-webdavd if a Virtual Machine...\n"
@@ -215,7 +215,7 @@ pre_install() {
 
 main() {
 	local -r script="${0##*/}"
-	local -r version="2.2.25301"
+	local -r version="2.3.26043"
 	local confirm
 	clear
 	print_logo
