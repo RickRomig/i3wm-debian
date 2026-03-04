@@ -203,13 +203,14 @@ enable_services() {
 
 pre_install() {
 	local distro
-	distro="$(awk 'NR = 1 {print $0}' <(/usr/bin/lsb_release --codename --short))"
+	distro="$(/usr/bin/lsb_release --codename --short 2>/dev/null)"
 	source_files || exit 1
 	[[ "$distro" == "bookworm" || "$distro" == "trixie" ]] || { printf "\e[91m%s is unsupported.\e[0m\nInstalls i3wm on Debian 12 or 13.\n" "${distro^}" >&2; exit 1; }
 	printf "Install spice-vdagent & spice-webdavd if a Virtual Machine...\n"
 	vm_spice_install
 	printf "\e[93mUpdating the system...\e[0m\n"
 	# sudo find /etc/apt -name "*.list" -exec sed -i 's/http:/https:/;/ftp/s/https:/http:/' {} \;
+	[[ -f /etc/apt/sources.list.d/debian-sources ]] || sudo apt modernize-sources
 	sudo apt-get update && sudo apt-get dist-upgrade -y && sudo apt-get clean
 }
 
