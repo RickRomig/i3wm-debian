@@ -130,9 +130,9 @@ configure_lightdm() {
 }
 
 initial_setup() {
-	lsblk | grep -iw swap || install_zram
+	grep -iw swap <(lsblk) || install_zram
 	install_microcode
-	lsusb | grep -i blue && install_bluetooth
+	grep -i blue <(lsusb) && install_bluetooth
 	printf "\e[93mSetting up directories...\e[0m\n"
 	xdg-user-dirs-update
 	mkdir -pv ~/.cache ~/.icons ~/Screenshots
@@ -218,11 +218,12 @@ main() {
 	local -r script="${0##*/}"
 	local -r version="2.3.26043"
 	local confirm
+	local re="^[Yy]$"
 	clear
 	print_logo
 	printf "This script will install i3wm, configuration files, and scripts on your Debian system.\n"
 	read -rp "Do you want to continue (y/n) " confirm
-	[[ ! "$confirm" =~ ^[Yy]$ ]] && { printf "Installation canceled.\n" >&2; exit; }
+	[[ ! $confirm =~ $re ]] && { printf "Installation canceled.\n" >&2; exit; }
 	pre_install
 	initial_setup
 	install_by_category
