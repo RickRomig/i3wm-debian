@@ -7,8 +7,8 @@
 # Author       : Copyright © 2025, Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail.com | rick.romig@mymetronet.com
 # Created      : 10 Apr 2025
-# Last updated : 12 Feb 2026
-# Version      : 1.8.26043
+# Last updated : 01 Apr 2026
+# Version      : 1.9.26091
 # Comments     : Sourced in install.sh
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -34,15 +34,16 @@ is_installed() {
 install_packages() {
   local packages=("$@")
   local to_install=()
+	local package new_package
 
-  for pkg in "${packages[@]}"; do
-		is_installed "$pkg" || to_install+=("$pkg")
+  for package in "${packages[@]}"; do
+		is_installed "$package" || to_install+=("$pkg")
   done
 
-  if [ ${#to_install[@]} -ne 0 ]; then
-    for pkg in "${to_install[@]}"; do
-    	printf "\e[93mInstalling %s...\e[0m\n" "$pkg"
-    	sudo apt-get install -yy "$pkg" 2>/dev/null || printf "\e[32m%s not installed, skipping...\e[0m\n" "$pkg"
+  if [ "${#to_install[@]}" -ne 0 ]; then
+    for new_package in "${to_install[@]}"; do
+    	printf "\e[93mInstalling %s...\e[0m\n" "$new_package"
+    	sudo apt-get install -yy "$new_package" 2>/dev/null || printf "\e[32m%s not installed, skipping...\e[0m\n" "$new_package"
     done
   fi
 }
@@ -52,7 +53,7 @@ clone_repos() {
 	local dl_dir repo repos repo_url
 	repo_url="https://github.com/RickRomig"
 	repos=(configs scripts)
-	dl_dir="$HOME/Downloads"
+	dl_dir=~/Downloads
 	printf "\e[93mCloning configs and scripts...\e[0m\n"
 	for repo in "${repos[@]}"; do
 		if [[ -d "$dl_dir/$repo" ]]; then
@@ -68,6 +69,6 @@ link_scripts() {
 	printf "\e[93mLinking scripts to ~/bin...\e[0m\n"
 	ln -vs ~/Downloads/scripts/ ~/bin
 	# printf "\e[93mCopying scripts to ~/bin ...\e[0m\n"
-	# cp -rpv "$HOME/Downloads/scripts/" "$HOME/bin/"
+	# cp -rpv ~/Downloads/scripts/ ~/bin/
 	# [[ -d "$HOME/bin" ]] && rm -rf "${HOME:?}/bin"
 }
