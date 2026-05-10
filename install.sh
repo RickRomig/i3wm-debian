@@ -7,7 +7,7 @@
 # Author       : Copyright © 2025, Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail.com | rick.romig@mymetronet.com
 # Created      : 10 Apr 2025
-# Last updated : 12 Feb 2026
+# Last updated : 10 May 2026
 # Comments     : Run this script first.
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -45,6 +45,7 @@ LOGO
 	echo -e "\033[0m"
 }
 
+# Source utils.sh and packages.conf
 source_files() {
 	local file files status script_dir
 	status=0
@@ -64,16 +65,18 @@ source_files() {
 	done
 }
 
+# Install Spice Tools if a virtual machine
 vm_spice_install() {
 	local localnet
-	localnet=$(cut -d' ' -f3 <(ip route get 1.2.3.4) | sed 's/\..$//')
+	localnet=$(cut -d' ' -f3 < <(ip route get 1.2.3.4)); localnet="${localnet%.*}"
 	if [[ "$localnet" == "196.168.122" ]] || [[ "$localnet" == "10.0.2" ]]; then
 		printf "\e[93mVirtual Machine - Installing Spice Tools...\e[0m\n"
-  	grep -q spice-vdagent <(apt-cache show spice-vdagent 2>/dev/null) && sudo apt-get install -y spice-vdagent
-  	grep -q spice-webdavd <(apt-cache show spice-webdavd 2>/dev/null) && sudo apt-get install -y spice-webdavd
+  	grep -q spice-vdagent < <(apt-cache show spice-vdagent 2>/dev/null) && sudo apt-get install -y spice-vdagent
+  	grep -q spice-webdavd < <(apt-cache show spice-webdavd 2>/dev/null) && sudo apt-get install -y spice-webdavd
 	fi
 }
 
+# Install ZRAM Tools (Swap partition should NOT have been created during install)
 install_zram() {
 	printf "\e[93mInstalling Z-Ram...\e[0m\n"
 	sudo apt install -y zram-tools
@@ -82,9 +85,10 @@ install_zram() {
 	printf "Zram-tools installed.\n"
 }
 
+# Install AMD or Intell microcode
 install_microcode() {
 	local vendor_id
-	vendor_id=$(awk '/Vendor ID:/ {print $NF}' <(lscpu))
+	vendor_id=$(awk '/Vendor ID:/ {print $NF}' < <(lscpu))
 	printf "\e[93mInstalling microcode for %s ...\e[0m\n" "$vendor_id"
 	case "$vendor_id" in
 		AuthenticAMD )
@@ -104,15 +108,17 @@ install_bluetooth() {
 	sudo systemctl enable bluetooth
 }
 
+# Install disk utilities as required
 install_disk_utils() {
 	if [[ -b /dev/vda ]]; then
 		printf "\e[91mVirtual machine, disk utillities were not installed.\e[0m\n"
-	else
-		[[ -b /dev/sda ]] && { printf "\e[93mInstalling hdparm...\e[0m\n"; sudo apt install -y hdparm; }
-		[[ -c /dev/nvme0 ]] && { printf "\e[93mInstalling nvme-cli...\e[0m\n"; sudo apt install -y nvme-cli; }
+		return
 	fi
+	[[ -b /dev/sda ]] && { printf "\e[93mInstalling hdparm...\e[0m\n"; sudo apt install -y hdparm; }
+	[[ -c /dev/nvme0 ]] && { printf "\e[93mInstalling nvme-cli...\e[0m\n"; sudo apt install -y nvme-cli; }
 }
 
+# Configure login manager
 configure_lightdm() {
 	printf "\e[93mConfiguring lightdm and slick-greeter ...\e[0m\n"
 	# Show users on lightdm greeter screen
@@ -129,6 +135,7 @@ configure_lightdm() {
 	sudo cp i3.desktop /usr/share/xsessions/
 }
 
+# Prepare for i3 iinstallation
 initial_setup() {
 	grep -iw swap <(lsblk) || install_zram
 	install_microcode
@@ -142,6 +149,7 @@ initial_setup() {
 	clone_repos
 }
 
+# Install applilcations using packages.conf
 install_by_category() {
 
 	printf "\e[93mInstalling Core packages...\e[0m\n"
@@ -188,6 +196,7 @@ install_by_category() {
 	install_packages "${LIGHTDM[@]}"
 }
 
+# Enable systemd servies
 enable_services() {
 	local service
 	printf "\e[93mConfiguring services...\e[0m\n"
@@ -201,6 +210,7 @@ enable_services() {
 	done
 }
 
+# Check for distribution, virtual machine, apt updates, moderinzed sources
 pre_install() {
 	local distro
 	distro="$(/usr/bin/lsb_release --codename --short 2>/dev/null)"
@@ -216,7 +226,7 @@ pre_install() {
 
 main() {
 	local -r script="${0##*/}"
-	local -r version="2.3.26043"
+	local -r version="2.4.26130"
 	local confirm
 	local re="^[Yy]$"
 	clear
