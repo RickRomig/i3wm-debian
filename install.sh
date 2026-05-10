@@ -137,9 +137,9 @@ configure_lightdm() {
 
 # Prepare for i3 iinstallation
 initial_setup() {
-	grep -iw swap <(lsblk) || install_zram
+	grep -iw swap < <(lsblk) || install_zram
 	install_microcode
-	grep -i blue <(lsusb) && install_bluetooth
+	grep -i blue < <(lsusb) && install_bluetooth
 	printf "\e[93mSetting up directories...\e[0m\n"
 	xdg-user-dirs-update
 	mkdir -pv ~/.cache ~/.icons ~/Screenshots
