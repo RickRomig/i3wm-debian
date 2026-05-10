@@ -7,8 +7,8 @@
 # Author       : Copyright © 2025, Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail.com | rick.romig@mymetronet.com
 # Created      : 10 Apr 2025
-# Last updated : 01 Apr 2026
-# Version      : 1.9.26091
+# Last updated : 10 May 2026
+# Version      : 1.10.26130
 # Comments     : Sourced in install.sh
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -25,12 +25,12 @@
 # GNU General Public License for more details.
 ###############################################################################
 
-# Function to check if a package is installed
+# Check if a package is installed
 is_installed() {
-	grep -qw '^ii' <(dpkg -l "$1" 2>/dev/null) && return 0 || return 1
+	grep -qw '^ii' < <(dpkg -l "$1" 2>/dev/null) && return 0 || return 1
 }
 
-# Function to install packages if not already installed
+# Install packages if not already installed
 install_packages() {
   local packages=("$@")
   local to_install=()
@@ -40,7 +40,7 @@ install_packages() {
 		is_installed "$package" || to_install+=("$pkg")
   done
 
-  if [ "${#to_install[@]}" -ne 0 ]; then
+  if [[ "${#to_install[@]}" -ne 0 ]]; then
     for new_package in "${to_install[@]}"; do
     	printf "\e[93mInstalling %s...\e[0m\n" "$new_package"
     	sudo apt-get install -yy "$new_package" 2>/dev/null || printf "\e[32m%s not installed, skipping...\e[0m\n" "$new_package"
@@ -64,7 +64,7 @@ clone_repos() {
 	done
 }
 
-# Copy scripts to ~/bin
+# Link/Copy scripts to ~/bin
 link_scripts() {
 	printf "\e[93mLinking scripts to ~/bin...\e[0m\n"
 	ln -vs ~/Downloads/scripts/ ~/bin
