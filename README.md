@@ -15,6 +15,7 @@ Files and scripts in this reposoitory are licensed under the GNU General Public 
 8. **slick-greeter** - used by LightDM to login user.
 9. **slickback.png** - background for LightDM login screen.
 10. **nano.sed** - sed script to configure nanorc.
+11. **zramswap.sed - sed script to configure /etc/default/zramswap
 ## Debian Installation
 1. Install a minimal installation of Debian stable using **Debian-Minimal-Install.md** as a guide.
 	- **Do not** set a root password. Set yourself up as primary user. This will automatically give you sudo access.
@@ -22,7 +23,7 @@ Files and scripts in this reposoitory are licensed under the GNU General Public 
 	- Highly recommend setting up a separate home partition. It makes life easier.
 2. In the software selection page:
 	- Uncheck all desktop environments.
-	- Check SSH server. SSH is used to administer all Linux systems on MosfaNet. (Shouldn't be needed in a VM.)
+	- Check SSH server. SSH is used to administer all Linux systems on MosfaNet.
 	- Check Standard system utilities.
 3. Reboot
 ## i3 Installation
@@ -39,7 +40,7 @@ $ sudo reboot
 ```
 ## NOTES
 - The `install.sh` script clones the configs and scripts repositories to ~/Downloads.
-- The `install.sh` script copies the contents of the script repository from ~/Downloads/scripts to ~/bin.
+- The `install.sh` script copies/links the contents of the script repository from ~/Downloads/scripts to ~/bin.
 - The `configs.sh` script copies or links configuration files from ~/Downloads/configs to ~/.config.
 - Configure Polybar modules for network and battery, as applicable, before rebooting after i3 installation.
 ## Set screen resolution in Gnome-Boxes VM
@@ -58,4 +59,4 @@ These programs are free software; you can redistribute them and/or modify them u
 These programs are distributed in the hope that they will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
 #### Rick Romig "*The Luddite Geek*"
-#### 05 September 2025
+#### 13 June 2026
