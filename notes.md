@@ -14,17 +14,15 @@
 	- Install disk utilities as applicable
 4. Setup LightDM
 5. Enable services
-6. Copy scripts from cloned scripts repo to ~/bin
+6. Copy or link scripts from cloned scripts repo to ~/bin
 7. Install Nerd Fonts with `nerdfonts.sh` script
-8. Copy configuration files with `configs.sh` script
+8. Copy or link configuration files with `configs.sh` script
 
 ### Configuration Files
 1. run.sh
-	- Copies scripts and supporting filesl from ~/Downloads/scripts to ~/bin
+	- Copies or links scripts and supporting files from ~/Downloads/scripts to ~/bin
 2. configs.sh
-	- Copies all directories and reshift.conf from ~/Downloads/configs to ~/.config/
-3. Picom is installed, but I have no configuration file for it.
-	- i3/autostart.sh runs `piccom -b`
+	- Copies or links all directories and reshift.conf from ~/Downloads/configs to ~/.config/
 
 ### Misc notes
 - Check for existing i3 configuration (not implemented)
