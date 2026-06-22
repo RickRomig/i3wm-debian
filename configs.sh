@@ -7,7 +7,7 @@
 # Author       : Copyright © 2025 Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail | rick.romig@mymetronet.net
 # Created      : 27 Apr 2025
-# Last updated : 12 Feb 2026
+# Last updated : 22 Jun 2026
 # Comments     :
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -64,6 +64,7 @@ link_configs() {
 		"rofi/arc_dark_transparent_colors.rasi"
 		"rofi/config.rasi"
 		"redshift.conf"
+		"shellcheck/shellcheckrc"
 	)
 	for file in "${files[@]}"; do
 		if [[ -f "$HOME/Downloads/configs/$file" ]]; then
@@ -160,7 +161,7 @@ show_polybar_devices() {
 
 main() {
 	local script="${0##*/}"
-	local version="2.6.26043"
+	local version="2.7.26173"
 	link_dotfiles
 	link_configs
 	copy_configs
