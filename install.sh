@@ -7,33 +7,33 @@
 # Author       : Copyright © 2025, Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail.com | rick.romig@mymetronet.com
 # Created      : 10 Apr 2025
-# Last updated : 10 May 2026
+# Last updated : 05 Jul 2026
 # Comments     : Run this script first.
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
 # License URL  : https://github.com/RickRomig/i3wm-debian/blob/main/LICENSE
 ###############################################################################
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
+# This program is free software; you can redistribute it and/or modify# it
+# under the terms of the GNU General Public License as published by the Free
+# Software Foundation; either version 2 of the License, or (at your option) any
+# later version.
 #
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-# GNU General Public License for more details.
+# This program is distributed in the hope that it will be useful, but WITHOUT ANY
+# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+# A PARTICULAR PURPOSE. See the# GNU General Public License for more details.
 ###############################################################################
 
-# shellcheck disable=SC1090
+# shellcheck source=./utils.sh
+# shellcheck source=./packages.conf
 
 ## Functions ##
 
 print_logo() {
 	echo -ne "\033[0;92m"
-	cat << "LOGO"
+	cat << _LOGO_
   __  __            __       _   _      _
  |  \/  | ___  ___ / _| __ _| \ | | ___| |_
- | |\/| |/ _ \/ __| |_ / _` |  \| |/ _ \ __|
+ | |\/| |/ _ \/ __| |_ / _\` |  \| |/ _ \ __|
  | |  | | (_) \__ \  _| (_| | |\  |  __/ |_
  |_|  |_|\___/|___/_|  \__,_|_| \_|\___|\__|
      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -41,8 +41,9 @@ print_logo() {
      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
      |T|h|e| |L|u|d|d|i|t|e| |G|e|e|k| |
      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-LOGO
+_LOGO_
 	echo -e "\033[0m"
+	return 0
 }
 
 # Source utils.sh and packages.conf
@@ -61,8 +62,8 @@ source_files() {
 			printf "\e[91m%s not found.\e[0m\n" "$file" >&2
 			status=1
 		fi
-		return "$status"
 	done
+	return "$status"
 }
 
 # Install Spice Tools if a virtual machine
@@ -74,6 +75,7 @@ vm_spice_install() {
   	grep -q spice-vdagent < <(apt-cache show spice-vdagent 2>/dev/null) && sudo apt-get install -y spice-vdagent
   	grep -q spice-webdavd < <(apt-cache show spice-webdavd 2>/dev/null) && sudo apt-get install -y spice-webdavd
 	fi
+	return "$?"
 }
 
 # Install ZRAM Tools (Swap partition should NOT have been created during install)
@@ -83,6 +85,7 @@ install_zram() {
 	sudo sed -i.bak -f ./zramswap.sed /etc/default/zramswap
   sudo systemctl restart zramswap.service
 	printf "Zram-tools installed.\n"
+	return 0
 }
 
 # Install AMD or Intell microcode
@@ -100,22 +103,25 @@ install_microcode() {
 		* )
 			printf "\e[91mWARNING!\e[0m %s CPU not supported.\n" "$vendor_id" >&2
 	esac
+	return 0
 }
 
 install_bluetooth() {
 	printf "\e[93mInstalling Bluetooth...\e[0m\n"
 	sudo apt install -y bluez blueman
 	sudo systemctl enable bluetooth
+	return "$?"
 }
 
 # Install disk utilities as required
 install_disk_utils() {
 	if [[ -b /dev/vda ]]; then
 		printf "\e[91mVirtual machine, disk utillities were not installed.\e[0m\n"
-		return
+		return 0
 	fi
 	[[ -b /dev/sda ]] && { printf "\e[93mInstalling hdparm...\e[0m\n"; sudo apt install -y hdparm; }
 	[[ -c /dev/nvme0 ]] && { printf "\e[93mInstalling nvme-cli...\e[0m\n"; sudo apt install -y nvme-cli; }
+	return "$?"
 }
 
 # Configure login manager
@@ -133,6 +139,7 @@ configure_lightdm() {
 	# XSessions & i3.desktop
 	[[ -d /usr/share/xsessions ]] || sudo mkdir -p /usr/share/xsessions
 	sudo cp i3.desktop /usr/share/xsessions/
+	return "$?"
 }
 
 # Prepare for i3 iinstallation
@@ -147,6 +154,7 @@ initial_setup() {
 	mkdir -pv ~/.local/{bin,state,share/{doc,fonts,logs,icons}}
 	mkdir -pv ~/.ssh && chmod 700 ~/.ssh
 	clone_repos
+	return "$?"
 }
 
 # Install applilcations using packages.conf
@@ -194,6 +202,7 @@ install_by_category() {
 
 	printf "\e[93mInstalling display manager...\e[0m\n"
 	install_packages "${LIGHTDM[@]}"
+	return 0
 }
 
 # Enable systemd servies
@@ -208,6 +217,7 @@ enable_services() {
 	    printf "%s is already enabled\n" "$service"
 	  fi
 	done
+	return "$?"
 }
 
 # Check for distribution, virtual machine, apt updates, moderinzed sources
@@ -222,11 +232,12 @@ pre_install() {
 	# sudo find /etc/apt -name "*.list" -exec sed -i 's/http:/https:/;/ftp/s/https:/http:/' {} \;
 	[[ -f /etc/apt/sources.list.d/debian-sources ]] || sudo apt modernize-sources
 	sudo apt-get update && sudo apt-get dist-upgrade -y && sudo apt-get clean
+	return "$?"
 }
 
 main() {
 	local -r script="${0##*/}"
-	local -r version="2.4.26130"
+	local -r version="2.5.26186"
 	local confirm
 	local re="^[Yy]$"
 	clear
