@@ -7,22 +7,21 @@
 # Author       : Copyright © 2025, Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail.com | rick.romig@mymetronet.com
 # Created      : 10 Apr 2025
-# Last updated : 10 May 2026
-# Version      : 1.10.26130
+# Last updated : 05 Jul 2026
+# Version      : 1.10.26186
 # Comments     : Sourced in install.sh
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
 # License URL  : https://github.com/RickRomig/i3wm-debian/blob/main/LICENSE
 ###############################################################################
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
+# This program is free software; you can redistribute it and/or modify# it
+# under the terms of the GNU General Public License as published by the Free
+# Software Foundation; either version 2 of the License, or (at your option) any
+# later version.
 #
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-# GNU General Public License for more details.
+# This program is distributed in the hope that it will be useful, but WITHOUT ANY
+# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+# A PARTICULAR PURPOSE. See the# GNU General Public License for more details.
 ###############################################################################
 
 # Check if a package is installed
@@ -46,6 +45,7 @@ install_packages() {
     	sudo apt-get install -yy "$new_package" 2>/dev/null || printf "\e[32m%s not installed, skipping...\e[0m\n" "$new_package"
     done
   fi
+	return 0
 }
 
 # Clone configs and scripts repositories to ~/Downloads
@@ -62,6 +62,7 @@ clone_repos() {
 			git clone "$repo_url/$repo.git" "$dl_dir/$repo"
 		fi
 	done
+	return 0
 }
 
 # Link/Copy scripts to ~/bin
@@ -71,4 +72,5 @@ link_scripts() {
 	# printf "\e[93mCopying scripts to ~/bin ...\e[0m\n"
 	# cp -rpv ~/Downloads/scripts/ ~/bin/
 	# [[ -d "$HOME/bin" ]] && rm -rf "${HOME:?}/bin"
+	return 0
 }
