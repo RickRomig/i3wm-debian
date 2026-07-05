@@ -7,7 +7,7 @@
 # Author       : Copyright © 2025 Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail | rick.romig@mymetronet.net
 # Created      : 27 Apr 2025
-# Last updated : 22 Jun 2026
+# Last updated : 05 Jul 2026
 # Comments     :
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -46,6 +46,7 @@ link_dotfiles() {
 		[[ -f "$HOME/$dot_file" ]] && mv -v "$HOME/$dot_file" "$old_configs/"
 		ln -sv ~/Downloads/configs/"$dot_file" ~/"$dot_file"
 	done
+	return 0
 }
 
 # Link specific configuration files to directories in ~/.config
@@ -79,6 +80,7 @@ link_configs() {
 		fi
 	done
   micro -plugin install bookmark
+	return 0
 }
 
 # Copy configuration directories to ~/.config
@@ -95,6 +97,7 @@ copy_configs(){
 		printf "\e[93mCopying %s ...\e[0m\n" "$cfg_dir"
 		cp -rv "$HOME/Downloads/configs/$cfg_dir" "$HOME/.config"/
 	done
+	return 0
 }
 
 # Copy miscellaneous files
@@ -103,6 +106,7 @@ cp_ln_misc_files() {
 	cp -av ~/Downloads/configs/icons/. ~/.icons/
 	ln -sv ~/Downloads/configs/backgrounds ~/.config/
 	ln -sv ~/Downloads/configs/local/leave.txt ~/.local/share/doc/leave.txt
+	return 0
 }
 
 # Configure the nano text editor
@@ -110,6 +114,7 @@ configure_nano() {
 	printf "\e[93mConfiguring nano...\e[0m\n"
 	cp -v /etc/nanorc "$HOME/Downloads/configs"/nano/
 	sed -i -f nano.sed "$HOME/Downloads/configs"/nano/nanorc
+	return 0
 }
 
 # Set reserved space for root and home partitions
@@ -126,6 +131,7 @@ set_reserved_space() {
 	[[ "$home_part" ]] && sudo /usr/sbin/tune2fs -m 0 "$home_part"
 	[[ "$data_part" ]] && sudo /usr/sbin/tune2fs -m 0 "$data_part"
 	printf "Partition reserve space set.\n"
+	return 0
 }
 
 # Add tweaks to /etc/sudoers.d directory and set swappiness
@@ -146,6 +152,7 @@ apply_system_tweaks() {
 	printf "\e[93mSetting sleep.conf...\e[0m\n"
 	sudo cp -v "$repo_dir"/99-sleep.conf /etc/systemd/sleep.conf.d/
 	set_reserved_space
+	return 0
 }
 
 show_polybar_devices() {
@@ -157,11 +164,12 @@ show_polybar_devices() {
 	[[ "$eth_int" ]] && printf "Ethernet: %s\n" "${eth_int##*/}"
 	[[ "$wifi_int" ]] && printf "Wireless: %s\n" "${wifi_int##*/}"
 	[[ "$bat_name" ]] && printf "Battery:  %s\n" "${bat_name##*/}"
+	return 0
 }
 
 main() {
 	local script="${0##*/}"
-	local version="2.7.26173"
+	local -r version="2.7.26186"
 	link_dotfiles
 	link_configs
 	copy_configs
