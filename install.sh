@@ -7,7 +7,7 @@
 # Author       : Copyright © 2025, Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail.com | rick.romig@mymetronet.com
 # Created      : 10 Apr 2025
-# Last updated : 05 Jul 2026
+# Last updated : 28 Jul 2026
 # Comments     : Run this script first.
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -25,8 +25,6 @@
 
 # shellcheck source=./utils.sh
 # shellcheck source=./packages.conf
-
-## Functions ##
 
 print_logo() {
 	echo -ne "\033[0;92m"
@@ -70,11 +68,7 @@ source_files() {
 vm_spice_install() {
 	local localnet
 	localnet=$(cut -d' ' -f3 < <(ip route get 1.2.3.4)); localnet="${localnet%.*}"
-	if [[ "$localnet" == "196.168.122" ]] || [[ "$localnet" == "10.0.2" ]]; then
-		printf "\e[93mVirtual Machine - Installing Spice Tools...\e[0m\n"
-  	grep -q spice-vdagent < <(apt-cache show spice-vdagent 2>/dev/null) && sudo apt-get install -y spice-vdagent
-  	grep -q spice-webdavd < <(apt-cache show spice-webdavd 2>/dev/null) && sudo apt-get install -y spice-webdavd
-	fi
+	[[ "$localnet" == "196.168.122" ]] || [[ "$localnet" == "10.0.2" ]] && sudo apt-get install -y spice-vdagent spice-webdavd
 	return "$?"
 }
 
@@ -255,7 +249,5 @@ main() {
 	echo "$script $version"
 	exit
 }
-
-## Execution ##
 
 main "$@"
