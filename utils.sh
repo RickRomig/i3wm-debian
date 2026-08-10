@@ -7,9 +7,9 @@
 # Author       : Copyright © 2025, Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail.com | rick.romig@mymetronet.com
 # Created      : 10 Apr 2025
-# Last updated : 05 Jul 2026
-# Version      : 1.10.26186
-# Comments     : Sourced in install.sh
+# Updated      : 10 Aug 2026
+# Version      : 1.11.26222
+# Comments     : Sourced by install.sh
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
 # License URL  : https://github.com/RickRomig/i3wm-debian/blob/main/LICENSE
@@ -50,10 +50,10 @@ install_packages() {
 
 # Clone configs and scripts repositories to ~/Downloads
 clone_repos() {
-	local dl_dir repo repos repo_url
-	repo_url="https://github.com/RickRomig"
+	local -r repo_url="https://github.com/RickRomig"
+	local -r dl_dir=~/Downloads
+	local repo repos
 	repos=(configs scripts)
-	dl_dir=~/Downloads
 	printf "\e[93mCloning configs and scripts...\e[0m\n"
 	for repo in "${repos[@]}"; do
 		if [[ -d "$dl_dir/$repo" ]]; then
