@@ -7,28 +7,26 @@
 # Author       : Copyright © 2025 Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail | rick.romig@mymetronet.net
 # Created      : 27 Apr 2025
-# Last updated : 05 Jul 2026
-# Comments     :
+# Updated      : 10 Aug 2026
+# Version      : 2.8.26222
+# Comments     : Run after nerfonts.sh
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
 # License URL  : https://github.com/RickRomig/i3wm-debian/blob/main/LICENSE
-###########################################################################
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
+###############################################################################
+# This program is free software; you can redistribute it and/or modify# it under
+# the terms of the GNU General Public License as published by the Free Software
+# Foundation; either version 2 of the License, or (at your option) any later
+# version.
 #
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-# GNU General Public License for more details.
-##########################################################################
-
-## Functions ##
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE. See the# GNU General Public License for more details.
+###############################################################################
 
 # Create symbolic links to dotfiles in the home directory
 link_dotfiles() {
-	local old_configs=~/old-configs
+	local -r old_configs=~/old-configs
 	[[ -d "$old_configs" ]] || mkdir -p "$old_configs"
 	local dot_file dot_files
 	dot_files=(
@@ -51,7 +49,7 @@ link_dotfiles() {
 
 # Link specific configuration files to directories in ~/.config
 link_configs() {
-	local old_configs=~/old-configs
+	local -r old_configs=~/old-configs
 	[[ -d "$old_configs" ]] || mkdir -p "$old_configs"
 	local file files
 	files=(
@@ -136,7 +134,7 @@ set_reserved_space() {
 
 # Add tweaks to /etc/sudoers.d directory and set swappiness
 apply_system_tweaks() {
-	local repo_dir=~/Downloads/configs
+	local -r repo_dir=~/Downloads/configs
 	printf "\e[93mApplying password feedback...\e[0m\n"
 	sudo cp -v "$repo_dir"/sudoers/0pwfeedback /etc/sudoers.d/
 	sudo chmod 440 /etc/sudoers.d/0pwfeedback
@@ -168,8 +166,8 @@ show_polybar_devices() {
 }
 
 main() {
-	local script="${0##*/}"
-	local -r version="2.7.26186"
+	local -r script="${0##*/}"
+	local -r version="2.8.26222"
 	link_dotfiles
 	link_configs
 	copy_configs
@@ -182,7 +180,5 @@ main() {
 	echo "$script $version"
 	exit
 }
-
-## Execution ##
 
 main "$@"
