@@ -7,20 +7,21 @@
 # Author       : Copyright © 2025, Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail.com | rick.romig@mymetronet.com
 # Created      : 10 Apr 2025
-# Last updated : 28 Jul 2026
+# Updated      : 10 Aug 2026
+# Version      : 2.6.26222
 # Comments     : Run this script first.
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
 # License URL  : https://github.com/RickRomig/i3wm-debian/blob/main/LICENSE
 ###############################################################################
-# This program is free software; you can redistribute it and/or modify# it
-# under the terms of the GNU General Public License as published by the Free
-# Software Foundation; either version 2 of the License, or (at your option) any
-# later version.
+# This program is free software; you can redistribute it and/or modify# it under
+# the terms of the GNU General Public License as published by the Free Software
+# Foundation; either version 2 of the License, or (at your option) any later
+# version.
 #
-# This program is distributed in the hope that it will be useful, but WITHOUT ANY
-# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
-# A PARTICULAR PURPOSE. See the# GNU General Public License for more details.
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE. See the# GNU General Public License for more details.
 ###############################################################################
 
 # shellcheck source=./utils.sh
@@ -46,8 +47,8 @@ _LOGO_
 
 # Source utils.sh and packages.conf
 source_files() {
-	local file files status script_dir
-	status=0
+	local file files script_dir
+	local -i status=0
 	script_dir=$(dirname "$(readlink -f "${0}")")
 	files=(utils.sh packages.conf)
 	for file in "${files[@]}"; do
@@ -66,10 +67,24 @@ source_files() {
 
 # Install Spice Tools if a virtual machine
 vm_spice_install() {
-	local localnet
+	local agents=(spice-vdagent spice-webdavd)
+	local agent localnet
+	local -i status=0
 	localnet=$(cut -d' ' -f3 < <(ip route get 1.2.3.4)); localnet="${localnet%.*}"
-	[[ "$localnet" == "196.168.122" ]] || [[ "$localnet" == "10.0.2" ]] && sudo apt-get install -y spice-vdagent spice-webdavd
-	return "$?"
+	if [[ "$localnet" == "196.168.122" ]] || [[ "$localnet" == "10.0.2" ]]; then
+		sudo apt-get install -y spice-vdagent spice-webdavd
+		for agent in "${agents[@]}"; do
+			if grep -q '^ii' < <(dpkg -l "$agent" 2>/dev/null); then
+				printf "%s installation successful.\n" "$agent"
+			else
+	 			status="$?"
+				printf "%s %s installation failed.\n" "$RED_ERROR" "$agent"
+			fi
+		done
+	else
+		printf "Not a virtual machine.\n"
+	fi
+	return "$status"
 }
 
 # Install ZRAM Tools (Swap partition should NOT have been created during install)
@@ -231,7 +246,7 @@ pre_install() {
 
 main() {
 	local -r script="${0##*/}"
-	local -r version="2.5.26186"
+	local -r version="2.6.26222"
 	local confirm
 	local re="^[Yy]$"
 	clear
