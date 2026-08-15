@@ -7,8 +7,8 @@
 # Author       : Copyright © 2025 Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail | rick.romig@mymetronet.net
 # Created      : 27 Apr 2025
-# Updated      : 10 Aug 2026
-# Version      : 2.8.26222
+# Updated      : 15 Aug 2026
+# Version      : 3.0.26227
 # Comments     : Run after nerfonts.sh
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -110,8 +110,8 @@ cp_ln_misc_files() {
 # Configure the nano text editor
 configure_nano() {
 	printf "\e[93mConfiguring nano...\e[0m\n"
-	cp -v /etc/nanorc "$HOME/Downloads/configs"/nano/
-	sed -i -f nano.sed "$HOME/Downloads/configs"/nano/nanorc
+	cp -v /etc/nanorc ~/.config/nano/
+	sed -i -f ~/bin/files/nano.sed ~/.config/nano/nanorc
 	return 0
 }
 
@@ -153,30 +153,48 @@ apply_system_tweaks() {
 	return 0
 }
 
-show_polybar_devices() {
-	local eth_int wifi_int bat_name
+configure_polybar() {
+	local -r conf=config.ini
+	local eth_int wifi_int bat_name polybar_dir
 	eth_int=$(find /sys/class/net -name "e*")
 	wifi_int=$(find /sys/class/net -name "w*")
 	bat_name=$(find /sys/class/power_supply/ -name "BAT*")
+	polybar_dir=$(find ~/.config -maxdepth 1 -type d -name polybar -print)
 	printf "\e[93mPolybar device names:\e[0m\n"
 	[[ "$eth_int" ]] && printf "Ethernet: %s\n" "${eth_int##*/}"
 	[[ "$wifi_int" ]] && printf "Wireless: %s\n" "${wifi_int##*/}"
 	[[ "$bat_name" ]] && printf "Battery:  %s\n" "${bat_name##*/}"
+	if [[ "$wifi_int" ]]; then
+		sed -i "s/wlan0/$wifi_int/" "$polybar_dir/$conf"
+	else
+		sed -i '/^modules-left/s/ wlan//' "$polybar_dir/$conf"
+	fi
+	if [[ "$eth_int" ]]; then
+		sed -i "s/eth0/$eth_int/" "$polybar_dir/$conf"
+	else
+		sed -i '/^modules-left/s/ eth//' "$polybar_dir/$conf"
+	fi
+	if [[ "$bat_name" ]]; then
+		sed -i "s/BAT0/$bat_name/" "$polybar_dir/$conf"
+	else
+		sed -i '/^modules-right/s/ battery//' "$polybar_dir/$conf"
+	fi
+	printf "polybar-i3 confgured.\n"
 	return 0
 }
 
 main() {
 	local -r script="${0##*/}"
-	local -r version="2.8.26222"
+	local -r version="3.0.26227"
 	link_dotfiles
 	link_configs
 	copy_configs
 	cp_ln_misc_files
 	configure_nano
 	apply_system_tweaks
+	configure_polybar
 	printf "\e[93mi3 Window Manager installation complete!\e[0m\n"
-	printf "Remember to configure Polybar before rebooting.\n"
-	show_polybar_devices
+	printf "Reboot and login to i3.\n"
 	echo "$script $version"
 	exit
 }
