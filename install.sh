@@ -7,8 +7,8 @@
 # Author       : Copyright © 2025, Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail.com | rick.romig@mymetronet.com
 # Created      : 10 Apr 2025
-# Updated      : 10 Aug 2026
-# Version      : 2.6.26222
+# Updated      : 15 Aug 2026
+# Version      : 2.7.26227
 # Comments     : Run this script first.
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -78,7 +78,7 @@ vm_spice_install() {
 				printf "%s installation successful.\n" "$agent"
 			else
 	 			status="$?"
-				printf "%s %s installation failed.\n" "$RED_ERROR" "$agent"
+				printf "\e[91mERROR:\e[0m %s installation failed.\n" "$agent"
 			fi
 		done
 	else
@@ -91,7 +91,7 @@ vm_spice_install() {
 install_zram() {
 	printf "\e[93mInstalling Z-Ram...\e[0m\n"
 	sudo apt install -y zram-tools
-	sudo sed -i.bak -f ./zramswap.sed /etc/default/zramswap
+	sudo sed -i.bak -f ~/Downloads/scripts/files/zramswap.sed /etc/default/zramswap
   sudo systemctl restart zramswap.service
 	printf "Zram-tools installed.\n"
 	return 0
@@ -111,6 +111,7 @@ install_microcode() {
 			printf "Intel microcode installed.\n" ;;
 		* )
 			printf "\e[91mWARNING!\e[0m %s CPU not supported.\n" "$vendor_id" >&2
+			return 1
 	esac
 	return 0
 }
@@ -151,9 +152,23 @@ configure_lightdm() {
 	return "$?"
 }
 
+# Check for distribution, virtual machine, apt updates, moderinzed sources
+pre_install() {
+	local distro
+	distro="$(/usr/bin/lsb_release --codename --short 2>/dev/null)"
+	source_files || exit 1
+	[[ "$distro" == "bookworm" || "$distro" == "trixie" ]] || { printf "\e[91m%s is unsupported.\e[0m\nInstalls i3wm on Debian 12 or 13.\n" "${distro^}" >&2; exit 1; }
+	printf "Install spice-vdagent & spice-webdavd if a Virtual Machine...\n"
+	vm_spice_install
+	printf "\e[93mUpdating the system...\e[0m\n"
+	# sudo find /etc/apt -name "*.list" -exec sed -i 's/http:/https:/;/ftp/s/https:/http:/' {} \;
+	[[ -f /etc/apt/sources.list.d/debian-sources ]] || sudo apt modernize-sources
+	sudo apt-get update && sudo apt-get dist-upgrade -y && sudo apt-get clean
+	return "$?"
+}
+
 # Prepare for i3 iinstallation
 initial_setup() {
-	grep -iw swap < <(lsblk) || install_zram
 	install_microcode
 	grep -i blue < <(lsusb) && install_bluetooth
 	printf "\e[93mSetting up directories...\e[0m\n"
@@ -163,6 +178,7 @@ initial_setup() {
 	mkdir -pv ~/.local/{bin,state,share/{doc,fonts,logs,icons}}
 	mkdir -pv ~/.ssh && chmod 700 ~/.ssh
 	clone_repos
+	grep -iw swap < <(lsblk) || install_zram
 	return "$?"
 }
 
@@ -229,24 +245,9 @@ enable_services() {
 	return "$?"
 }
 
-# Check for distribution, virtual machine, apt updates, moderinzed sources
-pre_install() {
-	local distro
-	distro="$(/usr/bin/lsb_release --codename --short 2>/dev/null)"
-	source_files || exit 1
-	[[ "$distro" == "bookworm" || "$distro" == "trixie" ]] || { printf "\e[91m%s is unsupported.\e[0m\nInstalls i3wm on Debian 12 or 13.\n" "${distro^}" >&2; exit 1; }
-	printf "Install spice-vdagent & spice-webdavd if a Virtual Machine...\n"
-	vm_spice_install
-	printf "\e[93mUpdating the system...\e[0m\n"
-	# sudo find /etc/apt -name "*.list" -exec sed -i 's/http:/https:/;/ftp/s/https:/http:/' {} \;
-	[[ -f /etc/apt/sources.list.d/debian-sources ]] || sudo apt modernize-sources
-	sudo apt-get update && sudo apt-get dist-upgrade -y && sudo apt-get clean
-	return "$?"
-}
-
 main() {
 	local -r script="${0##*/}"
-	local -r version="2.6.26222"
+	local -r version="2.7.26227"
 	local confirm
 	local re="^[Yy]$"
 	clear
