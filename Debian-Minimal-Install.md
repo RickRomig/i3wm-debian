@@ -100,23 +100,23 @@ $ sudo apt install git network-manager   # if not installed during Debian instal
 $ git clone https://github.com/RickRomig/i3wm-debian.git` ~/i3wm-debian
 ```
 ### Zram
-Install & configure Zram (Skip this step since Zram be installed by 'install.sh' if no swap is found.)
+Install & configure Zram (Skip this step since Zram will be installed by 'install.sh' if no swap is found.)
 ```bash
 $ sudo apt install zram-tools
 $ sudo nano /etc/default/zramswap
-# Uncomment ALGO=lz4
-ALGO=lz4
+# Uncomment ALGO=lz4 and cnange to zstd
+ALGO=zstd
 # Uncomment Percent=50 and change 50 to 25
 PERCENT=25
 # Use sed instead of nano (recommended)
-$ sed -i.bak '/ALGO/s/^#//;/PERCENT/s/^#//;s/50$/25/' /etc/default/zramswap
+$ sudo sed -i.bak '/ALGO/s/^#//;s/lz4/zstd/;/PERCENT/s/^#//;s/50$/25/' /etc/default/zramswap
 $ sudo systemctl restart zramswap.service
 ```
 ### Repositories for my scripts and configuration files
-For information only, repos will be cloned to `~/Downloads` by the `install.sh` installation script.
+For information only, repositories will be cloned to `~/Downloads` by the `install.sh` installation script.
 ```bash
 $ git clone https://github.com/RickRomig/scripts.git ~/Downloads/scripts
 $ git clone https://github.com/RickRomig/configs.git ~/Downloads/configs
 ```
 #### Rick Romig "*The Luddite Geek*"
-#### 05 September 2025
+#### 16 August 2026

@@ -2,27 +2,27 @@
 ## i3wm-debian installation scripts
 
 ### Initial Setup
-1. Function to check if installation is a virtual machine
+1. Function to check if installation is a virtual machine (implemented)
 	- If a VM, install `spice-vdagent` and `spice-webdavd`
-2. Install essential tools and packages
+2. Install essential tools and packages (implemented)
 	- Install `zram-tools`
 	- Install microcode
 	- Install Bluetooth (if present)
 	- Set up XDG and user directories
 	- Clone configs and scripts repositories to ~/Downloads
 3. Install packages with functions in `utils.sh` (Flatpak and Flathub are installed)
-	- Install disk utilities as applicable
-4. Setup LightDM
-5. Enable services
-6. Copy or link scripts from cloned scripts repo to ~/bin
-7. Install Nerd Fonts with `nerdfonts.sh` script
-8. Copy or link configuration files with `configs.sh` script
+	- Install disk utilities as applicable (implemented)
+4. Setup LightDM (implemented)
+5. Enable services (implemented)
+6. Copy or link scripts from cloned scripts repo to ~/bin (implemented)
+7. Install Nerd Fonts with `nerdfonts.sh` script (implemented)
+8. Copy or link configuration files with `configs.sh` script (implemented)
 
 ### Configuration Files
-1. run.sh
-	- Copies or links scripts and supporting files from ~/Downloads/scripts to ~/bin
+1. install.sh
+	- Copies or links scripts and supporting files from ~/Downloads/scripts to ~/bin (implemented)
 2. configs.sh
-	- Copies or links all directories and reshift.conf from ~/Downloads/configs to ~/.config/
+	- Copies or links all directories and redshift.conf from ~/Downloads/configs to ~/.config/ (implemented)
 
 ### Misc notes
 - Check for existing i3 configuration (not implemented)
@@ -31,7 +31,7 @@ check_i3(){
 	local i3_cfg_d response backup_dir
 	i3_cfg_d="$HOME/.config/i3"
 	if [[ "$i3_cfg_d" ]]; then
-		echo "An exist ~/.config/i3 directory was found."
+		echo "An existing ~/.config/i3 directory was found."
 		read -rp "Backup the existing configuration? (y/n)" response
 		if [[ "$response" =~ ^[Yy]$ ]]; then
 			backup_dir="$HOME/.config/i3_backup+$(date +%F-%R)"
@@ -41,7 +41,7 @@ check_i3(){
 	fi
 }
 ```
-- Modernize sources nag in Debian 13 Trixie
+- Modernize sources nag in Debian 13 Trixie (install.sh modernizes Debian sources)
 	- Create an alias in `.bashrc` or `.bash_aliases`
 ```bash
 alias apt='apt -o APT::Get::Update::SourceListWarnings=false'
@@ -52,7 +52,6 @@ alias apt='apt -o APT::Get::Update::SourceListWarnings=false'
 APT::Get::Update::SourceListWarnings "false";
 ```
 - Trixie backports Signed-By line: `/usr/share/keyrings/debian-archive-keyring.gpg`
-
 
 ### Replace current .bashrc (not implemented)
 ```bash
