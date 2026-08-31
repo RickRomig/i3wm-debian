@@ -40,11 +40,11 @@ $ micro .config/polybar/config.ini	# Edit wlan, eth, and battery modules as need
 $ sudo reboot
 ```
 ## NOTES
-- The `install.sh` script clones the configs and scripts repositories to ~/Downloads.
-- The `install.sh` script copies/links the contents of the script repository from ~/Downloads/scripts to ~/bin.
-- The `configs.sh` script copies/links configuration files from ~/Downloads/configs to ~/.config.
+- The `install.sh` script clones the configs and scripts repositories to `~/Downloads`.
+- The `install.sh` script copies/links the contents of the script repository from `~/Downloads/scripts to ~/bin`.
+- The `configs.sh` script copies/links configuration files from ~/Downloads/configs to `~/.config`.
 - Configure Polybar modules for network and battery, as applicable, before rebooting after i3 installation.
-	- The `configs.sh` script's `configure_polybar` function should configure the `config.ini'.
+	- The `configs.sh` script's `configure_polybar` function should configure the `config.ini`.
 ## Set screen resolution in Gnome-Boxes VM
 Add `display-setup-script=xrandr -s 1920x1080` in the `[Seat:*]` section as shown below:
 ```bash
