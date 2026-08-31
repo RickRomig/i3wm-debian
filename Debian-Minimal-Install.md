@@ -41,7 +41,7 @@
         - Set partition size (300M or 500M for UEFI partition if UEFI)
         - Create as `vfat` and select `EFI System Partition`  (UEFI install)
         - Create root (/) and home partitions (Make `/` bootable if not UEFI)
-        - Create as 'ext4' and designate as `/` and `/home' respectively.
+        - Create as 'ext4' and designate as `/` and `/home` respectively.
         - No swap parition, will be using `zram` for swap.
         - Write changes to disk.
    10. Install the base system.
@@ -100,7 +100,7 @@ $ sudo apt install git network-manager   # if not installed during Debian instal
 $ git clone https://github.com/RickRomig/i3wm-debian.git` ~/i3wm-debian
 ```
 ### Zram
-Install & configure Zram (Skip this step since Zram will be installed by 'install.sh' if no swap is found.)
+Install & configure Zram (Skip this step since Zram will be installed by 'install.sh` if no swap is found.)
 ```bash
 $ sudo apt install zram-tools
 $ sudo nano /etc/default/zramswap
