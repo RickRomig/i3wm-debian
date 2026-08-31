@@ -36,7 +36,7 @@ install_packages() {
 	local package new_package
 
   for package in "${packages[@]}"; do
-		is_installed "$package" || to_install+=("$pkg")
+		is_installed "$package" || to_install+=("$package")
   done
 
   if [[ "${#to_install[@]}" -ne 0 ]]; then
