@@ -24,6 +24,14 @@
 # A PARTICULAR PURPOSE. See the# GNU General Public License for more details.
 ###############################################################################
 
+# Log errors
+log() {
+  local message="$1"
+  local log_file=~/install-errors.log
+  tee -a "$log_file" < <(printf "%(%F %R)T: %s\n" -1 "$message")
+	return 0
+}
+
 # Check if a package is installed
 is_installed() {
 	grep -qw '^ii' < <(dpkg -l "$1" 2>/dev/null) && return 0 || return 1
@@ -42,7 +50,8 @@ install_packages() {
   if [[ "${#to_install[@]}" -ne 0 ]]; then
     for new_package in "${to_install[@]}"; do
     	printf "\e[93mInstalling %s...\e[0m\n" "$new_package"
-    	sudo apt-get install -yy "$new_package" 2>/dev/null || printf "\e[32m%s not installed, skipping...\e[0m\n" "$new_package"
+    	sudo apt-get install -yy "$new_package" # 2>/dev/null
+			is_installed "$new_package" || log "\e[32m%s not installed, skipping...\e[0m\n" "$new_package"
     done
   fi
 	return 0
