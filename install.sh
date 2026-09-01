@@ -193,49 +193,38 @@ install_by_category() {
 	install_packages "${SYSTEM_UTILS[@]}"
 	printf "\e[93mInstalling flathub...\e[0m\n"
 	sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-	sleep 5
 
 	printf "\e[93mInstalling network utilities...\e[0m\n"
 	install_packages "${NETWORK_UTILS[@]}"
 	sudo sed -i.bak '/managed/s/false/true/' /etc/NetworkManager/NetworkManager.conf
-	sleep 5
 
 	printf "\e[93mInstalling File manager packages...\e[0m\n"
 	install_packages "${FILE_MANAGER[@]}"
-	sleep 5
 
 	printf "\e[93mInstalling Audio packages...\e[0m\n"
 	install_packages "${AUDIO[@]}"
-	sleep 5
 
 	printf "\e[93mInstalling printer tools...\e[0m\n"
 	install_packages "${PRINTER_TOOLS[@]}"
-	sleep 5
 
 	printf "\e[93mInstalling development tools...\e[0m\n"
 	install_packages "${DEV_TOOLS[@]}"
-	sleep 5
 
 	printf "\e[93mInstalling system maintenance tools...\e[0m\n"
 	install_packages "${MAINTENANCE[@]}"
 	install_disk_utils
-	sleep 5
 
 	printf "\e[93mInstalling desktop environment...\e[0m\n"
 	install_packages "${DESKTOP[@]}"
-	sleep 5
 
 	printf "\e[93mInstalling office applications...\e[0m\n"
 	install_packages "${OFFICE[@]}"
-	sleep 5
 
 	printf "\e[93mInstalling media packages...\e[0m\n"
 	install_packages "${MEDIA[@]}"
-	sleep 5
 
 	printf "\e[93mInstalling fonts...\e[0m\n"
 	install_packages "${FONTS[@]}"
-	sleep 5
 
 	printf "\e[93mInstalling display manager...\e[0m\n"
 	install_packages "${LIGHTDM[@]}"
