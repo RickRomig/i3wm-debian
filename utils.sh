@@ -52,6 +52,7 @@ install_packages() {
     	printf "\e[93mInstalling %s...\e[0m\n" "$new_package"
     	sudo apt-get install -yy "$new_package" # 2>/dev/null
 			is_installed "$new_package" || log "\e[32m%s not installed, skipping...\e[0m\n" "$new_package"
+			sleep 2
     done
   fi
 	return 0
