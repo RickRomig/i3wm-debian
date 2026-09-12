@@ -7,8 +7,8 @@
 # Author       : Copyright © 2025 Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail | rick.romig@mymetronet.net
 # Created      : 27 Apr 2025
-# Updated      : 15 Aug 2026
-# Version      : 3.0.26227
+# Updated      : 12 Sep 2026
+# Version      : 3.1.26254
 # Comments     : Run after nerfonts.sh
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -23,6 +23,8 @@
 # ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
 # FOR A PARTICULAR PURPOSE. See the# GNU General Public License for more details.
 ###############################################################################
+
+# shellcheck source=./utils.sh
 
 # Create symbolic links to dotfiles in the home directory
 link_dotfiles() {
@@ -77,7 +79,7 @@ link_configs() {
 			ln -sv ~/Downloads/configs/"$file" ~/.config/"$file"
 		fi
 	done
-  micro -plugin install bookmark
+	micro -plugin install bookmark
 	return 0
 }
 
@@ -185,7 +187,7 @@ configure_polybar() {
 
 main() {
 	local -r script="${0##*/}"
-	local -r version="3.0.26227"
+	local -r version="3.1.26254"
 	link_dotfiles
 	link_configs
 	copy_configs
@@ -195,7 +197,7 @@ main() {
 	configure_polybar
 	printf "\e[93mi3 Window Manager installation complete!\e[0m\n"
 	printf "Reboot and login to i3.\n"
-	echo "$script $version"
+	over_line "$script $version"
 	exit
 }
 
