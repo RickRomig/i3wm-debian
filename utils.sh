@@ -7,9 +7,9 @@
 # Author       : Copyright © 2025, Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail.com | rick.romig@mymetronet.com
 # Created      : 10 Apr 2025
-# Updated      : 10 Aug 2026
-# Version      : 1.11.26222
-# Comments     : Sourced by install.sh
+# Updated      : 12 Sep 2026
+# Version      : 1.12.26254
+# Comments     : Sourced by install.sh, configs.sh, nerdfonts,sh
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
 # License URL  : https://github.com/RickRomig/i3wm-debian/blob/main/LICENSE
@@ -19,16 +19,16 @@
 # Software Foundation; either version 2 of the License, or (at your option) any
 # later version.
 #
-# This program is distributed in the hope that it will be useful, but WITHOUT ANY
-# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
-# A PARTICULAR PURPOSE. See the# GNU General Public License for more details.
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE. See the# GNU General Public License for more details.
 ###############################################################################
 
 # Log errors
 log() {
-  local message="$1"
-  local log_file=~/install-errors.log
-  tee -a "$log_file" < <(printf "%(%F %R)T: %s\n" -1 "$message")
+	local message="$1"
+	local log_file=~/install-errors.log
+	tee -a "$log_file" < <(printf "%(%F %R)T: %s\n" -1 "$message")
 	return 0
 }
 
@@ -39,21 +39,21 @@ is_installed() {
 
 # Install packages if not already installed
 install_packages() {
-  local packages=("$@")
-  local to_install=()
+	local packages=("$@")
+	local to_install=()
 	local package new_package
 
-  for package in "${packages[@]}"; do
+	for package in "${packages[@]}"; do
 		is_installed "$package" || to_install+=("$package")
-  done
+	done
 
-  if [[ "${#to_install[@]}" -ne 0 ]]; then
-    for new_package in "${to_install[@]}"; do
-    	printf "\e[93mInstalling %s...\e[0m\n" "$new_package"
-    	sudo apt-get install -yy "$new_package" # 2>/dev/null
-			is_installed "$new_package" || log "\e[32m%s not installed, skipping...\e[0m\n" "$new_package"
-			sleep 2
-    done
+	if [[ "${#to_install[@]}" -ne 0 ]]; then
+	for new_package in "${to_install[@]}"; do
+		printf "\e[93mInstalling %s...\e[0m\n" "$new_package"
+		sudo apt-get install -yy "$new_package" # 2>/dev/null
+		is_installed "$new_package" || log "\e[32m%s not installed, skipping...\e[0m\n" "$new_package"
+		sleep 2
+	done
   fi
 	return 0
 }
@@ -82,5 +82,17 @@ link_scripts() {
 	# printf "\e[93mCopying scripts to ~/bin ...\e[0m\n"
 	# cp -rpv ~/Downloads/scripts/ ~/bin/
 	# [[ -d "$HOME/bin" ]] && rm -rf "${HOME:?}/bin"
+	return 0
+}
+
+# shellcheck disable=SC2001
+# See if you can use ${variable//search/replace} instead.. (sed is necesary to replace all characters)
+over_line() {
+	local char line
+	local -r title="$1"
+	char="${2:--}"
+	char="${char::1}"
+	line=$(sed "s/./$char/g" <<< "$title")
+	printf "%s\n%s\n"  "$line" "$title"
 	return 0
 }
