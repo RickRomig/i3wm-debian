@@ -7,8 +7,8 @@
 # Author       : Copyright © 2025, Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail.com | rick.romig@mymetronet.com
 # Created      : 10 Apr 2025
-# Updated      : 15 Aug 2026
-# Version      : 2.7.26227
+# Updated      : 12 Sep 2026
+# Version      : 2.8.26254
 # Comments     : Run this script first.
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -92,7 +92,7 @@ install_zram() {
 	printf "\e[93mInstalling Z-Ram...\e[0m\n"
 	sudo apt install -y zram-tools
 	sudo sed -i.bak -f ~/Downloads/scripts/files/zramswap.sed /etc/default/zramswap
-  sudo systemctl restart zramswap.service
+	sudo systemctl restart zramswap.service
 	printf "Zram-tools installed.\n"
 	return 0
 }
@@ -248,7 +248,7 @@ enable_services() {
 
 main() {
 	local -r script="${0##*/}"
-	local -r version="2.7.26227"
+	local -r version="2.8.26254"
 	local confirm
 	local re="^[Yy]$"
 	clear
@@ -263,7 +263,7 @@ main() {
 	enable_services
 	link_scripts
 	printf "Run \e[93mnerdfonts.sh\e[0m and \e[93mconfigs.sh\e[0m to install Nerd Fonts and configuration files.\n"
-	echo "$script $version"
+	over_line "$script $version"
 	exit
 }
 
