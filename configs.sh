@@ -7,8 +7,8 @@
 # Author       : Copyright © 2025 Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail | rick.romig@mymetronet.net
 # Created      : 27 Apr 2025
-# Updated      : 12 Sep 2026
-# Version      : 3.1.26254
+# Updated      : 18 Sep 2026
+# Version      : 3.2.26261
 # Comments     : Run after nerfonts.sh
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -25,6 +25,7 @@
 ###############################################################################
 
 # shellcheck source=./utils.sh
+source ./utils.sh
 
 # Create symbolic links to dotfiles in the home directory
 link_dotfiles() {
@@ -187,7 +188,7 @@ configure_polybar() {
 
 main() {
 	local -r script="${0##*/}"
-	local -r version="3.1.26254"
+	local -r version="3.2.26261"
 	link_dotfiles
 	link_configs
 	copy_configs
