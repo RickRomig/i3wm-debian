@@ -7,8 +7,8 @@
 # Author       : Copyright © 2025, Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail.com | rick.romig@mymetronet.com
 # Created      : 10 Apr 2025
-# Updated      : 12 Sep 2026
-# Version      : 2.9.26254
+# Updated      : 18 Sep 2026
+# Version      : 2.10.26261
 # Comments     : Run this script after install.sh and before configs.sh
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -25,6 +25,7 @@
 ###############################################################################
 
 # shellcheck source=./utils.sh
+source ./utils.sh
 
 # shellcheck disable=SC2317 # Don't warn about unreachable commands in this function
 # ShellCheck may incorrectly believe that code is unreachable if it's invoked by variable name or in a trap.
@@ -55,7 +56,7 @@ install_SymbolNerdFonts() {
 
 main() {
 	local -r script="${0##*/}"
-	local -r version="2.9.26254"
+	local -r version="2.10.26261"
 	local -r font_dir=~/.local/share/fonts
 	TMP_DIR=$(mktemp -d) || { printf "\e[91mERROR:\e[0m: Failed to create temporary directory." >&2; exit 1; }
 	trap cleanup EXIT
