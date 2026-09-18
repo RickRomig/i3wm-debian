@@ -62,9 +62,6 @@ link_configs() {
 		"micro/bindings.json"
 		"micro/settings.json"
 		"picom/picom.conf"
-		"rofi/arc_dark_colors.rasi"
-		"rofi/arc_dark_transparent_colors.rasi"
-		"rofi/config.rasi"
 		"redshift.conf"
 		"shellcheck/shellcheckrc"
 	)
@@ -92,6 +89,7 @@ copy_configs(){
 		kitty
 		keepassxc
 		polybar
+		rofi
 		systemd
 	)
 	for cfg_dir in "${cfg_dirs[@]}"; do
@@ -144,13 +142,14 @@ apply_system_tweaks() {
 	printf "\e[93mApplying sudo timeout...\e[0m\n"
 	sudo cp -v "$repo_dir"/sudoers/10-timeout /etc/sudoers.d/
 	sudo chmod 440 /etc/sudoers.d/10-timeout
-	printf "\e[93mApplying settings for sleep/suspend...\e[0m\n"
-	sudo cp -v "$repo_dir"/sleep.conf /etc/systemd/
+	# printf "\e[93mApplying settings for sleep/suspend...\e[0m\n"
+	# sudo cp -v "$repo_dir"/sleep.conf /etc/systemd/
 	printf "\e[93mDisabling snaps...\e[0m\n"
 	sudo cp -v "$repo_dir"/apt/nosnap.pref /etc/apt/preferences.d/
 	printf "\e[93mSetting swappiness...\e[0m\n"
 	sudo cp -v "$repo_dir"/90-swappiness.conf /etc/sysctl.d/
 	printf "\e[93mSetting sleep.conf...\e[0m\n"
+	sudo mkdir -p /etc/systemd/sleep.conf.d
 	sudo cp -v "$repo_dir"/99-sleep.conf /etc/systemd/sleep.conf.d/
 	set_reserved_space
 	return 0
