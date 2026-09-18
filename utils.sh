@@ -7,8 +7,8 @@
 # Author       : Copyright © 2025, Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail.com | rick.romig@mymetronet.com
 # Created      : 10 Apr 2025
-# Updated      : 17 Sep 2026
-# Version      : 1.13.26260
+# Updated      : 18 Sep 2026
+# Version      : 1.14.26260
 # Comments     : Sourced by install.sh, configs.sh, nerdfonts,sh
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -51,7 +51,7 @@ install_packages() {
 	for new_package in "${to_install[@]}"; do
 		printf "\e[93mInstalling %s...\e[0m\n" "$new_package"
 		sudo apt-get install -yy "$new_package" # 2>/dev/null
-		is_installed "$new_package" || log "\e[32m%s not installed, skipping...\e[0m\n" "$new_package"
+		is_installed "$new_package" || log "%s not installed, skipping...\n" "$new_package"
 		sleep 2
 	done
   fi
