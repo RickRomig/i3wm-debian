@@ -7,8 +7,8 @@
 # Author       : Copyright © 2025, Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail.com | rick.romig@mymetronet.com
 # Created      : 10 Apr 2025
-# Updated      : 12 Sep 2026
-# Version      : 1.12.26254
+# Updated      : 17 Sep 2026
+# Version      : 1.13.26260
 # Comments     : Sourced by install.sh, configs.sh, nerdfonts,sh
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -78,6 +78,7 @@ clone_repos() {
 # Link/Copy scripts to ~/bin
 link_scripts() {
 	printf "\e[93mLinking scripts to ~/bin...\e[0m\n"
+	[[ -L ~/bin ]] || return 0
 	ln -vs ~/Downloads/scripts/ ~/bin
 	# printf "\e[93mCopying scripts to ~/bin ...\e[0m\n"
 	# cp -rpv ~/Downloads/scripts/ ~/bin/
