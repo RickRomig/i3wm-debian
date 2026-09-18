@@ -7,8 +7,8 @@
 # Author       : Copyright © 2025, Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail.com | rick.romig@mymetronet.com
 # Created      : 10 Apr 2025
-# Updated      : 12 Sep 2026
-# Version      : 2.8.26254
+# Updated      : 17 Sep 2026
+# Version      : 2.9.26260
 # Comments     : Run this script first.
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -27,6 +27,10 @@
 # shellcheck source=./utils.sh
 # shellcheck source=./packages.conf
 
+# Source utils.sh and packages.conf
+source ./utils.sh
+source ./packages.conf
+
 print_logo() {
 	echo -ne "\033[0;92m"
 	cat << _LOGO_
@@ -43,26 +47,6 @@ print_logo() {
 _LOGO_
 	echo -e "\033[0m"
 	return 0
-}
-
-# Source utils.sh and packages.conf
-source_files() {
-	local file files script_dir
-	local -i status=0
-	script_dir=$(dirname "$(readlink -f "${0}")")
-	files=(utils.sh packages.conf)
-	for file in "${files[@]}"; do
-		if [[ -f "$script_dir/$file" ]]; then
-    	printf "%s [OK]\n" "$file"
-    	sleep 1
-    	printf '\e[A\e[K'
-			source "$script_dir/$file"
-		else
-			printf "\e[91m%s not found.\e[0m\n" "$file" >&2
-			status=1
-		fi
-	done
-	return "$status"
 }
 
 # Install Spice Tools if a virtual machine
@@ -104,10 +88,10 @@ install_microcode() {
 	printf "\e[93mInstalling microcode for %s ...\e[0m\n" "$vendor_id"
 	case "$vendor_id" in
 		AuthenticAMD )
-			sudo apt-get install -y amd64-microcode
+			is_installed amd64-microcode || sudo apt-get install -y amd64-microcode
 			printf "AMD 64 microcode installed.\n" ;;
 		GenuineIntel )
-			sudo apt-get install -y intel-microcode
+			is_installed intel-microcode || sudo apt-get install -y intel-microcode
 			printf "Intel microcode installed.\n" ;;
 		* )
 			printf "\e[91mWARNING!\e[0m %s CPU not supported.\n" "$vendor_id" >&2
@@ -118,7 +102,8 @@ install_microcode() {
 
 install_bluetooth() {
 	printf "\e[93mInstalling Bluetooth...\e[0m\n"
-	sudo apt install -y bluez blueman
+	is_installed bluez || sudo apt install -y bluez
+	is_installed blueman || sudo apt install -y blueman
 	sudo systemctl enable bluetooth
 	return "$?"
 }
@@ -129,8 +114,14 @@ install_disk_utils() {
 		printf "\e[91mVirtual machine, disk utillities were not installed.\e[0m\n"
 		return 0
 	fi
-	[[ -b /dev/sda ]] && { printf "\e[93mInstalling hdparm...\e[0m\n"; sudo apt install -y hdparm; }
-	[[ -c /dev/nvme0 ]] && { printf "\e[93mInstalling nvme-cli...\e[0m\n"; sudo apt install -y nvme-cli; }
+	if [[ -b /dev/sda ]]; then
+		printf "\e[93mInstalling hdparm...\e[0m\n"
+		is_installed hdparm || sudo apt install -y hdparm
+	fi
+	if [[ -c /dev/nvme0 ]]; then
+		printf "\e[93mInstalling nvme-cli...\e[0m\n"
+		is_installed nvme-cli || sudo apt install -y nvme-cli
+	fi
 	return "$?"
 }
 
@@ -248,7 +239,7 @@ enable_services() {
 
 main() {
 	local -r script="${0##*/}"
-	local -r version="2.8.26254"
+	local -r version="2.9.26260"
 	local confirm
 	local re="^[Yy]$"
 	clear
