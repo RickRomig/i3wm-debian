@@ -18,24 +18,24 @@ Files and scripts in this reposoitory are licensed under the GNU General Public 
 8. **slick-greeter** - used by LightDM to login user.
 9. **slickback.png** - background for LightDM login screen.
 ## Debian Installation
-1. Install a minimal installation of Debian stable using **Debian-Minimal-Install.md** as a guide.
-	- **Do not** set a root password. Set yourself up as primary user. This will automatically give you sudo access.
-	- **Do not** create a swap partition. The `install.sh` script will install ZRam for swap unless it detects swap is already present.
+1. If installing on an existing system, backup the home folder/partition to an external drive.
+	- You may needed configuration files, SSH keys, and other data from the old installation.
+2. Install a minimal installation of Debian (Devuan) stable using **Debian-Minimal-Install.md** as a guide.
+	- **Do not** set a root password. Set yourself up as primary user. This will automatically give you sudo access. You can always set a root password later if necessary.
+	- **Do not** create a swap partition. The `install.sh` script will install ZRam for swap unless it detects that swap is already present.
 	- Highly recommend setting up a separate home partition. It makes life easier.
-2. In the software selection page:
+3. In the software selection page:
 	- Uncheck all desktop environments.
 	- Check SSH server. SSH is used to administer all Linux systems on MosfaNet.
 	- Check Standard system utilities.
 	- **Devuan** - select init system from sysvinit, openrc, or runit
 3. Reboot
 ## i3 Installation
-Once system has rebooted, run the following:
+1. Once system has rebooted, run the following:
 ```bash
-$ sudo apt install git network-manager	# if not installed during Debian installation
-$ sudo apt purge ifupdown	# if not installed during Debian installation
-$ sudo nano /etc/NetworkManager/NetworkManager.conf	# or
-$ sudo sed -i '/managed=false/managed=true' /etc/NetworkManager/NetworkManager.conf
-
+$ sudo apt install git network-manager	# if not installed during Debian/Devuan installation
+$ sudo apt purge ifupdown	# if not done during Debian/Devuan installation
+$ sudo sed -i '/managed/s/false/true' /etc/NetworkManager/NetworkManager.conf
 $ git clone https://github.com/RickRomig/i3wm-debian.git ~/i3wm-debian
 $ cd i3wm-debian
 $ ./install.sh
@@ -44,6 +44,7 @@ $ ./configs.sh
 $ micro .config/polybar/config.ini	# Edit wlan, eth, and battery modules as needed.
 $ sudo reboot
 ```
+2. Setup static IP and SSH connections as needed.
 ## NOTES
 - The `install.sh` script clones the configs and scripts repositories to `~/Downloads`.
 - The `install.sh` script copies/links the contents of the script repository from `~/Downloads/scripts to ~/bin`.
@@ -66,4 +67,4 @@ These programs are free software; you can redistribute them and/or modify them u
 These programs are distributed in the hope that they will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
 #### Rick Romig "*The Luddite Geek*"
-#### 21 October 2026
+#### 22 October 2026
