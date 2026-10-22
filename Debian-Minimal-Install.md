@@ -70,8 +70,7 @@
 chroot /target
 apt install git network-manager
 apt purge ifupdown
-nano /etc/NetworkManager/NetworkManager.conf	# or
-sed -i '/managed=false/managed=true' /etc/NetworkManager/NetworkManager.conf
+sed -i '/managed=/s/false/true' /etc/NetworkManager/NetworkManager.conf
 ```
    15. Finish the installation.
 4. Remove installation media and reboot.
@@ -159,4 +158,4 @@ $ git clone https://github.com/RickRomig/scripts.git ~/Downloads/scripts
 $ git clone https://github.com/RickRomig/configs.git ~/Downloads/configs
 ```
 #### Rick Romig "*The Luddite Geek*"
-#### 21 October 2026
+#### 22 October 2026
