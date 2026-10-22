@@ -26,11 +26,16 @@ Files and scripts in this reposoitory are licensed under the GNU General Public 
 	- Uncheck all desktop environments.
 	- Check SSH server. SSH is used to administer all Linux systems on MosfaNet.
 	- Check Standard system utilities.
+	- **Devuan** - select init system from sysvinit, openrc, or runit
 3. Reboot
 ## i3 Installation
 Once system has rebooted, run the following:
 ```bash
 $ sudo apt install git network-manager	# if not installed during Debian installation
+$ sudo apt purge ifupdown	# if not installed during Debian installation
+$ sudo nano /etc/NetworkManager/NetworkManager.conf	# or
+$ sudo sed -i '/managed=false/managed=true' /etc/NetworkManager/NetworkManager.conf
+
 $ git clone https://github.com/RickRomig/i3wm-debian.git ~/i3wm-debian
 $ cd i3wm-debian
 $ ./install.sh
@@ -44,7 +49,7 @@ $ sudo reboot
 - The `install.sh` script copies/links the contents of the script repository from `~/Downloads/scripts to ~/bin`.
 - The `configs.sh` script copies/links configuration files from ~/Downloads/configs to `~/.config`.
 - Configure Polybar modules for network and battery, as applicable, before rebooting after i3 installation.
-	- The `configs.sh` script's `configure_polybar` function should configure the `config.ini`.
+	- The `configs.sh` script's `configure_polybar` function should configure the `config.ini` and modules.
 ## Set screen resolution in Gnome-Boxes VM
 Add `display-setup-script=xrandr -s 1920x1080` in the `[Seat:*]` section as shown below:
 ```bash
@@ -61,4 +66,4 @@ These programs are free software; you can redistribute them and/or modify them u
 These programs are distributed in the hope that they will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
 #### Rick Romig "*The Luddite Geek*"
-#### 16 August 2026
+#### 21 October 2026
