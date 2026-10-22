@@ -1,6 +1,8 @@
 # Debian Stable - Minimal Install
 1. Boot to Debian Netinstall ISO USB drive.
    - URL: [Index of /cdimage/unofficial/non-free/cd-including-firmware/current/amd64/iso-cd](https://cdimage.debian.org/cdimage/unofficial/non-free/cd-including-firmware/current/amd64/iso-cd/)
+   - [Debian Trixie](https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/)
+   - [Devuan Excalibur](https://files.devuan.org/devuan_excalibur/installer-iso/)
 2. Select **Advanced Options** from the menu.
    - Recommended selections will be **bold-faced**.
 3. Select **Expert Install**.
@@ -59,12 +61,17 @@
          - **No** desktop environment (Uncheck Desktop Environment and any checked desktop environments.)
          - Check **SSH server** (my preference)
          - Check **standard system utilities**
+		- Init System
+		 - Devuan - **Sysvinit**, openrc, runit
    13. Install the GRUB bootloader.
        - Force GRUB installations to the EFI removable media path - **No**
    14. Execute a shell. (Installing network-manager before rebooting makes things easier)
 ```bash
 chroot /target
 apt install git network-manager
+apt purge ifupdown
+nano /etc/NetworkManager/NetworkManager.conf	# or
+sed -i '/managed=false/managed=true' /etc/NetworkManager/NetworkManager.conf
 ```
    15. Finish the installation.
 4. Remove installation media and reboot.
@@ -112,6 +119,39 @@ PERCENT=25
 $ sudo sed -i.bak '/ALGO/s/^#//;s/lz4/zstd/;/PERCENT/s/^#//;s/50$/25/' /etc/default/zramswap
 $ sudo systemctl restart zramswap.service
 ```
+### Add backports to sources
+1. Devuan
+```bash
+sudo apt edit-sources
+deb http://deb.devuan.org/merged excalibur main contrib non-free-firmware
+deb-src http://deb.devuan.org/merged excalibur main contrib non-free-firmware
+
+deb http://deb.devuan.org/merged excalibur-security main contrib non-free-firmware
+deb-src http://deb.devuan.org/merged excalibur-security main contrib non-free-firmware
+
+# excalibur-updates, to get updates before a point release is made;
+# see https://www.debian.org/doc/manuals/debian-reference/ch02.en.html#_updates_and_backports
+deb http://deb.devuan.org/merged excalibur-updates main contrib non-free-firmware
+deb-src http://deb.devuan.org/merged excalibur-updates main contrib non-free-firmware
+
+deb http://deb.devuan.org/merged excalibur-backports main contrib non-free non-free-firmware
+```
+2. Debian
+```bash
+sudo apt edit-sources
+deb http://deb.debian.org/debian trixie main contrib non-free-firmware
+deb-src http://deb.debian.org/debian trixie main contrib non-free-firmware
+
+deb http://deb.debian.org/debian trixie-security main contrib non-free-firmware
+deb-src http://deb.debian.org/debian trixie-security main contrib non-free-firmware
+
+# excalibur-updates, to get updates before a point release is made;
+# see https://www.debian.org/doc/manuals/debian-reference/ch02.en.html#_updates_and_backports
+deb http://deb.debian.org/debian trixie-updates main contrib non-free-firmware
+deb-src http://deb.debian.org/debian trixie-updates main contrib non-free-firmware
+
+deb http://deb.debian.org/debian trixie-backports main contrib non-free non-free-firmware
+```
 ### Repositories for my scripts and configuration files
 For information only, repositories will be cloned to `~/Downloads` by the `install.sh` installation script.
 ```bash
@@ -119,4 +159,4 @@ $ git clone https://github.com/RickRomig/scripts.git ~/Downloads/scripts
 $ git clone https://github.com/RickRomig/configs.git ~/Downloads/configs
 ```
 #### Rick Romig "*The Luddite Geek*"
-#### 16 August 2026
+#### 21 October 2026
