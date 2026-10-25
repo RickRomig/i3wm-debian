@@ -1,4 +1,3 @@
-#!/usr/bin/env bash
 ###############################################################################
 # Script Name  : utils.sh
 # Description  : Utility functions for installing packages for Debian i3WM
@@ -7,9 +6,9 @@
 # Author       : Copyright © 2025, Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail.com | rick.romig@mymetronet.com
 # Created      : 10 Apr 2025
-# Updated      : 18 Sep 2026
-# Version      : 1.14.26260
-# Comments     : Sourced by install.sh, configs.sh, nerdfonts,sh
+# Updated      : 25 Oct 2026
+# Version      : 1.14.26298
+# Comments     : Sourced by install.sh, configs.sh, nerdfonts.sh
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
 # License URL  : https://github.com/RickRomig/i3wm-debian/blob/main/LICENSE
