@@ -6,8 +6,8 @@
 # Author       : Copyright © 2025, Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail.com | rick.romig@mymetronet.com
 # Created      : 10 Apr 2025
-# Updated      : 31 Oct 2026
-# Version      : 1.15.26304
+# Updated      : 01 Nov 2026
+# Version      : 1.16.26305
 # Comments     : Sourced by install.sh, configs.sh, nerdfonts.sh
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -41,7 +41,7 @@ _LOGO_
 	return 0
 }
 
-# Log errors
+# Log installation errors
 log() {
 	local message="$1"
 	local log_file=~/install-errors.log
@@ -65,13 +65,13 @@ install_packages() {
 	done
 
 	if [[ "${#to_install[@]}" -ne 0 ]]; then
-	for new_package in "${to_install[@]}"; do
-		printf "\e[93mInstalling %s...\e[0m\n" "$new_package"
-		sudo apt-get install -yy "$new_package" # 2>/dev/null
-		is_installed "$new_package" || log "%s not installed, skipping...\n" "$new_package"
-		sleep 2
-	done
-  fi
+		for new_package in "${to_install[@]}"; do
+			printf "\e[93mInstalling %s...\e[0m\n" "$new_package"
+			sudo apt-get install -yy "$new_package" # 2>/dev/null
+			is_installed "$new_package" || log "%s not installed, skipping...\n" "$new_package"
+			sleep 2
+		done
+	fi
 	return 0
 }
 
@@ -98,6 +98,7 @@ link_scripts() {
 	[[ -L ~/bin ]] || return 0
 	ln -vs ~/Downloads/scripts/ ~/bin
 	# printf "\e[93mCopying scripts to ~/bin ...\e[0m\n"
+	# [[ -d ~/bin ]] && mkdir ~/bin
 	# cp -rpv ~/Downloads/scripts/ ~/bin/
 	# [[ -d "$HOME/bin" ]] && rm -rf "${HOME:?}/bin"
 	return 0
