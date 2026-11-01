@@ -98,7 +98,7 @@ link_scripts() {
 	[[ -L ~/bin ]] || return 0
 	ln -vs ~/Downloads/scripts/ ~/bin
 	# printf "\e[93mCopying scripts to ~/bin ...\e[0m\n"
-	# [[ -d ~/bin ]] && mkdir ~/bin
+	# [[ -d ~/bin ]] || mkdir -p ~/bin
 	# cp -rpv ~/Downloads/scripts/ ~/bin/
 	# [[ -d "$HOME/bin" ]] && rm -rf "${HOME:?}/bin"
 	return 0
