@@ -24,8 +24,8 @@
 # FOR A PARTICULAR PURPOSE. See the# GNU General Public License for more details.
 ###############################################################################
 
-# shellcheck source=./utils.sh
-source ./utils.sh
+# shellcheck source=./utils.bash
+source ./utils.bash
 
 # shellcheck disable=SC2317 # Don't warn about unreachable commands in this function
 # ShellCheck may incorrectly believe that code is unreachable if it's invoked by variable name or in a trap.
@@ -36,7 +36,17 @@ cleanup() {
 install_NerdFonts() {
 	local -r font_dir="$1"
 	local -r font_repo="https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0"
-	local -r fonts=( "FiraCode" "Go-Mono" "Hack" "Inconsolata" "Iosevka" "JetBrainsMono" "Mononoki" "RobotoMono" "SourceCodePro" )
+	local -r fonts=(
+		"FiraCode"
+		"Go-Mono"
+		"Hack"
+		"Inconsolata"
+		"Iosevka"
+		"JetBrainsMono"
+		"Mononoki"
+		"RobotoMono"
+		"SourceCodePro"
+	)
 	local font
 	[[ -d "$font_dir" ]] || sudo mkdir -p "$font_dir"
 	for font in "${fonts[@]}"; do
@@ -58,7 +68,7 @@ install_SymbolNerdFonts() {
 
 main() {
 	local -r script="${0##*/}"
-	local -r version="2.10.26261"
+	local -r version="2.11.26305"
 	local -r font_dir=~/.local/share/fonts
 	TMP_DIR=$(mktemp -d) || { printf "\e[91mERROR:\e[0m: Failed to create temporary directory." >&2; exit 1; }
 	trap cleanup EXIT
