@@ -1,13 +1,13 @@
 ###############################################################################
-# Script Name  : utils.sh
+# Script Name  : utils.bash
 # Description  : Utility functions for installing packages for Debian i3WM
 # Dependencies : None
 # Arguments    : None
 # Author       : Copyright © 2025, Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail.com | rick.romig@mymetronet.com
 # Created      : 10 Apr 2025
-# Updated      : 25 Oct 2026
-# Version      : 1.14.26298
+# Updated      : 31 Oct 2026
+# Version      : 1.15.26304
 # Comments     : Sourced by install.sh, configs.sh, nerdfonts.sh
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -22,6 +22,24 @@
 # ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
 # FOR A PARTICULAR PURPOSE. See the# GNU General Public License for more details.
 ###############################################################################
+
+print_logo() {
+	echo -ne "\033[0;92m"
+	cat << _LOGO_
+  __  __            __       _   _      _
+ |  \/  | ___  ___ / _| __ _| \ | | ___| |_
+ | |\/| |/ _ \/ __| |_ / _\` |  \| |/ _ \ __|
+ | |  | | (_) \__ \  _| (_| | |\  |  __/ |_
+ |_|  |_|\___/|___/_|  \__,_|_| \_|\___|\__|
+     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+     |i|3|w|m| |I|n|s|t|a|l|l|a|t|i|o|n|
+     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+     |T|h|e| |L|u|d|d|i|t|e| |G|e|e|k| |
+     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+_LOGO_
+	echo -e "\033[0m"
+	return 0
+}
 
 # Log errors
 log() {
@@ -60,15 +78,15 @@ install_packages() {
 # Clone configs and scripts repositories to ~/Downloads
 clone_repos() {
 	local -r repo_url="https://github.com/RickRomig"
-	local -r dl_dir=~/Downloads
-	local repo repos
-	repos=(configs scripts)
+	local -r clone_dir=~/Downloads
+	local repo
+	local -r repos=(configs scripts)
 	printf "\e[93mCloning configs and scripts...\e[0m\n"
 	for repo in "${repos[@]}"; do
-		if [[ -d "$dl_dir/$repo" ]]; then
+		if [[ -d "$clone_dir/$repo" ]]; then
 			echo "$repo repository already exists."
 		else
-			git clone "$repo_url/$repo.git" "$dl_dir/$repo"
+			git clone "$repo_url/$repo.git" "$clone_dir/$repo"
 		fi
 	done
 	return 0
@@ -86,7 +104,7 @@ link_scripts() {
 }
 
 # shellcheck disable=SC2001
-# See if you can use ${variable//search/replace} instead.. (sed is necesary to replace all characters)
+# See if you can use ${variable//search/replace} instead. (sed is necesary to replace all characters)
 over_line() {
 	local char line
 	local -r title="$1"
