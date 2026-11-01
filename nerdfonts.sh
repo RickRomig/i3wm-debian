@@ -7,8 +7,8 @@
 # Author       : Copyright © 2025, Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail.com | rick.romig@mymetronet.com
 # Created      : 10 Apr 2025
-# Updated      : 18 Sep 2026
-# Version      : 2.10.26261
+# Updated      : 01 Nov 2026
+# Version      : 2.11.26305
 # Comments     : Run this script after install.sh and before configs.sh
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -36,9 +36,9 @@ cleanup() {
 install_NerdFonts() {
 	local -r font_dir="$1"
 	local -r font_repo="https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0"
-	local font fonts
+	local -r fonts=( "FiraCode" "Go-Mono" "Hack" "Inconsolata" "Iosevka" "JetBrainsMono" "Mononoki" "RobotoMono" "SourceCodePro" )
+	local font
 	[[ -d "$font_dir" ]] || sudo mkdir -p "$font_dir"
-	fonts=( "FiraCode" "Go-Mono" "Hack" "Inconsolata" "Iosevka" "JetBrainsMono" "Mononoki" "RobotoMono" "SourceCodePro" )
 	for font in "${fonts[@]}"; do
 		printf "\e[03mInstalling %s ...\e[0m\n" "$font"
 		wget -q -P "$TMP_DIR" "$font_repo/$font.tar.xz"
@@ -46,12 +46,14 @@ install_NerdFonts() {
 		tar -xvf "$TMP_DIR/${font}.tar.xz" -C "$font_dir/$font/"
 	done
 	printf "Nerd fonts installed.\n"
+	return 0
 }
 
 install_SymbolNerdFonts() {
 	local -r font_dir="$1"
 	cp -v ~/Downloads/configs/local/nerdfonts/*.ttf "$font_dir/"
 	printf "Symbols Nerd Fonts installed.\n"
+	return 0
 }
 
 main() {
@@ -60,6 +62,7 @@ main() {
 	local -r font_dir=~/.local/share/fonts
 	TMP_DIR=$(mktemp -d) || { printf "\e[91mERROR:\e[0m: Failed to create temporary directory." >&2; exit 1; }
 	trap cleanup EXIT
+	print_logo
 	install_NerdFonts "$font_dir"
 	install_SymbolNerdFonts "$font_dir"
 	fc-cache
