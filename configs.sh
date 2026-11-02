@@ -1,15 +1,16 @@
 #!/usr/bin/env bash
 ##########################################################################
 # Script Name  : configs.sh
-# Description  : Setup configuration script in i3WM installation
+# Description  : copy & link configuration files for new i3WM installation
 # Dependencies : None
 # Arguments    : None
 # Author       : Copyright © 2025 Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail | rick.romig@mymetronet.net
 # Created      : 27 Apr 2025
-# Updated      : 18 Sep 2026
-# Version      : 3.2.26261
+# Updated      : 02 Nov 2026
+# Version      : 3.3.26306
 # Comments     : Run after nerfonts.sh
+#              : Configures polybar and completes i3 installation.
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
 # License URL  : https://github.com/RickRomig/i3wm-debian/blob/main/LICENSE
@@ -24,15 +25,15 @@
 # FOR A PARTICULAR PURPOSE. See the# GNU General Public License for more details.
 ###############################################################################
 
-# shellcheck source=./utils.sh
-source ./utils.sh
+# shellcheck source=./utils.bash
+source ./utils.bash
 
 # Create symbolic links to dotfiles in the home directory
 link_dotfiles() {
 	local -r old_configs=~/old-configs
 	[[ -d "$old_configs" ]] || mkdir -p "$old_configs"
-	local dot_file dot_files
-	dot_files=(
+	local file
+	local -r files=(
 		.bash_aliases
 		.bashrc
 		.bash_logout
@@ -42,10 +43,10 @@ link_dotfiles() {
 		.profile
 	)
 	printf "\e[93m93mLinking dotfiles ...\e[0m\n"
-	for dot_file in "${dot_files[@]}"; do
-		printf "\e[93mLinking %s ...\e[0m\n" "$dot_file"
-		[[ -f "$HOME/$dot_file" ]] && mv -v "$HOME/$dot_file" "$old_configs/"
-		ln -sv ~/Downloads/configs/"$dot_file" ~/"$dot_file"
+	for file in "${files[@]}"; do
+		printf "\e[93mLinking %s ...\e[0m\n" "$file"
+		[[ -f "$HOME/$file" ]] && mv -v "$HOME/$file" "$old_configs/"
+		ln -sv ~/Downloads/configs/"$file" ~/"$file"
 	done
 	return 0
 }
@@ -54,8 +55,8 @@ link_dotfiles() {
 link_configs() {
 	local -r old_configs=~/old-configs
 	[[ -d "$old_configs" ]] || mkdir -p "$old_configs"
-	local file files
-	files=(
+	local config
+	local -r configs=(
 		"dunst/dunstrc"
 		"flameshot/flameshot.ini"
 		"glow/glow.yml"
@@ -65,14 +66,14 @@ link_configs() {
 		"redshift.conf"
 		"shellcheck/shellcheckrc"
 	)
-	for file in "${files[@]}"; do
-		if [[ -f "$HOME/Downloads/configs/$file" ]]; then
-			printf "\e[93mLinking %s to %s ...\e[0m\n" "$HOME/Downloads/configs/$file" "$HOME/.config"
-			if [[ "$file" == "redshift.conf" ]]; then
-				mv -v "$HOME/.config/$file" "$old_configs/"
+	for config in "${configs[@]}"; do
+		if [[ -f "$HOME/Downloads/configs/$config" ]]; then
+			printf "\e[93mLinking %s to %s ...\e[0m\n" "$HOME/Downloads/configs/$config" "$HOME/.config"
+			if [[ "$config" == "redshift.conf" ]]; then
+				mv -v "$HOME/.config/$config" "$old_configs/"
 			else
-				[[ -d "$old_configs/${file%/*}" ]] || mkdir -p "$old_configs/${file%/*}"
-				mv -v "$HOME/.config/$file" "$old_configs/${file%/*}/${file##*/}"
+				[[ -d "$old_configs/${config%/*}" ]] || mkdir -p "$old_configs/${config%/*}"
+				mv -v "$HOME/.config/$config" "$old_configs/${config%/*}/${config##*/}"
 			fi
 			ln -sv ~/Downloads/configs/"$file" ~/.config/"$file"
 		fi
@@ -142,14 +143,12 @@ apply_system_tweaks() {
 	printf "\e[93mApplying sudo timeout...\e[0m\n"
 	sudo cp -v "$repo_dir"/sudoers/10-timeout /etc/sudoers.d/
 	sudo chmod 440 /etc/sudoers.d/10-timeout
-	# printf "\e[93mApplying settings for sleep/suspend...\e[0m\n"
-	# sudo cp -v "$repo_dir"/sleep.conf /etc/systemd/
 	printf "\e[93mDisabling snaps...\e[0m\n"
 	sudo cp -v "$repo_dir"/apt/nosnap.pref /etc/apt/preferences.d/
 	printf "\e[93mSetting swappiness...\e[0m\n"
 	sudo cp -v "$repo_dir"/90-swappiness.conf /etc/sysctl.d/
 	printf "\e[93mSetting sleep.conf...\e[0m\n"
-	sudo mkdir -p /etc/systemd/sleep.conf.d
+	[[ -d /etc/systemd/sleep.conf.d ]] || sudo mkdir -p /etc/systemd/sleep.conf.d
 	sudo cp -v "$repo_dir"/99-sleep.conf /etc/systemd/sleep.conf.d/
 	set_reserved_space
 	return 0
@@ -157,24 +156,25 @@ apply_system_tweaks() {
 
 configure_polybar() {
 	local -r conf=config.ini
-	local eth_int wifi_int bat_name polybar_dir
-	eth_int=$(find /sys/class/net -name "e*")
-	wifi_int=$(find /sys/class/net -name "w*")
-	bat_name=$(find /sys/class/power_supply/ -name "BAT*")
-	polybar_dir=$(find ~/.config -maxdepth 1 -type d -name polybar -print)
-	printf "\e[93mPolybar device names:\e[0m\n"
-	[[ "$eth_int" ]] && printf "Ethernet: %s\n" "${eth_int##*/}"
-	[[ "$wifi_int" ]] && printf "Wireless: %s\n" "${wifi_int##*/}"
-	[[ "$bat_name" ]] && printf "Battery:  %s\n" "${bat_name##*/}"
-	if [[ "$wifi_int" ]]; then
-		sed -i "s/wlan0/$wifi_int/" "$polybar_dir/$conf"
-	else
-		sed -i '/^modules-left/s/ wlan//' "$polybar_dir/$conf"
-	fi
+	local -r polybar_dir=~/.config/polybar
+	local eth_int wifi_int bat_name
+	eth_int=$(awk -F/ '{print $NF}' < <(find /sys/class/net -name "e*"))
+	wifi_int=$(awk -F/ '{print $NF}' < <(find /sys/class/net -name "w*"))
+	bat_name=$(awk -F/ '{print $NF}' < <(find /sys/class/power_supply -name "BAT*"))
+	# Remove list of device names when known to work
+	[[ "$eth_int" ]] && printf "Ethernet: %s\n" "$eth_int" || printf "No ethernet interface detected.\n"
+	[[ "$wifi_int" ]] && printf "Wireless: %s\n" "$wifi_int" || printf "No wireless interface detected.\n"
+	[[ "$bat_name" ]] && printf "Battery:  %s\n" "$bat_name" || printf " No battery detected.\n"
+	# Insert device names into modules
 	if [[ "$eth_int" ]]; then
 		sed -i "s/eth0/$eth_int/" "$polybar_dir/$conf"
 	else
 		sed -i '/^modules-left/s/ eth//' "$polybar_dir/$conf"
+	fi
+	if [[ "$wifi_int" ]]; then
+		sed -i "s/wlan0/$wifi_int/" "$polybar_dir/$conf"
+	else
+		sed -i '/^modules-left/s/ wlan//' "$polybar_dir/$conf"
 	fi
 	if [[ "$bat_name" ]]; then
 		sed -i "s/BAT0/$bat_name/" "$polybar_dir/$conf"
@@ -187,7 +187,8 @@ configure_polybar() {
 
 main() {
 	local -r script="${0##*/}"
-	local -r version="3.2.26261"
+	local -r version="3.3.26304"
+	print_logo
 	link_dotfiles
 	link_configs
 	copy_configs
