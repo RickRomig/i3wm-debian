@@ -1,15 +1,16 @@
 #!/usr/bin/env bash
 ###############################################################################
 # Script Name  : install.sh
-# Description  : Installs i3-wm on a minimal installation of Debin along with applications, untilities, etc.
+# Description  : Installs i3-wm on a minimal installation of Debian 13 or Devuan 6
 # Dependencies : None
 # Arguments    : None
 # Author       : Copyright © 2025, Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail.com | rick.romig@mymetronet.com
 # Created      : 10 Apr 2025
-# Updated      : 17 Sep 2026
-# Version      : 2.9.26260
+# Updated      : 02 Nov 2026
+# Version      : 3.2.26306
 # Comments     : Run this script first.
+#              : Supports Debian 13 (Trixie) and Devuan 6 (Excalibur)
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
 # License URL  : https://github.com/RickRomig/i3wm-debian/blob/main/LICENSE
@@ -24,58 +25,41 @@
 # FOR A PARTICULAR PURPOSE. See the# GNU General Public License for more details.
 ###############################################################################
 
-# shellcheck source=./utils.sh
+# shellcheck source=./utils.bash
 # shellcheck source=./packages.conf
-
-# Source utils.sh and packages.conf
-source ./utils.sh
+source ./utils.bash
 source ./packages.conf
-
-print_logo() {
-	echo -ne "\033[0;92m"
-	cat << _LOGO_
-  __  __            __       _   _      _
- |  \/  | ___  ___ / _| __ _| \ | | ___| |_
- | |\/| |/ _ \/ __| |_ / _\` |  \| |/ _ \ __|
- | |  | | (_) \__ \  _| (_| | |\  |  __/ |_
- |_|  |_|\___/|___/_|  \__,_|_| \_|\___|\__|
-     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-     |i|3|w|m| |I|n|s|t|a|l|l|a|t|i|o|n|
-     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-     |T|h|e| |L|u|d|d|i|t|e| |G|e|e|k| |
-     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-_LOGO_
-	echo -e "\033[0m"
-	return 0
-}
 
 # Install Spice Tools if a virtual machine
 vm_spice_install() {
-	local agents=(spice-vdagent spice-webdavd)
-	local agent localnet
-	local -i status=0
-	localnet=$(cut -d' ' -f3 < <(ip route get 1.2.3.4)); localnet="${localnet%.*}"
-	if [[ "$localnet" == "196.168.122" ]] || [[ "$localnet" == "10.0.2" ]]; then
-		sudo apt-get install -y spice-vdagent spice-webdavd
-		for agent in "${agents[@]}"; do
-			if grep -q '^ii' < <(dpkg -l "$agent" 2>/dev/null); then
-				printf "%s installation successful.\n" "$agent"
-			else
-	 			status="$?"
-				printf "\e[91mERROR:\e[0m %s installation failed.\n" "$agent"
-			fi
-		done
-	else
-		printf "Not a virtual machine.\n"
+	if [[ ! -b /dev/vda ]]; then
+		printf "Not a virtual machine. Spice agents not installed.\n" >&2
+		return 1
 	fi
-	return "$status"
+	local -r agents=(spice-vdagent spice-webdavd)
+	local agent
+	local -i code=0
+	printf "Install spice-vdagent & spice-webdavd on a Virtual Machine...\n"
+	for agent in "${agents[@]}"; do
+		sudo apt-get install -y "$agent"
+		if ! is_installed "$agent"; then
+			printf "\e[91mERROR:\e[0m %s installation failed.\n" "$agent"
+	 		code=1
+		fi
+	done
+	return "$code"
 }
 
 # Install ZRAM Tools (Swap partition should NOT have been created during install)
 install_zram() {
+	if grep -q -E 'file|partition' /proc/swaps; then
+		printf "A swap file or partition already exists.\n" >&2
+		return 1
+	fi
 	printf "\e[93mInstalling Z-Ram...\e[0m\n"
 	sudo apt install -y zram-tools
-	sudo sed -i.bak -f ~/Downloads/scripts/files/zramswap.sed /etc/default/zramswap
+	# sudo sed -i.bak -f ~/Downloads/scripts/files/zramswap.sed /etc/default/zramswap
+	sudo cp -v ~/Downloads/configs/zramswap /etc/default/zramswap
 	sudo systemctl restart zramswap.service
 	printf "Zram-tools installed.\n"
 	return 0
@@ -147,9 +131,10 @@ configure_lightdm() {
 pre_install() {
 	local distro
 	distro="$(/usr/bin/lsb_release --codename --short 2>/dev/null)"
-	source_files || exit 1
-	[[ "$distro" == "bookworm" || "$distro" == "trixie" ]] || { printf "\e[91m%s is unsupported.\e[0m\nInstalls i3wm on Debian 12 or 13.\n" "${distro^}" >&2; exit 1; }
-	printf "Install spice-vdagent & spice-webdavd if a Virtual Machine...\n"
+	if [[ "$distro" != "excalibur" && "$distro" != "trixie" ]]; then
+		printf "\e[91m%s is not supported.\e[0m\nInstalls i3wm on Debian 13 or Devuan 6 only.\n" "${distro^}" >&2
+		exit 1
+	fi
 	vm_spice_install
 	printf "\e[93mUpdating the system...\e[0m\n"
 	# sudo find /etc/apt -name "*.list" -exec sed -i 's/http:/https:/;/ftp/s/https:/http:/' {} \;
@@ -169,7 +154,7 @@ initial_setup() {
 	mkdir -pv ~/.local/{bin,state,share/{doc,fonts,logs,icons}}
 	mkdir -pv ~/.ssh && chmod 700 ~/.ssh
 	clone_repos
-	grep -iw swap < <(lsblk) || install_zram
+	install_zram
 	return "$?"
 }
 
@@ -239,7 +224,7 @@ enable_services() {
 
 main() {
 	local -r script="${0##*/}"
-	local -r version="2.9.26260"
+	local -r version="3.0.26304"
 	local confirm
 	local re="^[Yy]$"
 	clear
