@@ -6,8 +6,8 @@
 # Author       : Copyright © 2025, Richard B. Romig, Mosfanet
 # Email        : rick.romig@gmail.com | rick.romig@mymetronet.com
 # Created      : 10 Apr 2025
-# Updated      : 01 Nov 2026
-# Version      : 1.16.26305
+# Updated      : 02 Nov 2026
+# Version      : 1.16.26306
 # Comments     : Sourced by install.sh, configs.sh, nerdfonts.sh
 # TODO (Rick)  :
 # License      : GNU General Public License, version 2.0
@@ -34,7 +34,7 @@ print_logo() {
      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
      |i|3|w|m| |I|n|s|t|a|l|l|a|t|i|o|n|
      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-     |T|h|e| |L|u|d|d|i|t|e| |G|e|e|k| |
+     |T|h|e| | |L|u|d|d|i|t|e| |G|e|e|k|
      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 _LOGO_
 	echo -e "\033[0m"
